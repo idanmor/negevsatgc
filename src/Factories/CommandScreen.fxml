@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="669.0000999999975" prefWidth="958.0" snapToPixel="true" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Factories.CommandScreenController">
+  <children>
+    <SplitPane dividerPositions="0.501453488372093" focusTraversable="true" layoutX="17.0" layoutY="36.0" prefHeight="391.0" prefWidth="690.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <children>
+            <Label fx:id="labelMissionDate" layoutX="0.0" layoutY="29.0" prefHeight="35.0" prefWidth="92.0" text="Mission Date:" />
+            <TextField fx:id="textFieldDate" blendMode="SRC_OVER" layoutX="106.0" layoutY="39.0" onKeyPressed="#updateDateFinishLabel" prefWidth="164.0" promptText="dd/mm/yyy" />
+            <ComboBox fx:id="ComboMissionClass" layoutX="106.0" layoutY="72.0" onAction="#comboClassSelectedAction" onHidden="#comboClassSelectedAction" prefHeight="21.0" prefWidth="164.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <Label fx:id="LabelMissionClass" layoutX="0.0" layoutY="72.0" prefHeight="23.0" prefWidth="92.0" text="Mission Class:" />
+          </children>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="389.0" prefWidth="227.0">
+          <children>
+            <Label layoutX="0.0" layoutY="23.0" prefHeight="23.0" prefWidth="101.0" text="Mission Date:" />
+            <Label layoutX="0.0" layoutY="0.0" prefHeight="23.0" prefWidth="295.0" text="Commands - summary" />
+            <Label fx:id="summaryLabelDate" layoutX="79.0" layoutY="27.0" prefWidth="186.0" text="" />
+            <Label fx:id="MissionClass" layoutX="0.0" layoutY="53.0" mnemonicParsing="false" prefWidth="92.0" text="Mission Class" />
+            <Label fx:id="summaryMissionClass" layoutX="90.0" layoutY="53.0" prefWidth="186.0" text="" />
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <Label id="TitleLabel" fx:id="titleLabel" alignment="CENTER" layoutX="3.0" layoutY="1.0" prefHeight="35.0" prefWidth="598.0" text="Command Screen" textAlignment="CENTER" wrapText="false">
+      <stylesheets>
+        <URL value="@Demo1.css" />
+      </stylesheets>
+    </Label>
+    <ImageView fx:id="wordMapImage" fitHeight="344.5" fitWidth="689.0" layoutX="18.0" layoutY="427.0" onMouseExited="#resetCoardinates" onMouseMoved="#updateCursor" onMousePressed="#updateFirstCoardinate" onMouseReleased="#updateLastCoardinate" opacity="1.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <image>
+        <Image url="@map.png" />
+      </image>
+    </ImageView>
+  </children>
+</AnchorPane>
