@@ -6,9 +6,9 @@
 
 package MenuItems;
 
+import Factories.InternalScreenFactory;
+import Factories.StatisticsScreeFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 /**
  *
@@ -22,7 +22,8 @@ public class MenuItemStatistics extends MenuItemStrategy{
 
     @Override
     public void applyActionOnGrid(BorderPane mainPane) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        InternalScreenFactory factory = new StatisticsScreeFactory();
+        factory.createScreenPane(mainPane);
     }
     
 }
