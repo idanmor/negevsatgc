@@ -9,24 +9,39 @@ package Factories;
 import StatisticsItems.StatisticsComboFiltersStrat;
 import StatisticsItems.StatisticsTemperatureFilter;
 import com.sai.javafx.calendar.FXCalendar;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import misc.StatisticDataItem;
+import misc.StatisticDataItemInterface;
 
 /**
  *
  * @author Max
  */
 public class StatisticsScreeFactory implements InternalScreenFactory{
-    TableView<String> table;
+    TableView<StatisticDataItemInterface> table;
+    
     @Override
     public void createScreenPane(BorderPane gridPane) {
         initialize(gridPane);
@@ -53,6 +68,14 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
                 filter(filterCombo.getSelectionModel().getSelectedItem().toString(), before.getTextField().getText(), after.getTextField().getText());
             }
         });
+        Button compare = new Button("Compare");
+        compare.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent t) {
+                createCompareStatisticsWindows();
+            }
+        });
         
         AnchorPane.setTopAnchor(filterBy, topGap);
         AnchorPane.setLeftAnchor(filterBy, topGap);
@@ -73,11 +96,39 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
         
         AnchorPane.setTopAnchor(table, topGap * 8);
         AnchorPane.setLeftAnchor(table, 10.0);
-        
-        anchor.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filletButton,table);
-        table.setPrefWidth(anchor.getMaxWidth() - 20);
+        AnchorPane.setLeftAnchor(compare, 10.0);
+        AnchorPane.setTopAnchor(compare, topGap*8 + 10 + table.getPrefHeight());
+        anchor.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filletButton,table,compare);
+      //  table.setPrefWidth(anchor.getMaxWidth() - 20);
         
         border.setCenter(anchor);
+    }
+    
+    private void createCompareStatisticsWindows(){
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+         xAxis.setLabel("Day Time");
+        final LineChart<String,Number> lineChart = 
+                new LineChart<String,Number>(xAxis,yAxis);
+       
+        lineChart.setTitle("Diagnostics comperator");
+        ObservableList<StatisticDataItemInterface> selected = table.getSelectionModel().getSelectedItems();
+        for(int i = 0 ; i < selected.size(); i++){
+            StatisticDataItemInterface selectedItem = selected.get(i);
+            String[][] selectedItemData = selected.get(i).getData();
+            XYChart.Series series = new XYChart.Series();
+            series.setName(selectedItem.getDate());
+            for(int j = 0 ; j < selectedItemData.length; j++){
+                 series.getData().add(new XYChart.Data(selectedItemData[j][0], Double.valueOf(selectedItemData[j][1])));          
+            }
+              lineChart.getData().add(series);
+        }
+        Stage s = new Stage();
+        Scene scene = new Scene(lineChart, 800, 600);
+        s.setScene(scene);
+        s.show();
+        
+        
     }
     
     
@@ -98,9 +149,93 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     
     private void createTable(){
         table = new TableView<>();
-        table.getColumns().addAll(new TableColumn<String,String>("Date"), new TableColumn<String,String>("Category"), new TableColumn<String, String>("Severity"));
-        
+        table.setPrefWidth(600);
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        TableColumn date = new TableColumn("Date");
+        TableColumn category = new TableColumn("Category");
+        TableColumn severity = new TableColumn("Severity");
+       
+        //table.getColumns().addAll(new TableColumn<String,String>("Date"), new TableColumn<String,String>("Category"), new TableColumn<String, String>("Severity"));
+       
+        date.setCellValueFactory(
+         new PropertyValueFactory<StatisticDataItemInterface,String>("date")
+        );
+        category.setCellValueFactory(
+            new PropertyValueFactory<StatisticDataItemInterface,String>("category")
+        );
+        severity.setCellValueFactory(
+            new PropertyValueFactory<StatisticDataItemInterface,String>("severity")
+        );
+        populateTableDemo();
+         table.getColumns().addAll(date, category, severity);
     }
     
+    private void populateTableDemo(){
+        DemoPopulateTable d = new DemoPopulateTable();
+        table.setItems(d.getNodes());
+    }
+    
+    
+    private class DemoPopulateTable{
+        private ObservableList<StatisticDataItemInterface> demoNodes;
+        private final int DATA_SIZE = 20;
+        
+        public DemoPopulateTable(){
+            demoNodes = FXCollections.observableArrayList();
+            StringBuilder date = new StringBuilder("1/1/2014");
+            for(int i = 1 ; i < 6; i++){
+                date.replace(0, 1, String.valueOf(i));
+                demoNodes.add((new StatisticDataItem(date.toString(), "Temperature", "Normal", generateRandomStatisticsData())));
+            }
+            
+        }
+        
+        public ObservableList<StatisticDataItemInterface> getNodes(){
+            return demoNodes;
+        }
+        
+        private Comparator<String> dateComperator =  new Comparator<String>() {
+
+                @Override
+                public int compare(String o1, String o2) {
+                    String[] split1 = o1.split(":");
+                    String[] split2 = o2.split(":");
+                    if (Integer.valueOf(split1[0]) > Integer.valueOf(split2[0])){
+                        return 1;
+                    }else if (Integer.valueOf(split1[0]) < Integer.valueOf(split2[0])){
+                        return -1;
+                    }else{
+                        return Integer.valueOf(split1[1]) > Integer.valueOf(split2[1]) ? 1 : -1; 
+                    }
+                 }
+            };
+        private String[][] generateRandomStatisticsData(){
+            String[][] data = new String[DATA_SIZE][2]; // x is the hour, y is the temp
+            Integer[] hourForSort = new Integer[DATA_SIZE];
+            String hour = null;
+            String fTemp = null;
+            StringBuilder hourBuilder = new StringBuilder();
+            StringBuilder dateBuilder = new StringBuilder();
+            for(int i = 0; i < data.length ; i++){
+               // hour = hourBuilder.append((int)(Math.random()*24)).append(":").append((int)(Math.random()*60)).toString();
+                hour = hourBuilder.append(i + DATA_SIZE).toString();
+                hourForSort[i] = Integer.valueOf(hour);
+                hourBuilder.setLength(0);
+            }
+            Arrays.sort(hourForSort);
+            for(int i = 0; i < hourForSort.length ; i++){
+                data[i][0] = String.valueOf(hourForSort[i]);
+                for(int j = 1 ; j < data[i].length ; j++){
+                    fTemp = dateBuilder.append(Math.random() * 300).toString();
+                    dateBuilder.setLength(0);
+                    data[i][j] = fTemp;
+                }
+               
+            }
+            
+            
+            return data;
+        }
+    }
     
 }
