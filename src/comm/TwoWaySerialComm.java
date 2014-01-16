@@ -106,7 +106,7 @@ public class TwoWaySerialComm
     {
         try
         {
-            (new TwoWaySerialComm()).connect("COM3");
+            (new TwoWaySerialComm()).connect("COM1");
         }
         catch ( Exception e )
         {
