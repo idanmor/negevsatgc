@@ -9,16 +9,23 @@ package Factories;
 import StatisticsItems.StatisticsComboFiltersStrat;
 import StatisticsItems.StatisticsTemperatureFilter;
 import com.sai.javafx.calendar.FXCalendar;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -30,6 +37,8 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -70,7 +79,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
 
             @Override
             public void handle(ActionEvent t) {
-                filter(filterCombo.getSelectionModel().getSelectedItem().toString(), before.getTextField().getText(), after.getTextField().getText());
+                StatisticsComboFiltersStrat item = filterCombo.getSelectionModel().getSelectedItem();
+                filter(item == null ? null : item.toString(), before.getTextField().getText(), after.getTextField().getText());
             }
         });
         Button compare = new Button("Compare");
@@ -90,7 +100,9 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
                 createCompareStatisticsWindowsYY();
             }
         });
+        smartCompare.setDisable(true);
         filterBox.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filterButton,smartCompare);
+      
         anchor.getChildren().addAll(filterBox,table,compare);
         table.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -104,6 +116,56 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             }
         });
         border.setCenter(anchor);
+    }
+    public void writeExcel() throws Exception {
+        Writer writer = null;
+        try {
+            File file = new File("C:\\Person.csv.");
+            writer = new BufferedWriter(new FileWriter(file));
+            for (StatisticDataItemInterface data : table.getItems()) {
+                String text = data.getDate() + "," + data.getCategory()  + "," + data.getSeverity() + "\n";
+             writer.write(text);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+           
+            writer.flush();
+             writer.close();
+        } 
+    }
+    
+    public void writeExcelOneGraph(LineChart chart) throws Exception {
+        Writer writer = null;
+        try {
+            File file = new File("Person.csv.");
+            StringBuilder text = new StringBuilder();
+             writer = new BufferedWriter(new FileWriter(file));
+            TableView.TableViewSelectionModel<StatisticDataItemInterface> selectionModel = table.getSelectionModel();
+            for(int i = 0 ; i < selectionModel.getSelectedItems().size() ; i++){
+              String[][] data = selectionModel.getSelectedItems().get(i).getData();
+                for(int j = 0 ; j < data.length; j++){
+                    //writer.write(data[j][0]);
+                    for(int k = 0 ; k < data[j].length ; k++){
+                        text.append(data[j][k]).append(",");
+                    }
+                    text.append("\n");
+                }
+              
+            }
+            for (StatisticDataItemInterface data : table.getItems()) {
+                //String text = data.getDate() + "," + data.getCategory()  + "," + data.getSeverity() + "\n";
+         //    writer.write(text.toString());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+           
+            writer.flush();
+             writer.close();
+        } 
     }
     
     private void createCompareStatisticsWindows(){
@@ -150,8 +212,24 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
 //            }
             
               lineChart.getData().add(getSeriesFromData(firstSelectedItem,secondSelectedItem));
-              //lineChart.getData().add(getSeriesFromData(secondSelectedItem));
-     //   }
+        try {
+            //lineChart.getData().add(getSeriesFromData(secondSelectedItem));
+            //   }
+            writeExcelOneGraph(lineChart);
+        } catch (Exception ex) {
+            Logger.getLogger(StatisticsScreeFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Image excellImage = new Image(getClass().getResourceAsStream("excel.jpg"));
+     
+        Button exportToExcel = new Button("Export to excel",new ImageView(excellImage));
+        exportToExcel.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent t) {
+                
+            }
+        });
         Stage s = new Stage();
         Scene scene = new Scene(lineChart, 800, 600);
         s.setScene(scene);
@@ -172,13 +250,37 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     
     
     private void filter(String type ,String before, String after){
-        if(type == null || type.isEmpty()){
-            return;
-        }
-         table.setItems(table.getItems().filtered(row -> row.equals(type)));
-         GregorianCalendar beforeCal = createCalendar(before);
-         GregorianCalendar afterCal = createCalendar(after);
-         List items = table.getItems();
+        GregorianCalendar beforeCal = null;
+         GregorianCalendar afterCal = null;
+        // table.setItems(table.getItems().filtered(row -> row.equals(type)));
+         if(before != null && !before.isEmpty()){
+            beforeCal = createCalendar(before);
+          
+         }
+         if(after != null && !after.isEmpty()){
+            afterCal = createCalendar(after);
+          
+         }
+           
+         ObservableList<StatisticDataItemInterface> filteredItems = FXCollections.observableArrayList();
+         List<StatisticDataItemInterface> items = table.getItems();
+         for(StatisticDataItemInterface item: items){
+            boolean valid = true;
+            if(type != null && !type.isEmpty() && !type.equals(item.getCategory())){
+                valid = false;
+            }else
+            if(beforeCal != null && beforeCal.compareTo(createCalendar(item.getDate())) < 0){
+                 valid = false;
+             }else if (afterCal != null && afterCal.compareTo(createCalendar(item.getDate())) > 0){
+                 valid = false;
+             }
+             if(valid){
+                 filteredItems.add(item);
+             }
+             
+             
+         }
+         table.setItems(filteredItems);
     }
     
     private GregorianCalendar createCalendar(String Date){
@@ -207,6 +309,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
         );
         populateTableDemo();
          table.getColumns().addAll(date, category, severity);
+        
     }
     
     private void populateTableDemo(){
