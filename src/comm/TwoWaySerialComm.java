@@ -92,7 +92,7 @@ public class TwoWaySerialComm
                 while ( ( c = System.in.read()) > -1 )
                 {
                     this.out.write(c);
-                    System.out.println(c);
+                    //System.out.println(c);
                 }                
             }
             catch ( IOException e )
@@ -110,7 +110,6 @@ public class TwoWaySerialComm
         }
         catch ( Exception e )
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
