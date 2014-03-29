@@ -8,12 +8,10 @@ package Factories;
 
 import StatisticsItems.StatisticsComboFiltersStrat;
 import StatisticsItems.StatisticsTemperatureFilter;
-import com.sai.javafx.calendar.FXCalendar;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
@@ -25,13 +23,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -71,16 +69,16 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
         ComboBox<StatisticsComboFiltersStrat> filterCombo = new ComboBox<>();
         filterCombo.getItems().addAll(new StatisticsTemperatureFilter());
         Label beforeDate = new Label("Before: ");
-        FXCalendar before = new FXCalendar();   
+        DatePicker before = new DatePicker();   
         Label afterDate = new Label("After :");
-        FXCalendar after = new FXCalendar();   
+        DatePicker after = new DatePicker();   
         Button filterButton = new Button("Filter");
         filterButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent t) {
                 StatisticsComboFiltersStrat item = filterCombo.getSelectionModel().getSelectedItem();
-                filter(item == null ? null : item.toString(), before.getTextField().getText(), after.getTextField().getText());
+                filter(item == null ? null : item.toString(), before.getEditor().getText(), after.getEditor().getText());
             }
         });
         Button compare = new Button("Compare");

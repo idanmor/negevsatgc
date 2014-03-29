@@ -8,6 +8,7 @@ package MenuItems;
 
 
 import Factories.CommandScreen;
+import MissionFrames.MissionSplitFrameIMPL;
 import javafx.scene.layout.BorderPane;
 
 
@@ -24,8 +25,10 @@ public class MenuItemCommand extends MenuItemStrategy {
 
     @Override
     public void applyActionOnGrid(BorderPane mainPane) {
-        CommandScreen factory = new CommandScreen();
-        factory.createScreenPane(mainPane);
+      //  CommandScreen factory = new CommandScreen();
+     //   factory.createScreenPane(mainPane);
+        MissionSplitFrameIMPL m = new MissionSplitFrameIMPL(mainPane);
+        
     }
     
 }

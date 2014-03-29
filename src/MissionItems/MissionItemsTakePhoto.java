@@ -94,7 +94,7 @@ public class MissionItemsTakePhoto extends MissionItemStrat
     }
     
     
-    private class DeleteButton extends Button{
+    public class DeleteButton extends Button{
         private int tableIndex;
         
         

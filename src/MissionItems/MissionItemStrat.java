@@ -6,7 +6,6 @@
 
 package MissionItems;
 
-import com.sai.javafx.calendar.FXCalendar;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
@@ -51,7 +51,7 @@ public abstract class MissionItemStrat {
        rightPane.add(sumSchedule, 2, 30);
        rightPane.add(scheduledDate,3,30);
         //left       
-        FXCalendar calendar = new FXCalendar();
+        DatePicker calendar = new DatePicker();
         CheckBox schedule = new CheckBox("Add to Schedule");
         calendar.setVisible(false);
         schedule.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -62,7 +62,7 @@ public abstract class MissionItemStrat {
                 calendar.setVisible(newVal);
                 if(!newVal){
                     scheduledDate.setText("Undefined");
-                    calendar.getTextField().clear();
+                    calendar.getEditor().clear();
                 }
                  sumSchedule.setText("Scheduled: " + newVal);
                    
@@ -70,11 +70,11 @@ public abstract class MissionItemStrat {
             
         });
       
-        calendar.getTextField().textProperty().addListener(new ChangeListener<String>() {
+        calendar.getEditor().textProperty().addListener(new ChangeListener<String>() {
 
            @Override
            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                scheduledDate.setText(calendar.getTextField().getText());
+                scheduledDate.setText(calendar.getEditor().getText());
            }
        }
         );
