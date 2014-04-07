@@ -99,7 +99,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             }
         });
         smartCompare.setDisable(true);
-        filterBox.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filterButton,smartCompare);
+        filterBox.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filterButton/*,smartCompare*/);
       
         anchor.getChildren().addAll(filterBox,table,compare);
         table.setOnMouseClicked(new EventHandler<MouseEvent>() {

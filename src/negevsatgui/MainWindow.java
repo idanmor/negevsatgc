@@ -7,11 +7,11 @@
 package negevsatgui;
 
 import MenuItems.MainMenu;
-import java.util.Random;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -50,6 +50,11 @@ public class MainWindow{
         smartSentance.setStyle("-fx-font-size:20;");
         Label satteliteStatus = new Label(getSatteliteStatus());
         satteliteStatus.setStyle("-fx-font-size:20;");
+//        BorderPane logsTemp = new BorderPane();
+//        TextField logs = new TextField("Mission logs");
+//        logsTemp.setTop(logs);
+//        logsTemp.setCenter(new TextArea());
+//        mainPane.setCenter(logsTemp);
         mainPane.setCenter(smartSentance);
         mainPane.setBottom(satteliteStatus);
         Scene scene = new Scene(root, width, height);      

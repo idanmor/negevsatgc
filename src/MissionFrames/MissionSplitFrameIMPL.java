@@ -6,6 +6,7 @@
 
 package MissionFrames;
 
+import MenuItems.MissionComboBoxWrapper;
 import MenuItems.MissionDatePickerWrapper;
 import MenuItems.MissionItemWrapper;
 import MenuItems.MissionTableWrapper;
@@ -54,10 +55,12 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
     
     private final int MISSION_DESC = 0;
     private final int MISSION_DATE = 1;
-    private final int MISSION_DURATION = 2;
-    private final int MISSION_LOCATION_TABLE = 3;
-    
-    private final int MISSION_MAX_NUM_ITEMS = 4;
+    private final int MISSION_DATE_END = 2;
+    private final int MISSION_DURATION = 3;
+
+    private final int COMPONENT_ON_OFF_LOCATION = 4;
+        private final int MISSION_LOCATION_TABLE = 5;
+    private final int MISSION_MAX_NUM_ITEMS = 6;
     public MissionSplitFrameIMPL(BorderPane pane){
         mainSplitPane = new SplitPane();
         mainPane = new BorderPane();
@@ -177,7 +180,9 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
              dateAndLocation.getChildren().addAll(getDateAndLocationItems());
              TreeItem missionGeneral =  new TreeItem(new MissionTreeItem("General mission items"));
              missionGeneral.getChildren().addAll(getGeneralMissionDescription());
-             root.getChildren().addAll(dateAndLocation, missionGeneral);
+             TreeItem missionComponentsAction = new TreeItem(new MissionTreeItem("Components Actions"));
+             missionComponentsAction.getChildren().addAll(getSatteliteComponentCommands());
+             root.getChildren().addAll(dateAndLocation, missionGeneral, missionComponentsAction);
              
         }
     }
@@ -190,7 +195,8 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
          MissionDatePickerWrapper picker = new MissionDatePickerWrapper(LocalDate.now());
          picker.setEditable(false);
          list.add(new TreeItem (new MissionTreeItem(picker, "Mission Date", new Label("Date:"), MISSION_DATE)));
-         list.add(new TreeItem(new MissionTreeItem(new MissionTextWrapper("Type duration here"), "Duration", new Label("Mission Duration:"), MISSION_DURATION)));
+         list.add(new TreeItem(new MissionTreeItem(new MissionDatePickerWrapper(LocalDate.now()), "Mission end time", new Label("End mission:"), MISSION_DATE_END)));
+         list.add(new TreeItem(new MissionTreeItem(new MissionTextWrapper("Type duration here"), "Duration", new Label("Mission Duration(hours):"), MISSION_DURATION)));
          list.add(new TreeItem (getWebMapMissionItem()));
          return list;
    }
@@ -203,10 +209,21 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
          MissionTextWrapper nonEditableField = new MissionTextWrapper("Take photo");
          nonEditableField.setEditable(false);
          list.add(new TreeItem (new MissionTreeItem(nonEditableField, "Take photo mission", new Label("Mission description:"),MISSION_DESC)));
+         list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
          list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
          return list;
     }
     
+      protected ObservableList<TreeItem> getSatteliteComponentCommands(){
+          ObservableList<TreeItem> list = FXCollections.observableArrayList();
+         ObservableList<Object> mode = FXCollections.observableArrayList("Online","Offline");
+          list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(mode), "Change Component Status", new Label("Mode:"),COMPONENT_ON_OFF_LOCATION)));      
+          return list;
+      } 
+      private ObservableList<Object> getListOfSatteliteComponents(){
+          return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera");
+          
+      }
     private MissionTreeItem getWebMapMissionItem(){
         MissionTreeItem item = new MissionTreeItem(generateLocationTable(), "SelectLocation", null, MISSION_LOCATION_TABLE){
            public void doAdditionalActionsOnSelection(){
