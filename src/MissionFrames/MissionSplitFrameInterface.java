@@ -4,16 +4,14 @@
  * and open the template in the editor.
  */
 
-package Factories;
-
-import javafx.scene.layout.BorderPane;
+package MissionFrames;
 
 /**
  *
  * @author Max
  */
-public interface InternalScreenFactory {
-    
-    public void createScreenPane(BorderPane gridPane);
+public interface MissionSplitFrameInterface{ 
+    public void populateLeftList();
+    public String buildMissionSummary();
     
 }

@@ -20,4 +20,5 @@ public interface MenuFactory{
     public Menu createExpandMenu(String name, Collection <MenuItemStrategy> menuItems);
     public Menu createViewMenu();
     public Menu createFileMenu();
+	public Menu createToolsMenu();
 }

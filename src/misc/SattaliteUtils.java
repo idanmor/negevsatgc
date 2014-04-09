@@ -28,6 +28,4 @@ public class SattaliteUtils {
         box.setSpacing(10);
         return box;
     }
-    
-    
 }

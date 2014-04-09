@@ -3,6 +3,8 @@ package webmap;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
+import Utils.Constants;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -172,7 +174,7 @@ public class WebMap{
         stage.setTitle("Web Map");
         Scene scene = new Scene(root,1000,700, Color.web("#666970"));
         stage.setScene(scene);
-        scene.getStylesheets().add("/webmap/WebMap.css");
+        scene.getStylesheets().add(Constants.CSS_WEB_MAP);
         // show stage
         stage.show();
     }

@@ -7,6 +7,7 @@
 package negevsatgui;
 
 import MenuItems.MainMenu;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,8 +15,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import Utils.Constants;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,6 +28,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -67,6 +72,11 @@ public class MainWindow{
         smartSentance.setStyle("-fx-font-size:20;");
         Label satteliteStatus = new Label(getSatteliteStatus());
         satteliteStatus.setStyle("-fx-font-size:20;");
+//        BorderPane logsTemp = new BorderPane();
+//        TextField logs = new TextField("Mission logs");
+//        logsTemp.setTop(logs);
+//        logsTemp.setCenter(new TextArea());
+//        mainPane.setCenter(logsTemp);
         mainPane.setCenter(smartSentance);
         mainPane.setBottom(satteliteStatus);
         Scene scene = new Scene(root, width, height);      
@@ -74,7 +84,7 @@ public class MainWindow{
      
         primaryStage.setScene(scene);
         scene.getStylesheets().add
-        (NegevSatGui.class.getResource("mainCss.css").toExternalForm());
+        (NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ex) {
@@ -91,6 +101,7 @@ public class MainWindow{
         String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
         return generatedStatus[(int)(Math.random()*generatedStatus.length)];
     }
+    
     
     TextArea demoListView;
     public void showMainScreen(BorderPane mainPane){
@@ -171,7 +182,5 @@ public class MainWindow{
         return iv;
           
     }
-    
-    
     
 }

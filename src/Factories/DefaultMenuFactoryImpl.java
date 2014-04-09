@@ -56,6 +56,12 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
      menuFile.getItems().add(new MenuItemExit());
      return menuFile;
     }
+
+	@Override
+	public Menu createToolsMenu() {
+		Menu tools = this.createMenu("Tools");
+		return tools;
+	}
     
     
     
