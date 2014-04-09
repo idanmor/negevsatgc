@@ -8,6 +8,8 @@ package Factories;
 
 import StatisticsItems.StatisticsComboFiltersStrat;
 import StatisticsItems.StatisticsTemperatureFilter;
+import Utils.Constants;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -18,13 +20,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -60,9 +63,6 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     
     private void initialize(BorderPane border){
         createTable();
-        double leftGap = 60;
-        double topGap = 10;
-        int mult = 1;
         VBox anchor = SattaliteUtils.getVbox();
         HBox filterBox = SattaliteUtils.getHBox();
         Label filterBy = new Label("Filter");
@@ -99,7 +99,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             }
         });
         smartCompare.setDisable(true);
-        filterBox.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filterButton/*,smartCompare*/);
+        filterBox.getChildren().addAll(filterBy,filterCombo,beforeDate,before,afterDate,after,filterButton);
       
         anchor.getChildren().addAll(filterBox,table,compare);
         table.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -134,7 +134,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
         } 
     }
     
-    public void writeExcelOneGraph(LineChart chart) throws Exception {
+    public void writeExcelOneGraph(BarChart chart) throws Exception {
         Writer writer = null;
         try {
             File file = new File("Person.csv.");
@@ -170,8 +170,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
          xAxis.setLabel("Day Time");
-        final LineChart<String,Number> lineChart = 
-                new LineChart<String,Number>(xAxis,yAxis);
+        final BarChart<String,Number> lineChart = 
+                new BarChart<String,Number>(xAxis,yAxis);
         lineChart.setTitle("Diagnostics comperator");
         ObservableList<StatisticDataItemInterface> selected = table.getSelectionModel().getSelectedItems();
         for(int i = 0 ; i < selected.size(); i++){
@@ -185,7 +185,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
               lineChart.getData().add(series);
         }
         Stage s = new Stage();
-        Scene scene = new Scene(lineChart, 800, 600);
+        Scene scene = new Scene(lineChart, 1000, 600);
+        scene.getStylesheets().add(Constants.CSS_CHART);
         s.setScene(scene);
         s.show();
         
@@ -196,8 +197,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
          xAxis.setLabel("Day Time");
-        final LineChart<String,Number> lineChart = 
-                new LineChart<>(xAxis,yAxis);
+        final BarChart<String,Number> lineChart = 
+                new BarChart<>(xAxis,yAxis);
         lineChart.setTitle("Diagnostics comperator");
         ObservableList<StatisticDataItemInterface> selected = table.getSelectionModel().getSelectedItems();
      //   for(int i = 0 ; i < 2; i++){
@@ -229,7 +230,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             }
         });
         Stage s = new Stage();
-        Scene scene = new Scene(lineChart, 800, 600);
+        Scene scene = new Scene(lineChart, 800, 800);
+        scene.getStylesheets().add(Constants.CSS_CHART);
         s.setScene(scene);
         s.show();
         

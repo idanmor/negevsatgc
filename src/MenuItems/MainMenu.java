@@ -26,7 +26,8 @@ public class MainMenu extends MenuBar  {
     private void init(){
         MenuFactory factory = new DefaultMenuFactoryImpl();
         Menu menuFile = factory.createFileMenu();
-        Menu menuView = factory.createViewMenu();            
+        Menu menuView = factory.createViewMenu();
+        Menu menuTools = factory.createToolsMenu();
         this.getMenus().addAll(menuFile,menuView);
     }
     

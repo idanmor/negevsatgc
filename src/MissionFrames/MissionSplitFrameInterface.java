@@ -13,4 +13,5 @@ package MissionFrames;
 public interface MissionSplitFrameInterface{ 
     public void populateLeftList();
     public String buildMissionSummary();
+    
 }

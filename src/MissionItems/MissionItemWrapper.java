@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package MenuItems;
+package MissionItems;
 
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
  * @author Max
  */
 public interface MissionItemWrapper {
+	
     public String getMissionValue();
 
     /**

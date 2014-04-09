@@ -1,27 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package MenuItems;
+package MissionItems;
 
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 
-/**
- *
- * @author Max
- */
-public class MissionTextWrapper extends TextField implements MissionItemWrapper{
+public class TimeTextFieldWrapper extends TimeTextField implements MissionItemWrapper {
 
-    @Override
+	@Override
     public String getMissionValue() {
         return this.getText();
     }
     
-    public MissionTextWrapper(String text){
+    public TimeTextFieldWrapper(String text){
         super(text);
     }
 
@@ -38,4 +27,7 @@ public class MissionTextWrapper extends TextField implements MissionItemWrapper{
         return prefix.toString().trim() + " " + getMissionValue();
     }
     
+    public TimeTextFieldWrapper clone(){
+    	return new TimeTextFieldWrapper(this.getText());
+    }
 }

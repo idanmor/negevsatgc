@@ -4,39 +4,38 @@
  * and open the template in the editor.
  */
 
-package MenuItems;
+package MissionItems;
 
-import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 /**
  *
  * @author Max
  */
-public class MissionComboBoxWrapper extends ComboBox<Object>implements MissionItemWrapper{
+public class MissionTextWrapper extends TextField implements MissionItemWrapper{
 
-    
-    
-    public MissionComboBoxWrapper(ObservableList<Object> lst){
-        super(lst);
-    }
     @Override
     public String getMissionValue() {
-        return this.getSelectionModel().getSelectedItem().toString();
+        return this.getText();
+    }
+    
+    public MissionTextWrapper(String text){
+        super(text);
     }
 
     @Override
     public Parent getWrappedItem() {
         return this;
     }
-    
-      @Override
+
+    @Override
     public String getValueStringWithPreIfNeeded(Label prefix) {
         if(prefix == null){
             return getMissionValue();
         }
         return prefix.toString().trim() + " " + getMissionValue();
     }
+    
 }

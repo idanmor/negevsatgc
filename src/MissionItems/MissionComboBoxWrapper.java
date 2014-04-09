@@ -4,34 +4,34 @@
  * and open the template in the editor.
  */
 
-package MenuItems;
+package MissionItems;
 
-import java.time.LocalDate;
+import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-
-
 
 /**
  *
  * @author Max
  */
-public class MissionDatePickerWrapper extends DatePicker implements MissionItemWrapper {
+public class MissionComboBoxWrapper extends ComboBox<Object>implements MissionItemWrapper{
 
     
-    public MissionDatePickerWrapper(LocalDate ld){
-        super(ld);
+    
+    public MissionComboBoxWrapper(ObservableList<Object> lst){
+        super(lst);
     }
     @Override
     public String getMissionValue() {
-        return this.getEditor().getText();
+        return this.getSelectionModel().getSelectedItem().toString();
     }
 
     @Override
     public Parent getWrappedItem() {
         return this;
     }
+    
       @Override
     public String getValueStringWithPreIfNeeded(Label prefix) {
         if(prefix == null){
@@ -39,5 +39,4 @@ public class MissionDatePickerWrapper extends DatePicker implements MissionItemW
         }
         return prefix.toString().trim() + " " + getMissionValue();
     }
-    
 }

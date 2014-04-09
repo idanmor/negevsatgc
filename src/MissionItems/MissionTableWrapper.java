@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package MenuItems;
+package MissionItems;
 
 import com.sun.org.apache.bcel.internal.generic.TABLESWITCH;
 import java.util.Set;

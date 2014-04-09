@@ -18,7 +18,7 @@ public class FactoryManager {
       
     public FactoryManager(){
         menuFactory =  new DefaultMenuFactoryImpl();
-        commandScreenFactory  = new CommandScreen();
+      //  commandScreenFactory  = new CommandScreen();
         
        
     }

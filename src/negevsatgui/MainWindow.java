@@ -7,6 +7,7 @@
 package negevsatgui;
 
 import MenuItems.MainMenu;
+import Utils.Constants;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -62,7 +63,7 @@ public class MainWindow{
      
         primaryStage.setScene(scene);
         scene.getStylesheets().add
-        (NegevSatGui.class.getResource("mainCss.css").toExternalForm());
+        (NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
       //  primaryStage.setFullScreen(true);
        // primaryStage.show();
     }
