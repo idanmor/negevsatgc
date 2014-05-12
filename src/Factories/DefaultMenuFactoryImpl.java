@@ -8,12 +8,15 @@ package Factories;
 
 import MenuItems.MenuItemCommand;
 import MenuItems.MenuItemExit;
+import MenuItems.MenuItemSatteliteStatus;
 import MenuItems.MenuItemSchedule;
 import MenuItems.MenuItemStatistics;
 import MenuItems.MenuItemStrategy;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
@@ -31,7 +34,6 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
     @Override
     public Menu createExpandMenu(String name, Collection<MenuItemStrategy> menuItems) {
         Menu menuEffect = new Menu(name);
-       // final ToggleGroup groupEffect = new ToggleGroup();
         for (MenuItem childMenu : menuItems) {
             menuEffect.getItems().add(childMenu);
             }
@@ -42,9 +44,10 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
     public Menu createViewMenu() {
          // --- Menu View
         Menu menuView = new Menu("View");
-        List<MenuItemStrategy> listOfMenuItems = new ArrayList();
+        List<MenuItemStrategy> listOfMenuItems = new ArrayList<>();
         listOfMenuItems.add(new MenuItemCommand());
         listOfMenuItems.add(new MenuItemStatistics());
+        listOfMenuItems.add(new MenuItemSatteliteStatus());
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
         menuView.getItems().addAll(menuSceens, new MenuItemSchedule());
         return menuView;
