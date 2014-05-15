@@ -14,7 +14,7 @@ public class Utils {
 	
 	
 	
-	private static class TextAndPicture extends Label{
+	public static class TextAndPicture extends Label{
 		private String text = null;
 		private Image picture = null;
 		public TextAndPicture(String text, Image picture){
