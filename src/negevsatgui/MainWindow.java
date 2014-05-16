@@ -72,16 +72,9 @@ public class MainWindow{
         smartSentance.setStyle("-fx-font-size:20;");
         Label satteliteStatus = new Label(getSatteliteStatus());
         satteliteStatus.setStyle("-fx-font-size:20;");
-//        BorderPane logsTemp = new BorderPane();
-//        TextField logs = new TextField("Mission logs");
-//        logsTemp.setTop(logs);
-//        logsTemp.setCenter(new TextArea());
-//        mainPane.setCenter(logsTemp);
         mainPane.setCenter(smartSentance);
         mainPane.setBottom(satteliteStatus);
-        Scene scene = new Scene(root, width, height);      
-       // ((BorderPane) scene.getRoot()).getChildren().addAll(new MainMenu(), mainPane);
-     
+        Scene scene = new Scene(root, width, height);         
         primaryStage.setScene(scene);
         scene.getStylesheets().add
         (NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
@@ -110,7 +103,7 @@ public class MainWindow{
         HBox secondLine = new HBox();
         VBox logBox = new VBox();
         VBox buttonBox = SattaliteUtils.getVbox();
-     //   firtsLine.getChildren().add(getImageViewFromLocation("map.png"));
+
         firtsLine.getChildren().addAll(getImageViewFromLocation("map.png",firtsLine),getImageViewFromLocation("sattelite.png",firtsLine));
        
          demoListView = new TextArea();
@@ -141,7 +134,7 @@ public class MainWindow{
        final String[] logOutPut = {"Moving to power save mode... ", "Moving to maintenece mode...",
            "Restart command initiated..", "Sending telemetry file...", "Sending scheduled commands", "Running system analasys"};
        String[] buttonNames = {"Power Save", "Maitenance Mode",
-           "Restart systmes", "Send Telemetry", "Send shceduled command", "Analyze systems"};
+           "Restart systems", "Send Telemetry", "Send shceduled command", "Analyze systems"};
        HBox one = SattaliteUtils.getHBox();
        HBox two =  SattaliteUtils.getHBox();
        int numOfButton = logOutPut.length;
