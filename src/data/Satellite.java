@@ -12,4 +12,5 @@ public class Satellite {
 	private Temperature temperature;
 	private ThermalControl thermalControl;
 	private SolarPanels solarPanels;
+	//TODO:
 }
