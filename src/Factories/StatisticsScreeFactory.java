@@ -63,8 +63,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     
     private void initialize(BorderPane border){
         createTable();
-        VBox anchor = SattaliteUtils.getVbox();
-        HBox filterBox = SattaliteUtils.getHBox();
+        VBox anchor = SattaliteUtils.getVbox(10);
+        HBox filterBox = SattaliteUtils.getHBox(10);
         Label filterBy = new Label("Filter");
         ComboBox<StatisticsComboFiltersStrat> filterCombo = new ComboBox<>();
         filterCombo.getItems().addAll(new StatisticsTemperatureFilter());

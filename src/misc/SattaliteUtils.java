@@ -16,16 +16,17 @@ import javafx.scene.layout.VBox;
  */
 public class SattaliteUtils {
     
-    public  static VBox getVbox(){
+    public  static VBox getVbox(int spacing){
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(15, 12, 15, 12));
+        vbox.setSpacing(spacing);
         return vbox;
     }
     
-    public static HBox getHBox(){
+    public static HBox getHBox(int spacing){
         HBox box = new HBox();
         box.setPadding(new Insets(15, 12, 15, 12));
-        box.setSpacing(10);
+        box.setSpacing(spacing);
         return box;
     }
 }
