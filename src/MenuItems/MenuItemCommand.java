@@ -19,7 +19,7 @@ public class MenuItemCommand extends MenuItemStrategy {
   
 
     public MenuItemCommand() {
-        super("Command");
+        super("Mission Command");
     }
 
     @Override

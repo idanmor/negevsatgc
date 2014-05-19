@@ -55,7 +55,7 @@ import misc.StatisticDataItemInterface;
  */
 public class StatisticsScreeFactory implements InternalScreenFactory{
     TableView<StatisticDataItemInterface> table;
-    
+    ObservableList<StatisticDataItemInterface> backUpListItems = null;
     @Override
     public void createScreenPane(BorderPane gridPane) {
         initialize(gridPane);
@@ -263,7 +263,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
          }
            
          ObservableList<StatisticDataItemInterface> filteredItems = FXCollections.observableArrayList();
-         List<StatisticDataItemInterface> items = table.getItems();
+         List<StatisticDataItemInterface> items = backUpListItems;
          for(StatisticDataItemInterface item: items){
             boolean valid = true;
             if(type != null && !type.isEmpty() && !type.equals(item.getCategory())){
@@ -308,6 +308,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             new PropertyValueFactory<StatisticDataItemInterface,String>("severity")
         );
         populateTableDemo();
+        backUpListItems = table.getItems();
          table.getColumns().addAll(date, category, severity);
         
     }
