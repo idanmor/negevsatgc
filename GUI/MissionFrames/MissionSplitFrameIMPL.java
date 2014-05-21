@@ -146,6 +146,11 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 				@Override
 				public void handle(MouseEvent mouseEvent)
 				{            
+					TreeItem<MissionTreeItem> selectedItem = leftTree.getSelectionModel().getSelectedItem();
+					if(selectedItem == null){
+						mouseEvent.consume();
+						return;
+					}
 					if(mouseEvent.getClickCount() == 2)
 					{
 						MissionTreeItem item =  (MissionTreeItem) leftTree.getSelectionModel().getSelectedItem().getValue();
@@ -337,6 +342,7 @@ private class MissionTreeItem /*extends TreeItem<MissionTreeItem>*/{
 		return explainLabel;
 	}
 
+	@SuppressWarnings("unused")
 	public void doAdditionalActionsOnSelection(){
 		//if any additional actions needed override this function
 	}

@@ -19,6 +19,10 @@ public interface Constants {
 	public static final String ICON_RED = CSS_PACKAGE_LOCATION + "red.jpg";
 	public static final String ICON_YELLOW = CSS_PACKAGE_LOCATION + "yellow.jpg";
 	public static final String ICON_GREEN = CSS_PACKAGE_LOCATION + "green.png";
+	
+	//MainPane Images
+	public static final String MAIN_IMAGES_LOCATION = CSS_PACKAGE_LOCATION;
+	
 	//General
 	public static final int MAIN_PANE_WIDTH = MainWindow.getMainWindow().getMainPane().widthProperty().intValue();
 }

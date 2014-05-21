@@ -7,6 +7,8 @@
 package negevsatgui;
 
 import MenuItems.MainMenu;
+import Panels.MissionPanel;
+import Panels.SatteliteStatusPanel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -99,8 +101,7 @@ public class MainWindow{
 		HBox secondLine = new HBox();
 		VBox logBox = new VBox();
 		HBox buttonBox = SattaliteUtils.getHBox(10);
-
-		firtsLine.getChildren().addAll(getImageViewFromLocation("map.png",firtsLine),getImageViewFromLocation("sattelite.png",firtsLine));
+		firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane()));
 
 		demoListView = new TextArea();
 		demoListView.setEditable(false);
@@ -167,11 +168,7 @@ public class MainWindow{
 
 	}
 
-	private ImageView getImageViewFromLocation(String location, HBox father){
-		ImageView iv = new ImageView(new Image(getClass().getResourceAsStream(location)));
-		return iv;
-
-	}
+	
 
 	private HBox getImmidiateModeChangeBox(){
 		comboSattelites = new ComboBox<>();

@@ -3,6 +3,7 @@ package Utils;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
 public class Utils {
 
@@ -12,7 +13,12 @@ public class Utils {
 		return new TextAndPicture(text, picture);
 	}
 	
-	
+	public static Image getImageViewFromLocation(Class cs, String location){
+		return new Image(cs.getResourceAsStream(Constants.MAIN_IMAGES_LOCATION + location));
+		//ImageView iv = new ImageView(new Image(cs.getResourceAsStream(location)));
+		//return iv;
+
+	}
 	
 	public static class TextAndPicture extends Label{
 		private String text = null;
