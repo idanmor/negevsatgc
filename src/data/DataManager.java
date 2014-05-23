@@ -1,6 +1,12 @@
 package data;
 
+import java.sql.Timestamp;
+import java.util.List;
+
+import persistency.dbConnection;
+
 public class DataManager {
+	static dbConnection db;
 	public static final String tle = 
 					"ISS (ZARYA)\n"
 					+ "1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927\n"
@@ -11,7 +17,7 @@ public class DataManager {
 	private Satellite latestSatData;
 	
 	private DataManager() {
-		// TODO Initialize latestSatData with the latest data from the Satellite
+		db= dbConnection.getdbCon();
 	}
 	
 	public static DataManager getInstance() {
@@ -19,4 +25,5 @@ public class DataManager {
 			instance = new DataManager();
 		return instance;
 	}
+	
 }
