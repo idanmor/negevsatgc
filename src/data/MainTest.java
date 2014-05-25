@@ -16,10 +16,10 @@ public class MainTest {
 	   // dbConnection.insertTemprature(1, 2, 3, TS);
 	    dbConnection.insertSatellite(Status.ON, Status.ON,Status.ON, Status.ON, Status.ON, Status.ON, TS);
 	    Timestamp t=new Timestamp(date.getTime());
-	    List<? extends Component> tlst=dbConnection.getComponentData("Temprature",oldestTS,t);
+	    List<? extends Component> tlst=dbConnection.getTemprature(oldestTS,t);
 	    for (Component item: tlst)
 	    	System.out.println("select from temprature "+item.getSampleTimestamp());
-	    List<? extends Component> elst=dbConnection.getComponentData("Energy",oldestTS,t);
+	    List<? extends Component> elst=dbConnection.getEnergy(oldestTS,t);
 	    for (Component item: elst)
 	    	System.out.println("select from energy "+item.getSampleTimestamp());
 	    List<Satellite> stlst=dbConnection.getSatelliteData(oldestTS,t);
