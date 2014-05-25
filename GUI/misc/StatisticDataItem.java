@@ -11,14 +11,14 @@ package misc;
  * @author Max
  */
 public class StatisticDataItem implements StatisticDataItemInterface{
-    private String date,category,severity; 
+    private String date,component,severity; 
     private String[][] data;
 
     
     
-    public StatisticDataItem(String date, String category, String severity, String[][] data){
+    public StatisticDataItem(String date, String component, String severity, String[][] data){
         this.date = date;
-        this.category = category;
+        this.component = component;
         this.severity = severity;
         this.data = data;
     }
@@ -28,8 +28,8 @@ public class StatisticDataItem implements StatisticDataItemInterface{
     }
 
     @Override
-    public String getCategory() {
-       return category;
+    public String getComponent() {
+       return component;
     }
 
     @Override

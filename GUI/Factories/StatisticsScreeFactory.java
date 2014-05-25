@@ -266,7 +266,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
          List<StatisticDataItemInterface> items = backUpListItems;
          for(StatisticDataItemInterface item: items){
             boolean valid = true;
-            if(type != null && !type.isEmpty() && !type.equals(item.getCategory())){
+            if(type != null && !type.isEmpty() && !type.equals(item.getComponent())){
                 valid = false;
             }else
             if(beforeCal != null && beforeCal.compareTo(createCalendar(item.getDate())) < 0){

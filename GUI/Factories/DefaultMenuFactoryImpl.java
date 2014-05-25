@@ -12,6 +12,7 @@ import MenuItems.MenuItemSatteliteStatus;
 import MenuItems.MenuItemSchedule;
 import MenuItems.MenuItemStatistics;
 import MenuItems.MenuItemStrategy;
+import MenuItems.MenuItemTableTemperature;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +53,7 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         listOfMenuItems.add(new MenuItemSatteliteStatus());
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
         List<MenuItemStrategy> listOfTablesItems = new ArrayList<>();
-        //TODO
+        listOfTablesItems.add(new MenuItemTableTemperature());
         Menu tableScreens = this.createExpandMenu("View Tables", listOfTablesItems);
         menuView.getItems().addAll(menuSceens,tableScreens, new MenuItemSchedule());
         return menuView;

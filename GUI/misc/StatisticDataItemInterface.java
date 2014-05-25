@@ -12,7 +12,7 @@ package misc;
  */
 public interface StatisticDataItemInterface {
    public String getDate();
-   public String getCategory();
+   public String getComponent();
    public String getSeverity();
    public String[][] getData();
 }

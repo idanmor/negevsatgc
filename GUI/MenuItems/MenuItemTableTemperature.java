@@ -9,27 +9,35 @@ import java.util.Comparator;
 
 
 
+
+import Utils.Constants;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 public class MenuItemTableTemperature extends MenuItemStrategy {
 	 TableView<StatisticDataItemInterface> table;
 	public MenuItemTableTemperature() {
 		super("Components Temperature");
+		createTable();
 		
 	}
 
 	@Override
 	public void applyActionOnGrid(BorderPane mainPane) {
-		// TODO Auto-generated method stub
+		mainPane.setCenter(table);
 		
 	}
 	  public void writeExcel() throws Exception {
@@ -38,7 +46,7 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	            File file = new File("C:\\Person.csv.");
 	            writer = new BufferedWriter(new FileWriter(file));
 	            for (StatisticDataItemInterface data : table.getItems()) {
-	                String text = data.getDate() + "," + data.getCategory()  + "," + data.getSeverity() + "\n";
+	                String text = data.getDate() + "," + data.getComponent()  + "," + data.getSeverity() + "\n";
 	             writer.write(text);
 	            }
 	        } catch (Exception ex) {
@@ -90,7 +98,7 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	        table.setPrefWidth(600);
 	        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 	        TableColumn date = new TableColumn("Date Taken");
-	        TableColumn component = new TableColumn("component");
+	        TableColumn component = new TableColumn("Component");
 	        TableColumn severity = new TableColumn("Severity");
 	       
 	        //table.getColumns().addAll(new TableColumn<String,String>("Date"), new TableColumn<String,String>("Category"), new TableColumn<String, String>("Severity"));
@@ -114,20 +122,45 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	        table.setItems(d.getNodes());
 	    }
 	    
-	    
+	    private void createCompareStatisticsWindows(){
+	        final CategoryAxis xAxis = new CategoryAxis();
+	        final NumberAxis yAxis = new NumberAxis();
+	         xAxis.setLabel("Day Time");
+	        final BarChart<String,Number> lineChart = 
+	                new BarChart<String,Number>(xAxis,yAxis);
+	        lineChart.setTitle("Diagnostics comperator");
+	        ObservableList<StatisticDataItemInterface> selected = table.getSelectionModel().getSelectedItems();
+	        for(int i = 0 ; i < selected.size(); i++){
+	            StatisticDataItemInterface selectedItem = selected.get(i);
+	            String[][] selectedItemData = selected.get(i).getData();
+	            XYChart.Series series = new XYChart.Series();
+	            series.setName(selectedItem.getDate());
+	            for(int j = 0 ; j < selectedItemData.length; j++){
+	                 series.getData().add(new XYChart.Data(selectedItemData[j][0], Double.valueOf(selectedItemData[j][1])));          
+	            }
+	              lineChart.getData().add(series);
+	        }
+	        Stage s = new Stage();
+	        Scene scene = new Scene(lineChart, 1000, 600);
+	        scene.getStylesheets().add(Constants.CSS_CHART);
+	        s.setScene(scene);
+	        s.show();
+	        
+	        
+	    }
 	    private class DemoPopulateTable{
-	    	private String[] components = new String[]{"Computer","SBand","Battery"};
+	    	private String[] components = new String[]{"Sensor1","Sensor2","Sensor3"};
 	        private ObservableList<StatisticDataItemInterface> demoNodes;
 	        private final int DATA_SIZE = 20;
 	        
 	        public DemoPopulateTable(){
 	            demoNodes = FXCollections.observableArrayList();
 	            StringBuilder date = new StringBuilder("1/5/2014");
-	            for(int i = 1 ; i < 6; i++){
+	            for(int i = 1 ; i < 10; i++){
 	                date.replace(0, 1, String.valueOf(i));
-	                demoNodes.add((new StatisticDataItem(date.toString(), "Temperature", components[i % components.length], generateRandomStatisticsData())));
+	                demoNodes.add((new StatisticDataItem(date.toString(),components[i % components.length], "Temperature",  generateRandomStatisticsData())));
 	            }
-	            demoNodes.add((new StatisticDataItem(date.toString(), "Voltage", "Normal", generateRandomStatisticsData())));
+	           // demoNodes.add((new StatisticDataItem(date.toString(), "Voltage", "Normal", generateRandomStatisticsData())));
 	            
 	        }
 	        

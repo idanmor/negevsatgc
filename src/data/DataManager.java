@@ -6,7 +6,7 @@ import java.util.List;
 import persistency.dbConnection;
 
 public class DataManager {
-	static dbConnection db;
+	private static dbConnection db;
 	public static final String tle = 
 					"ISS (ZARYA)\n"
 					+ "1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927\n"
@@ -24,6 +24,9 @@ public class DataManager {
 		if (instance == null)
 			instance = new DataManager();
 		return instance;
+	}
+	public static List<? extends Component> getComponentData(String component, Timestamp date1, Timestamp date2){
+		return db.getComponentData(component, date1, date2);
 	}
 	
 	public static List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
