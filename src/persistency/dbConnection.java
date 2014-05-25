@@ -40,19 +40,23 @@ public class dbConnection {
         return dbcon;
     }
  
-    public static List<? extends Component> getComponentData(String component, Timestamp date1, Timestamp date2){
+    public static List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
         
-        List<? extends Component> data=null;
+        List<Temprature> data=null;
         try{
-            switch (component){
-                case "Energy":
-                  data = egDao.queryBuilder().where().between(Energy.DATE_FIELD_NAME, date1, date2).query();
-                  break;
-                case "Temprature":
-                   data = tmpDao.queryBuilder().where().between(Temprature.DATE_FIELD_NAME, date1, date2).query();
-                   break;
-     
-            }    
+            data = tmpDao.queryBuilder().where().between(Temprature.DATE_FIELD_NAME, date1, date2).query();
+        }
+        catch( Exception e ) {
+               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+               System.exit(0);
+        }
+        return data;
+    }
+    public static List<Energy> getEnergy(Timestamp date1, Timestamp date2){
+        
+        List<Energy> data=null;
+        try{
+           data = egDao.queryBuilder().where().between(Energy.DATE_FIELD_NAME, date1, date2).query();          
         }
         catch( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
