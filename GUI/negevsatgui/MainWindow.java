@@ -81,13 +81,16 @@ public class MainWindow{
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add
 		(NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException ex) {
-			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
+//		try {
+//			Thread.sleep(2000);
+//		} catch (InterruptedException ex) {
+//			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+//		}
+		mainPane.prefHeightProperty().bind(scene.heightProperty());
+		mainPane.prefWidthProperty().bind(scene.widthProperty());
 		showMainScreen(mainPane);
+		
+		
 	}
 
 	public BorderPane getMainPane(){

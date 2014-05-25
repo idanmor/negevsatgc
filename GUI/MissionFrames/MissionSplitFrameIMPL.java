@@ -61,7 +61,6 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	private final int MISSION_DESC = 0;
 	private final int MISSION_DATE = 1;
 	private final int MISSION_DATE_END = 2;
-	private final int MISSION_DURATION = 3;
 
 	private final int COMPONENT_ON_OFF_LOCATION = 4;
 	private final int MISSION_LOCATION_TABLE = 5;
@@ -134,6 +133,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		}
 		return cancelButton;
 	}
+	@SuppressWarnings({"unchecked","rawtypes"})
 	@Override
 	public void populateLeftList() {
 		if(leftTree == null){
@@ -187,9 +187,10 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 				}
 					});
 			TreeItem dateAndLocation = new TreeItem(new MissionTreeItem("Date and Location Items"));
-			dateAndLocation.getChildren().addAll(getDateAndLocationItems());
+			dateAndLocation.getChildren().addAll(getDateAndLocationItems());	
 			TreeItem missionGeneral =  new TreeItem(new MissionTreeItem("General mission items"));
 			missionGeneral.getChildren().addAll(getGeneralMissionDescription());
+			
 			TreeItem missionComponentsAction = new TreeItem(new MissionTreeItem("Components Actions"));
 			missionComponentsAction.getChildren().addAll(getSatteliteComponentCommands());
 			root.getChildren().addAll(dateAndLocation, missionGeneral, missionComponentsAction);
@@ -200,6 +201,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	 * The function returns a list of mission that is related to dates, locations, time ext...
 	 * @return list of mission items 
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ObservableList<TreeItem> getDateAndLocationItems(){
 		if(dateAndLocationlist == null){
 			dateAndLocationlist = FXCollections.observableArrayList();
@@ -221,6 +223,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
  * The function returns a list of missions that describe the mission for example: Take photo, measure temperature....
  * @return list of mission items 
  */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 protected ObservableList<TreeItem> getGeneralMissionDescription(){
 	ObservableList<TreeItem> list = FXCollections.observableArrayList();
 	MissionTextWrapper nonEditableField = new MissionTextWrapper("Take photo");
@@ -230,7 +233,7 @@ protected ObservableList<TreeItem> getGeneralMissionDescription(){
 	list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
 	return list;
 }
-
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 protected ObservableList<TreeItem> getSatteliteComponentCommands(){
 	ObservableList<TreeItem> list = FXCollections.observableArrayList();
 	ObservableList<Object> mode = FXCollections.observableArrayList("Online","Offline");
@@ -238,7 +241,7 @@ protected ObservableList<TreeItem> getSatteliteComponentCommands(){
 	return list;
 } 
 private ObservableList<Object> getListOfSatteliteComponents(){
-	return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera");
+	return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera","Solar Panel");
 
 }
 private MissionTreeItem getWebMapMissionItem(){
@@ -255,7 +258,7 @@ private MissionTreeItem getWebMapMissionItem(){
 public String buildMissionSummary() {
 	return "unsupported";
 }
-
+@SuppressWarnings({ "unchecked", "rawtypes" })
 private MissionTableWrapper generateLocationTable(){
 	MissionTableWrapper table = new MissionTableWrapper();
 

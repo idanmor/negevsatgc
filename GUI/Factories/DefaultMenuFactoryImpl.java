@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javafx.geometry.Orientation;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 
 /**
  *
@@ -49,7 +51,10 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         listOfMenuItems.add(new MenuItemStatistics());
         listOfMenuItems.add(new MenuItemSatteliteStatus());
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
-        menuView.getItems().addAll(menuSceens, new MenuItemSchedule());
+        List<MenuItemStrategy> listOfTablesItems = new ArrayList<>();
+        //TODO
+        Menu tableScreens = this.createExpandMenu("View Tables", listOfTablesItems);
+        menuView.getItems().addAll(menuSceens,tableScreens, new MenuItemSchedule());
         return menuView;
     }
 
@@ -66,6 +71,9 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
 		return tools;
 	}
     
+	public Separator getSeparator(){
+		return new Separator(Orientation.VERTICAL);
+	}
     
     
 }
