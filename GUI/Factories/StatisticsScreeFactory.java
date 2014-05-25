@@ -137,7 +137,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     public void writeExcelOneGraph(BarChart chart) throws Exception {
         Writer writer = null;
         try {
-            File file = new File("Person.csv.");
+            File file = new File("Person.csv");
             StringBuilder text = new StringBuilder();
              writer = new BufferedWriter(new FileWriter(file));
             TableView.TableViewSelectionModel<StatisticDataItemInterface> selectionModel = table.getSelectionModel();
