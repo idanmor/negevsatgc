@@ -21,7 +21,7 @@ public class dbConnection {
 
     private dbConnection(){
         try{
-            connectionSource =new JdbcConnectionSource("jdbc:sqlite:C:\\sqlite\\negevSatDB.db");
+            connectionSource =new JdbcConnectionSource("jdbc:sqlite:D:\\sqlite\\negevSatDB.db");
             egDao =DaoManager.createDao(connectionSource, Energy.class);
             tmpDao =DaoManager.createDao(connectionSource, Temprature.class);
             satDao =DaoManager.createDao(connectionSource, Satellite.class);
@@ -40,7 +40,7 @@ public class dbConnection {
         return dbcon;
     }
  
-    public static List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
+    public List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
         
         List<Temprature> data=null;
         try{
@@ -52,7 +52,7 @@ public class dbConnection {
         }
         return data;
     }
-    public static List<Energy> getEnergy(Timestamp date1, Timestamp date2){
+    public List<Energy> getEnergy(Timestamp date1, Timestamp date2){
         
         List<Energy> data=null;
         try{

@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.joda.time.Days;
+
 import data.DataManager;
 import data.Temprature;
 import StatisticsItems.StatisticsComboFiltersStrat;
@@ -253,7 +255,8 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	        severity.setCellValueFactory(
 	            new PropertyValueFactory<StatisticDataItemInterface,String>("type")
 	        );
-	        populateTableDemo();
+	        //populateTableDemo();
+	        populateTable();
 	        //backUpListItems = table.getItems();
 	        table.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -270,15 +273,30 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	         
 	        
 	    }
-//	    private void populateTable(){
-//	    	Timestamp oldestTS=new Timestamp(463777);
-//		    Timestamp TS=new Timestamp(463780);
-//	    	List<Temprature> temp = DataManager.getTemprature(oldestTS, TS);
-//	    	ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
-//	    	for(Temprature t : temp){
-//	    		nodes.add(new StatisticDataItem(t.getSampleTimestamp(), t.getsensor1, severity, data))
-//	    	}
-//	    }
+	    private void populateTable(){
+	    	final long monthInMS = 26280000;//need to mult by 100
+	    	final long dayinMS = 86400000;
+	    	Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
+		    Timestamp TS=new Timestamp(System.currentTimeMillis());
+		    ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
+		
+		    while(oldestTS.before(TS)){
+		    boolean hasData = false;
+		    	List<Temprature> temp = DataManager.getInstance().getTemprature(oldestTS, TS);
+		        String[][] data = new String[temp.size()][3];
+		    	for(int i = 0 ; i < temp.size() ; i++){
+		    		hasData = true;
+		    		Temprature t = temp.get(i);
+		    		data[i][0] = new Date(t.getSampleTimestamp().getTime()).toString();
+		    		data[i][1] = t.getSensor1() + ""; //for now only 1
+		    	}    
+		    	if(hasData){
+		    		nodes.add(new StatisticDataItem(new Date(oldestTS.getTime()).toString(), "Temperature", "Sensor 1", data)); //TODO
+		    	}
+		    	oldestTS.setTime(oldestTS.getTime() + dayinMS);
+		    }
+	    	table.getItems().addAll(nodes);
+	    }
 	    private void populateTableDemo(){
 	        DemoPopulateTable d = new DemoPopulateTable();
 	        table.setItems(d.getNodes());
