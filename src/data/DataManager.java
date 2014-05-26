@@ -25,9 +25,6 @@ public class DataManager {
 			instance = new DataManager();
 		return instance;
 	}
-	public static List<? extends Component> getComponentData(String component, Timestamp date1, Timestamp date2){
-		return db.getComponentData(component, date1, date2);
-	}
 	
 	public static List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
 		return dbConnection.getTemprature(date1, date2);

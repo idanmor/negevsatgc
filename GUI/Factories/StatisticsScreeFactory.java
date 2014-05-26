@@ -121,7 +121,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             File file = new File("C:\\Person.csv.");
             writer = new BufferedWriter(new FileWriter(file));
             for (StatisticDataItemInterface data : table.getItems()) {
-                String text = data.getDate() + "," + data.getCategory()  + "," + data.getSeverity() + "\n";
+                String text = data.getDate() + "," + data.getComponent()  + "," + data.getSeverity() + "\n";
              writer.write(text);
             }
         } catch (Exception ex) {
