@@ -167,7 +167,7 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	            File file = new File("C:\\Person.csv");
 	            writer = new BufferedWriter(new FileWriter(file));
 	            for (StatisticDataItemInterface data : table.getItems()) {
-	                String text = data.getDate() + "," + data.getComponent()  + "," + data.getSeverity() + "\n";
+	                String text = data.getDate() + "," + data.getComponent()  + "," + data.getType() + "\n";
 	             writer.write(text);
 	            }
 	        } catch (Exception ex) {
@@ -183,11 +183,12 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	    public void writeExcelOneGraph(LineChart<String, Number> chart) throws Exception {
 	        Writer writer = null;
 	        try {
-	            File file = new File("D:\\Person.csv");
+	            File file = new File("D:\\Temperature.csv");
 	            if(file.exists()){
 	            	file.delete();
 	            }
 	            file.createNewFile();
+	             
 	            StringBuilder text = new StringBuilder();
 	             writer = new BufferedWriter(new FileWriter(file));
 	            TableView.TableViewSelectionModel<StatisticDataItemInterface> selectionModel = table.getSelectionModel();
@@ -238,10 +239,11 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 	        TableColumn date = new TableColumn("Date Taken");
 	        TableColumn component = new TableColumn("Component");
-	        TableColumn severity = new TableColumn("Severity");
-	       
-	        //table.getColumns().addAll(new TableColumn<String,String>("Date"), new TableColumn<String,String>("Category"), new TableColumn<String, String>("Severity"));
-	       
+	        TableColumn severity = new TableColumn("Type");
+	        date.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+	        component.prefWidthProperty().bind(table.widthProperty().multiply(0.50));
+	        severity.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+	        
 	        date.setCellValueFactory(
 	         new PropertyValueFactory<StatisticDataItemInterface,String>("date")
 	        );
@@ -249,7 +251,7 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	            new PropertyValueFactory<StatisticDataItemInterface,String>("component")
 	        );
 	        severity.setCellValueFactory(
-	            new PropertyValueFactory<StatisticDataItemInterface,String>("severity")
+	            new PropertyValueFactory<StatisticDataItemInterface,String>("type")
 	        );
 	        populateTableDemo();
 	        //backUpListItems = table.getItems();

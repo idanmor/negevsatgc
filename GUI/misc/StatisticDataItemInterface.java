@@ -13,6 +13,6 @@ package misc;
 public interface StatisticDataItemInterface {
    public String getDate();
    public String getComponent();
-   public String getSeverity();
+   public String getType();
    public String[][] getData();
 }
