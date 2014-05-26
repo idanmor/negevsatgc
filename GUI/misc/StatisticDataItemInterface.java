@@ -15,4 +15,5 @@ public interface StatisticDataItemInterface {
    public String getComponent();
    public String getType();
    public String[][] getData();
+   public String getSimpleDate();
 }

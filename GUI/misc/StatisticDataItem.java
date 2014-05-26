@@ -13,7 +13,6 @@ package misc;
 public class StatisticDataItem implements StatisticDataItemInterface{
     private String date,component,type; 
     private String[][] data;
-
     
     
     public StatisticDataItem(String date, String component, String type, String[][] data){
@@ -40,5 +39,12 @@ public class StatisticDataItem implements StatisticDataItemInterface{
     @Override
     public String[][] getData() {
         return data;
+    }
+    
+    public String getSimpleDate(){
+    	if(date.contains(" ")){
+    		return date.substring(0, date.indexOf(" "));
+    	}
+    	return date;
     }
 }

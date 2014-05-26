@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -21,9 +22,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.Days;
 
+import sun.security.action.GetLongAction;
 import data.DataManager;
 import data.Temprature;
 import StatisticsItems.StatisticsComboFiltersStrat;
@@ -149,10 +152,10 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	         List<StatisticDataItemInterface> items = backUpListItems;
 	         for(StatisticDataItemInterface item: items){
 	            boolean valid = true;
-	           
-	            if(beforeCal != null && beforeCal.compareTo(Utils.createCalendar(item.getDate())) < 0){
+	            
+	            if(beforeCal != null && beforeCal.compareTo(Utils.createCalendar(item.getSimpleDate())) < 0){
 	                 valid = false;
-	             }else if (afterCal != null && afterCal.compareTo(Utils.createCalendar(item.getDate())) > 0){
+	             }else if (afterCal != null && afterCal.compareTo(Utils.createCalendar(item.getSimpleDate())) > 0){
 	                 valid = false;
 	             }
 	             if(valid){
@@ -242,8 +245,8 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	        TableColumn date = new TableColumn("Date Taken");
 	        TableColumn component = new TableColumn("Component");
 	        TableColumn severity = new TableColumn("Type");
-	        date.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-	        component.prefWidthProperty().bind(table.widthProperty().multiply(0.50));
+	        date.prefWidthProperty().bind(table.widthProperty().multiply(0.5));
+	        component.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 	        severity.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 	        
 	        date.setCellValueFactory(
@@ -279,19 +282,25 @@ public class MenuItemTableTemperature extends MenuItemStrategy {
 	    	Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 		    Timestamp TS=new Timestamp(System.currentTimeMillis());
 		    ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
-		
+		    oldestTS = Utils.stripTimePortion(oldestTS);
 		    while(oldestTS.before(TS)){
 		    boolean hasData = false;
-		    	List<Temprature> temp = DataManager.getInstance().getTemprature(oldestTS, TS);
+		    
+		    DateFormat formatter = DateFormat.getDateTimeInstance(
+                    DateFormat.SHORT, 
+                    DateFormat.SHORT,Locale.getDefault());
+		    Timestamp toDate = new Timestamp(oldestTS.getTime() + dayinMS);
+		    	List<Temprature> temp = DataManager.getInstance().getTemprature(oldestTS, toDate);
 		        String[][] data = new String[temp.size()][3];
 		    	for(int i = 0 ; i < temp.size() ; i++){
 		    		hasData = true;
 		    		Temprature t = temp.get(i);
-		    		data[i][0] = new Date(t.getSampleTimestamp().getTime()).toString();
+		    		data[i][0] = formatter.format(new Date(t.getSampleTimestamp().getTime())).toString();
 		    		data[i][1] = t.getSensor1() + ""; //for now only 1
+		    		data[i][2] = "Sensor 1";
 		    	}    
 		    	if(hasData){
-		    		nodes.add(new StatisticDataItem(new Date(oldestTS.getTime()).toString(), "Temperature", "Sensor 1", data)); //TODO
+		    		nodes.add(new StatisticDataItem(formatter.format(new Date(oldestTS.getTime())).toString(), "Temperature", "Sensor 1", data)); //TODO
 		    	}
 		    	oldestTS.setTime(oldestTS.getTime() + dayinMS);
 		    }
