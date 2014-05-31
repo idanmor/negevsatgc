@@ -2,7 +2,9 @@ package data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 @DatabaseTable(tableName="Satellite")
 public class Satellite {
@@ -26,17 +28,17 @@ public class Satellite {
     
     public Satellite(){}
     
-    public Satellite(Timestamp ts, Status s1, Status s2, Status s3, Status s4,Status s5, Status s6) {
+    public Satellite(Timestamp ts, Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal) {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.sampleTimestamp=ts;
         this.timeReceivedTimestamp=t;
-        this.TempStatus=s1;
-        this.EnergyStatus=s2;
-        this.SbandStatus=s3;
-        this.PayloadStatus=s4;
-        this.SolarPanelsStatus=s5;
-        this.ThermalStatus=s6;
+        this.TempStatus=temp;
+        this.EnergyStatus=energy;
+        this.SbandStatus=Sband;
+        this.PayloadStatus=Payload;
+        this.SolarPanelsStatus=SolarPanels;
+        this.ThermalStatus=Thermal;
 	}
 
 
@@ -64,5 +66,15 @@ public class Satellite {
     }
     public Status getThermalStatus(){
     	return this.ThermalStatus;
+    }
+    public ArrayList<Status> getAllStatus(){
+    	ArrayList<Status> statList= new ArrayList<Status>();
+    	statList.add(getTempStatus());
+    	statList.add(getEnergyStatus());
+    	statList.add(getSbandStatus());
+    	statList.add(getPayloadStatus());
+    	statList.add(getSolarPanelsStatus());
+    	statList.add(getThermalStatus());
+    	return statList;
     }
 }

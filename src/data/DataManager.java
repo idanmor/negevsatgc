@@ -26,11 +26,11 @@ public class DataManager {
 		return instance;
 	}
 	
-	public static List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
-		return dbConnection.getTemprature(date1, date2);
+	public static List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
+		return dbConnection.getTemprature(startDate, endDate);
 	}
 	
-	public static List<Energy> getEnergy(Timestamp date1, Timestamp date2){
-		return dbConnection.getEnergy(date1, date2);
+	public static List<Energy> getEnergy(Timestamp startDate, Timestamp endDate){
+		return dbConnection.getEnergy(startDate, endDate);
 	}
 }
