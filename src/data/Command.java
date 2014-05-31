@@ -1,6 +1,6 @@
 package data;
 
-public enum Commands {
+public enum Command {
 
 	MOVE_TO_SAFE(1),
 	MOVE_TO_STANDBY(2),
@@ -18,7 +18,7 @@ public enum Commands {
 	
 	private final int value;
 	
-	private Commands(final int newValue) {
+	private Command(final int newValue) {
 	        value = newValue;
 	}
 

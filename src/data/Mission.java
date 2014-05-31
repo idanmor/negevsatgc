@@ -13,13 +13,13 @@ public class Mission {
     @DatabaseField
     private Timestamp missionExecutionTS;
     @DatabaseField
-    private Commands command;
+    private Command command;
     @DatabaseField
     private int priority;
     
     public Mission(){}
     
-    public Mission(Timestamp _ts, Timestamp _missionExecutionTS, Commands _command, int _priority) {
+    public Mission(Timestamp _ts, Timestamp _missionExecutionTS, Command _command, int _priority) {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.creationTimestamp=t;
