@@ -14,6 +14,7 @@ public class MainTest {
 
 	public static void main(String[] args) {
 		DataManager dm=DataManager.getInstance();
+		dbConnection db=dbConnection.getdbCon();
 		java.util.Date date= new java.util.Date();
 		final long monthInMS = 26280000;//need to mult by 100
 		final long hourInMs = 3600000;
@@ -28,7 +29,7 @@ public class MainTest {
 	    	int randomModifier = (int) (Math.random() * 10);
 	    	int temp = startTemp + i * (randomModifier > 5 ? 1 : -1);
 	    	
-	    	dbConnection.insertTemprature(temp, temp,temp, oldestTS);
+	    	db.insertTemprature(temp, temp,temp, oldestTS);
 	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
 	    }
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
@@ -41,7 +42,7 @@ public class MainTest {
 	    List<? extends Component> elst=dm.getEnergy(oldestTS,t);
 	    for (Component item: elst)
 	    	System.out.println("select from energy "+item.getSampleTimestamp());
-	    List<Satellite> stlst=dbConnection.getSatelliteData(oldestTS,t);
+	    List<Satellite> stlst=db.getSatelliteData(oldestTS,t);
 	    for (Satellite item: stlst)
 	    	System.out.println("select from satellite "+item.getSampleTimestamp());
 	}

@@ -1,6 +1,7 @@
 package data;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import persistency.dbConnection;
@@ -26,11 +27,32 @@ public class DataManager {
 		return instance;
 	}
 	
-	public List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
-		return db.getTemprature(date1, date2);
+	public List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
+		return db.getTemprature(startDate, endDate);
 	}
 	
-	public List<Energy> getEnergy(Timestamp date1, Timestamp date2){
-		return db.getEnergy(date1, date2);
+	public List<Energy> getEnergy(Timestamp startDate, Timestamp endDate){
+		return db.getEnergy(startDate, endDate);
+	}
+	
+	public List<Energy> getStatus(Timestamp startDate, Timestamp endDate){
+		return db.getEnergy(startDate, endDate);
+	}
+	
+	public void setLatestSatData(Satellite sat){
+		this.latestSatData=sat;
+	}
+	public Satellite getLatestSatData(){
+		return(this.latestSatData);
+	}
+	public ArrayList<String> getListOfStatusComponents(){
+		ArrayList<String> arr=new ArrayList<String>();
+		arr.add("Temprature");
+		arr.add("Energy");
+		arr.add("Sband");
+		arr.add("Payload");
+		arr.add("SolarPanels");
+		arr.add("Thermal");
+		return(arr);
 	}
 }

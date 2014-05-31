@@ -42,7 +42,7 @@ public class dbConnection {
         return dbcon;
     }
  
-    public static List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
+    public List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
         
         List<Temprature> data=null;
         try{
@@ -54,7 +54,7 @@ public class dbConnection {
         }
         return data;
     }
-    public static List<Energy> getEnergy(Timestamp startDate, Timestamp endDate){
+    public List<Energy> getEnergy(Timestamp startDate, Timestamp endDate){
         
         List<Energy> data=null;
         try{
@@ -67,7 +67,7 @@ public class dbConnection {
         return data;
     }
 
-    public static List<Satellite> getSatelliteData(Timestamp startDate, Timestamp endDate){
+    public List<Satellite> getSatelliteData(Timestamp startDate, Timestamp endDate){
     	List<Satellite> data=null;
     	try{
     		data=satDao.queryBuilder().where().between(Satellite.DATE_FIELD_NAME, startDate, endDate).query();
@@ -80,7 +80,7 @@ public class dbConnection {
     }
 
     
-    public static void insertSatellite(Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal, Timestamp ts){
+    public void insertSatellite(Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal, Timestamp ts){
         Satellite sat=new Satellite(ts,temp,energy,Sband,Payload,SolarPanels,Thermal);
         try{
             satDao.create(sat);
@@ -91,7 +91,7 @@ public class dbConnection {
          }
     }
     
-    public static void insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp ts){
+    public void insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp ts){
         Temprature tmp=new Temprature(ts,sensor1,sensor2,sensor3);
         try{
             tmpDao.create(tmp);
@@ -102,7 +102,7 @@ public class dbConnection {
          }
     }
     
-    public static void insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp ts){
+    public void insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp ts){
         Energy eng=new Energy(ts,batt1V,batt2V,batt3V,batt1C,batt2C,batt3C);  
         try{
             egDao.create(eng);

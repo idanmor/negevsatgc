@@ -26,7 +26,22 @@ public class Mission {
         this.missionExecutionTS=_missionExecutionTS;
         this.command=_command;
         this.priority=_priority;
-        
-      
 	}
+    
+    public Timestamp getMissionExecutionTS(){
+    	return this.missionExecutionTS;
+    }
+
+    public Command getcommand(){
+    	return this.command;
+    }
+    public int getPriority(){
+    	return this.priority;
+    }
+    
+
+    
+    public Timestamp getCreationTimestamp(){
+    	return this.creationTimestamp;
+    }
 }

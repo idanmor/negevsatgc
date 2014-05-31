@@ -25,6 +25,7 @@ public class Satellite {
     private Status ThermalStatus;
     @DatabaseField
     private Timestamp timeReceivedTimestamp;
+    DataManager dm;
     
     public Satellite(){}
     
@@ -39,6 +40,9 @@ public class Satellite {
         this.PayloadStatus=Payload;
         this.SolarPanelsStatus=SolarPanels;
         this.ThermalStatus=Thermal;
+        
+        dm=DataManager.getInstance();
+        dm.setLatestSatData(this);
 	}
 
 
