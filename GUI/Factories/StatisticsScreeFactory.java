@@ -121,7 +121,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
             File file = new File("C:\\Person.csv.");
             writer = new BufferedWriter(new FileWriter(file));
             for (StatisticDataItemInterface data : table.getItems()) {
-                String text = data.getDate() + "," + data.getCategory()  + "," + data.getSeverity() + "\n";
+                String text = data.getDate() + "," + data.getComponent()  + "," + data.getType() + "\n";
              writer.write(text);
             }
         } catch (Exception ex) {
@@ -137,7 +137,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     public void writeExcelOneGraph(BarChart chart) throws Exception {
         Writer writer = null;
         try {
-            File file = new File("Person.csv.");
+            File file = new File("Person.csv");
             StringBuilder text = new StringBuilder();
              writer = new BufferedWriter(new FileWriter(file));
             TableView.TableViewSelectionModel<StatisticDataItemInterface> selectionModel = table.getSelectionModel();
@@ -266,7 +266,7 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
          List<StatisticDataItemInterface> items = backUpListItems;
          for(StatisticDataItemInterface item: items){
             boolean valid = true;
-            if(type != null && !type.isEmpty() && !type.equals(item.getCategory())){
+            if(type != null && !type.isEmpty() && !type.equals(item.getComponent())){
                 valid = false;
             }else
             if(beforeCal != null && beforeCal.compareTo(createCalendar(item.getDate())) < 0){

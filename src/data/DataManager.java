@@ -6,7 +6,7 @@ import java.util.List;
 import persistency.dbConnection;
 
 public class DataManager {
-	static dbConnection db;
+	private dbConnection db;
 	public static final String tle = 
 					"ISS (ZARYA)\n"
 					+ "1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927\n"
@@ -26,11 +26,11 @@ public class DataManager {
 		return instance;
 	}
 	
-	public static List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
-		return dbConnection.getTemprature(startDate, endDate);
+	public List<Temprature> getTemprature(Timestamp date1, Timestamp date2){
+		return db.getTemprature(date1, date2);
 	}
 	
-	public static List<Energy> getEnergy(Timestamp startDate, Timestamp endDate){
-		return dbConnection.getEnergy(startDate, endDate);
+	public List<Energy> getEnergy(Timestamp date1, Timestamp date2){
+		return db.getEnergy(date1, date2);
 	}
 }

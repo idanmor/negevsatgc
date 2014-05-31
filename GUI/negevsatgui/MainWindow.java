@@ -33,6 +33,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -66,11 +67,13 @@ public class MainWindow{
 
 	public void start(Stage primaryStage) {
 		int height = 600;
-		int width = 800;
+		int width = 810;
 		mainPane = new BorderPane();  
 		BorderPane root = new BorderPane();
 		root.setTop(new MainMenu());
 		root.setCenter(mainPane);
+		mainPane.setId("mainPane");
+		
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
 		Label satteliteStatus = new Label(getSatteliteStatus());
@@ -81,11 +84,14 @@ public class MainWindow{
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add
 		(NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
+		//mainPane.getStylesheets().add("mainClass.css");
+		mainPane.getStyleClass().add("main");
 //		try {
 //			Thread.sleep(2000);
 //		} catch (InterruptedException ex) {
 //			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
 //		}
+	
 		mainPane.prefHeightProperty().bind(scene.heightProperty());
 		mainPane.prefWidthProperty().bind(scene.widthProperty());
 		showMainScreen(mainPane);
