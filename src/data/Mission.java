@@ -19,7 +19,7 @@ public class Mission {
     
     public Mission(){}
     
-    public Mission(Timestamp _ts, Timestamp _missionExecutionTS, Command _command, int _priority) {
+    public Mission(Timestamp _missionExecutionTS, Command _command, int _priority) {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.creationTimestamp=t;

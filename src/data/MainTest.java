@@ -23,28 +23,33 @@ public class MainTest {
 	 	
     	final long dayinMS = 86400000;
     	
-        int startTemp = 50;
-        int i = 5;
-	    while(oldestTS.before(TS)){
-	    	int randomModifier = (int) (Math.random() * 10);
-	    	int temp = startTemp + i * (randomModifier > 5 ? 1 : -1);
-	    	
-	    	db.insertTemprature(temp, temp,temp, oldestTS);
-	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
-	    }
+//        int startTemp = 50;
+//        int i = 5;
+//	    while(oldestTS.before(TS)){
+//	    	int randomModifier = (int) (Math.random() * 10);
+//	    	int temp = startTemp + i * (randomModifier > 5 ? 1 : -1);
+//	    	
+//	    	db.insertTemprature(temp, temp,temp, oldestTS);
+//	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
+//	    }
+	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
+	    List<Mission> mission=db.getMission(TS);
+	    for (Mission m: mission)
+    	System.out.println("select from mission "+m.getCreationTimestamp());
+//	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
 //	    dbConnection.insertTemprature(1, 2, 3, TS);
 //	    dbConnection.insertSatellite(Status.ON, Status.ON,Status.ON, Status.ON, Status.ON, Status.ON, TS);
-	    Timestamp t=new Timestamp(date.getTime());
-	    List<? extends Component> tlst=dm.getTemprature(oldestTS,t);
-	    for (Component item: tlst)
-	    	System.out.println("select from temprature "+item.getSampleTimestamp());
-	    List<? extends Component> elst=dm.getEnergy(oldestTS,t);
-	    for (Component item: elst)
-	    	System.out.println("select from energy "+item.getSampleTimestamp());
-	    List<Satellite> stlst=db.getSatelliteData(oldestTS,t);
-	    for (Satellite item: stlst)
-	    	System.out.println("select from satellite "+item.getSampleTimestamp());
+//	    Timestamp t=new Timestamp(date.getTime());
+//	    List<? extends Component> tlst=dm.getTemprature(oldestTS,t);
+//	    for (Component item: tlst)
+//	    	System.out.println("select from temprature "+item.getSampleTimestamp());
+//	    List<? extends Component> elst=dm.getEnergy(oldestTS,t);
+//	    for (Component item: elst)
+//	    	System.out.println("select from energy "+item.getSampleTimestamp());
+//	    List<Satellite> stlst=db.getSatelliteData(oldestTS,t);
+//	    for (Satellite item: stlst)
+//	    	System.out.println("select from satellite "+item.getSampleTimestamp());
 	}
 
 }

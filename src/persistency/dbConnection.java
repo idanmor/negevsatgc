@@ -17,6 +17,7 @@ public class dbConnection {
     static Dao<Energy, Timestamp> egDao;
     static Dao<Temprature, Timestamp> tmpDao;
     static Dao<Satellite, Timestamp> satDao;
+    static Dao<Mission, Timestamp> missionDao;
     
 
 
@@ -27,6 +28,7 @@ public class dbConnection {
             egDao =DaoManager.createDao(connectionSource, Energy.class);
             tmpDao =DaoManager.createDao(connectionSource, Temprature.class);
             satDao =DaoManager.createDao(connectionSource, Satellite.class);
+            missionDao = DaoManager.createDao(connectionSource, Mission.class);
             
        
         }
@@ -42,6 +44,30 @@ public class dbConnection {
         return dbcon;
     }
  
+    public List<Mission> getMission(Timestamp creationTimestamp){
+    	List<Mission> mission=null;
+    	try{
+    		mission=missionDao.queryBuilder().where().eq(Mission.DATE_FIELD_NAME, creationTimestamp).query();
+    		}
+    	catch( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+    	}	
+    	return mission;
+    }
+    
+    public List<Satellite> getSatelliteData(Timestamp startDate, Timestamp endDate){
+    	List<Satellite> data=null;
+    	try{
+    		data=satDao.queryBuilder().where().between(Satellite.DATE_FIELD_NAME, startDate, endDate).query();
+    		}
+    	catch( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+    	}	
+    	return data;
+    }
+    
     public List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
         
         List<Temprature> data=null;
@@ -67,18 +93,19 @@ public class dbConnection {
         return data;
     }
 
-    public List<Satellite> getSatelliteData(Timestamp startDate, Timestamp endDate){
-    	List<Satellite> data=null;
-    	try{
-    		data=satDao.queryBuilder().where().between(Satellite.DATE_FIELD_NAME, startDate, endDate).query();
-    		}
-    	catch( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-    	}	
-    	return data;
-    }
+ 
 
+    public void insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
+        Mission mission=new Mission(_missionExecutionTS,_command,_priority);
+        try{
+            missionDao.create(mission);
+        }
+        catch ( Exception e ) {
+               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+               System.exit(0);
+         }
+    }
+    
     
     public void insertSatellite(Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal, Timestamp ts){
         Satellite sat=new Satellite(ts,temp,energy,Sband,Payload,SolarPanels,Thermal);
