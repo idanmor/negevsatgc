@@ -20,8 +20,9 @@ public class TemperatureComponentStatistics extends AbstractComponentStatistics 
 	
 	@Override
 	protected void populateTableNodes(Timestamp oldestTS,
-			ObservableList<StatisticDataItemInterface> nodes, boolean hasData,
+			ObservableList<StatisticDataItemInterface> nodes,
 			DateFormat formatter, Timestamp toDate) {
+		boolean hasData = false;
 		List<Temprature> temp = DataManager.getInstance().getTemprature(oldestTS, toDate);
 		String[][] data = new String[temp.size()][3];
 		for(int i = 0 ; i < temp.size() ; i++){

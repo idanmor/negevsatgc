@@ -8,13 +8,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import data.DataManager;
-import data.Temprature;
 import Utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -210,7 +207,7 @@ public abstract class AbstractComponentStatistics {
 
 	protected abstract String getCsvFileLocationAndName();
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createTable(){
 		table = new TableView<>();
 		table.setPrefWidth(600);
@@ -254,21 +251,19 @@ public abstract class AbstractComponentStatistics {
 		Timestamp TS=new Timestamp(System.currentTimeMillis());
 		ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
 		oldestTS = Utils.stripTimePortion(oldestTS);
+		DateFormat formatter = DateFormat.getDateTimeInstance(
+				DateFormat.SHORT, 
+				DateFormat.SHORT,Locale.getDefault());
 		while(oldestTS.before(TS)){
-			boolean hasData = false;
-
-			DateFormat formatter = DateFormat.getDateTimeInstance(
-					DateFormat.SHORT, 
-					DateFormat.SHORT,Locale.getDefault());
 			Timestamp toDate = new Timestamp(oldestTS.getTime() + dayinMS);
-			populateTableNodes(oldestTS, nodes, hasData, formatter, toDate);
+			populateTableNodes(oldestTS, nodes, formatter, toDate);
 			oldestTS.setTime(oldestTS.getTime() + dayinMS);
 		}
 		table.getItems().addAll(nodes);
 	}
 	
 	protected abstract void populateTableNodes(Timestamp oldestTS,
-			ObservableList<StatisticDataItemInterface> nodes, boolean hasData,
+			ObservableList<StatisticDataItemInterface> nodes,
 			DateFormat formatter, Timestamp toDate);
 	
 	private void populateTableDemo(){
@@ -276,11 +271,9 @@ public abstract class AbstractComponentStatistics {
 		table.setItems(d.getNodes());
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createStatisicsWindow(LineChart<String,Number> lineChart){
 		lineChart.getData().clear();
-		final Comparator<XYChart.Data<String, Number>> comparator = 
-				(XYChart.Data<String, Number> o1, XYChart.Data<String, Number> o2) -> 
-		o1.getXValue().compareTo(o2.getXValue());
 		lineChart.setTitle("Diagnostics");
 		ObservableList<StatisticDataItemInterface> selected = table.getSelectionModel().getSelectedItems();
 		for(int i = 0 ; i < selected.size(); i++){
