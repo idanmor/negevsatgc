@@ -24,7 +24,11 @@ public class MissionComboBoxWrapper extends ComboBox<Object>implements MissionIt
     }
     @Override
     public String getMissionValue() {
-        return this.getSelectionModel().getSelectedItem().toString();
+    	Object selectedItem = this.getSelectionModel().getSelectedItem();
+    	if(selectedItem == null){
+    		return null;
+    	}
+        return selectedItem.toString();
     }
 
     @Override
