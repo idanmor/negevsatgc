@@ -2,7 +2,11 @@ package data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import javafx.util.Pair;
 
 @DatabaseTable(tableName="Energy")
 public class Energy extends Component {
@@ -46,22 +50,34 @@ public class Energy extends Component {
     public Timestamp getReceivedTimestamp(){
         return timeReceivedTimestamp;
     }
-    public float getBatt1v(){
+    public float getBatt1Voltage(){
         return batt1Voltage;
     }
-    public float getBatt2v(){
+    public float getBatt2Voltage(){
         return batt2Voltage;
     }
-    public float getBatt3v(){
+    public float getBatt3Voltage(){
         return batt3Voltage;
     }
-    public float getBatt1c(){
+    public float getBatt1Current(){
         return batt1Current;
     }
-    public float getBatt2c(){
+    public float getBatt2Current(){
         return batt2Current;
     }
-    public float getBatt3c(){
+    public float getBatt3Current(){
         return batt3Current;
     }
+    
+	public ArrayList<Pair<String, Float>> getSensorsValues() {
+		ArrayList<Pair<String, Float>> sensorsValues= new ArrayList<Pair<String, Float>>();
+		sensorsValues.add(new Pair("batt1Voltage",new Float(this.getBatt1Voltage())));
+		sensorsValues.add(new Pair("batt2Voltage",new Float(this.getBatt2Voltage())));
+		sensorsValues.add(new Pair("batt3Voltage",new Float(this.getBatt3Voltage())));
+		sensorsValues.add(new Pair("batt1Current",new Float(this.getBatt1Current())));
+		sensorsValues.add(new Pair("batt2Current",new Float(this.getBatt2Current())));
+		sensorsValues.add(new Pair("batt3Current",new Float(this.getBatt3Current())));
+		
+		return sensorsValues;
+	}
 }

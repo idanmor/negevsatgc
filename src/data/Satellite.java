@@ -12,7 +12,7 @@ public class Satellite {
     @DatabaseField(id = true) 
     private Timestamp sampleTimestamp;
     @DatabaseField
-    private Status TempStatus;
+    private Status TempratureStatus;
     @DatabaseField
     private Status EnergyStatus;
     @DatabaseField
@@ -34,7 +34,7 @@ public class Satellite {
         Timestamp t=new Timestamp(date.getTime());
         this.sampleTimestamp=ts;
         this.timeReceivedTimestamp=t;
-        this.TempStatus=temp;
+        this.TempratureStatus=temp;
         this.EnergyStatus=energy;
         this.SbandStatus=Sband;
         this.PayloadStatus=Payload;
@@ -53,8 +53,8 @@ public class Satellite {
     public Timestamp getTimeReceivedTimestamp(){
     	return this.sampleTimestamp;
     }
-    public Status getTempStatus(){
-    	return this.TempStatus;
+    public Status getTempratureStatus(){
+    	return this.TempratureStatus;
     }
     public Status getEnergyStatus(){
     	return this.EnergyStatus;
@@ -73,7 +73,7 @@ public class Satellite {
     }
     public ArrayList<Status> getAllStatus(){
     	ArrayList<Status> statList= new ArrayList<Status>();
-    	statList.add(getTempStatus());
+    	statList.add(getTempratureStatus());
     	statList.add(getEnergyStatus());
     	statList.add(getSbandStatus());
     	statList.add(getPayloadStatus());

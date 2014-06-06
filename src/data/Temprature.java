@@ -2,7 +2,11 @@ package data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import javafx.util.Pair;
 
 @DatabaseTable(tableName="Temprature")
 public class Temprature extends Component {
@@ -45,5 +49,15 @@ public class Temprature extends Component {
     public float getSensor3(){
         return sensor3;
     }
+
+	
+	public ArrayList<Pair<String, Float>> getSensorsValues() {
+		ArrayList<Pair<String, Float>> sensorsValues= new ArrayList<Pair<String, Float>>();
+		sensorsValues.add(new Pair("sensor1",new Float(this.getSensor1())));
+		sensorsValues.add(new Pair("sensor2",new Float(this.getSensor2())));
+		sensorsValues.add(new Pair("sensor3",new Float(this.getSensor3())));
+		
+		return sensorsValues;
+	}
 	
 }
