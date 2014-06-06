@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.util.Pair;
 import persistency.dbConnection;
 
 public class DataManager {
@@ -39,8 +40,8 @@ public class DataManager {
 		return db.getEnergy(startDate, endDate);
 	}
 	
-	public List<Energy> getStatus(Timestamp startDate, Timestamp endDate){
-		return db.getEnergy(startDate, endDate);
+	public List<Satellite> getStatus(Timestamp startDate, Timestamp endDate){
+		return db.getSatelliteData(startDate, endDate);
 	}
 	
 	public List<Mission> getMission(Timestamp creationTimestamp){
@@ -50,15 +51,20 @@ public class DataManager {
 	public Satellite getLatestSatData(){
 		return(this.latestSatData);
 	}
-	public ArrayList<String> getListOfStatusComponents(){
-		ArrayList<String> arr=new ArrayList<String>();
-		arr.add("Temprature");
-		arr.add("Energy");
-		arr.add("Sband");
-		arr.add("Payload");
-		arr.add("SolarPanels");
-		arr.add("Thermal");
-		return(arr);
+	public ArrayList<Pair<String,Status>> getListOfStatusPairs(Satellite satellite){
+		ArrayList<Pair<String, Status>> statusPairs=new ArrayList<Pair<String,Status>>();
+		statusPairs.add(new Pair("Temprature",satellite.getTempratureStatus()));
+		statusPairs.add(new Pair("Energy",satellite.getEnergyStatus()));
+		statusPairs.add(new Pair("Sband",satellite.getSbandStatus()));
+		statusPairs.add(new Pair("Payload",satellite.getPayloadStatus()));
+		statusPairs.add(new Pair("SolarPanels",satellite.getSolarPanelsStatus()));
+		statusPairs.add(new Pair("Thermal",satellite.getThermalStatus()));
+		return(statusPairs);
+	}
+	
+	public ArrayList<Pair<String,Float>> getReadingsPerSensor(Component component){
+		ArrayList<Pair<String, Float>> sensorsValues=component.getSensorsValues();	
+		return sensorsValues;
 	}
 	
 	 public void insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
@@ -77,7 +83,11 @@ public class DataManager {
 		 db.insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
 	 }
 	 
-	    public void delete(String component,Timestamp ts) {
-	    	db.delete(component, ts);
-	    }
+	 public void deleteComponent(String component,Timestamp timeStamp) {
+		 db.deleteComponent(component, timeStamp);
+	 }
+	    
+	 public void deleteCompletedMission(Timestamp creationTimestamp){
+		 db.deleteCompletedMission(creationTimestamp);
+	 }
 }
