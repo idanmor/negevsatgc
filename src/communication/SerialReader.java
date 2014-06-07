@@ -23,17 +23,22 @@ public class SerialReader implements Runnable {
 	        	System.out.println("DEBUG: Read " + len + " bytes");
 	        	String str = new String(buffer, 0, len);
 	        	if(str.contains(CommunicationManager.msgDelimiter)) {
+	        		boolean isFinished = str.endsWith(CommunicationManager.msgDelimiter.toString());
 	        		String[] splitted = str.split(CommunicationManager.msgDelimiter.toString());
 	        		msg.append(splitted[0]);
-	        		//Send message to processing
+	        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
 	        		System.out.println(msg.toString());
 	        		for(int i=1; i<splitted.length-1; i++) {
 		        		msg = new Message(splitted[i]);
-		        		// Send message to processing
+		        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
 		        		System.out.println(msg.toString());
 	        		}
 	        		msg = new Message(splitted[splitted.length-1]);
-	        		System.out.println(msg.toString());
+	        		if(isFinished) {
+	        			CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
+	        			System.out.println(msg.toString());
+	        			msg = new Message();
+	        		}
 	        	}
 	        	else {
 	        		msg.append(str);

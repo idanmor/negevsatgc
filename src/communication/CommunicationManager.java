@@ -23,17 +23,15 @@ public class CommunicationManager {
 	
 	private Lock inputLock;
 	private Condition inputDataAvailable;
-	private Lock outputLock;
-	private Condition outputDataAvailable;
 	
 	private BlockingQueue<Message> outputQueue;
+	private BlockingQueue<Message> messageAcceptorQueue;
 
 	private CommunicationManager() {
 		this.inputLock = new ReentrantLock();
 		this.inputDataAvailable = this.inputLock.newCondition();
-		this.outputLock = new ReentrantLock();
-		this.outputDataAvailable = this.outputLock.newCondition();
 		this.outputQueue = new LinkedBlockingQueue<Message>();
+		this.messageAcceptorQueue = new LinkedBlockingQueue<Message>();
 	}
 	
 	public static CommunicationManager getInstance() {
@@ -81,20 +79,16 @@ public class CommunicationManager {
 		return this.outputQueue;
 	}
 	
+	public BlockingQueue<Message> getMessageAcceptorQueue() {
+		return this.messageAcceptorQueue;
+	}
+	
 	public Lock getInputLock() {
 		return inputLock;
 	}
 	
-	public Lock getOutputLock() {
-		return outputLock;
-	}
-	
 	public Condition getInputDataAvailable() {
 		return inputDataAvailable;
-	}
-	
-	public Condition getOutputDataAvailable() {
-		return outputDataAvailable;
 	}
 
 }
