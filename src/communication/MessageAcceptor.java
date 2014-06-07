@@ -1,6 +1,5 @@
 package communication;
 
-
 import org.w3c.dom.*;
 
 public class MessageAcceptor implements Runnable {
@@ -9,13 +8,16 @@ public class MessageAcceptor implements Runnable {
     {
 		while (true) {
 			try {
-				Message m = CommunicationManager.getInstance().getOutputQueue().take();
-				Document msg = m.toDocument();
+				System.out.println("DEBUG: MessageAcceptor waiting for new message");
+				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
+				System.out.println("DEBUG: Message Accepted");
+				System.out.println(m.toString());
+				/*Document msg = m.toDocument();
 				try {
 					parseMessage(msg);
 				} catch (InvalidMessageException e) {
 					System.out.println("Error: " + e.getMessage());
-				}
+				}*/
 	        } catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -24,7 +26,7 @@ public class MessageAcceptor implements Runnable {
 	
 	public void parseMessage(Document msg) throws InvalidMessageException {
     	NodeList nList = msg.getElementsByTagName("downstreamPacket");
-    	if(nList.getLength() != 0) {
+    	if(nList.getLength() == 0) {
     		throw new InvalidMessageException("No downstreamPacket Element!");
     	}
     	Node packet = nList.item(0);

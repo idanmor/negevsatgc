@@ -60,6 +60,7 @@ public class CommunicationManager {
                 
                 (new Thread(new SerialReader(in))).start();
                 (new Thread(new SerialWriter(out))).start();
+                (new Thread(new MessageAcceptor())).start();
             }
             else {
                 System.out.println("Error: Only serial ports are handled by this application");
