@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="negevsatgui.SattelitePictureController">
+   <children>
+      <ImageView fitHeight="300.0" fitWidth="400.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../CssPackage/sattelite.png" />
+         </image>
+      </ImageView>
+      <Group fx:id="groupPayload" layoutX="-290.0" layoutY="28.0">
+         <children>
+            <ImageView fx:id="ImageViewPayload" fitHeight="39.0" fitWidth="70.0" layoutX="431.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="LabelPayload" layoutX="437.0" layoutY="218.0" text="Payload" />
+         </children>
+      </Group>
+      <Group fx:id="groupPayload1" layoutX="-115.0" layoutY="116.0" />
+      <Group fx:id="groupSP" layoutX="-392.0" layoutY="20.0">
+         <children>
+            <ImageView fx:id="ImageViewSP" fitHeight="39.0" fitWidth="70.0" layoutX="431.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="labelSP" layoutX="437.0" layoutY="218.0" text="Supply Power" />
+         </children>
+      </Group>
+      <Group fx:id="groupPDU" layoutX="-223.0" layoutY="-182.0">
+         <children>
+            <ImageView fx:id="ImageViewPDU" fitHeight="39.0" fitWidth="54.0" layoutX="407.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="labelPDU" layoutX="420.0" layoutY="224.0" prefHeight="17.0" prefWidth="29.0" text="PDU" />
+         </children>
+      </Group>
+      <Group fx:id="groupRadio" layoutX="-327.0" layoutY="-176.0">
+         <children>
+            <ImageView fx:id="ImageViewRadio" fitHeight="39.0" fitWidth="54.0" layoutX="431.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="labelRadio" layoutX="437.0" layoutY="218.0" prefHeight="17.0" prefWidth="47.0" text="Radio" />
+         </children>
+      </Group>
+      <Group fx:id="groupBattery" layoutX="-410.0" layoutY="-176.0">
+         <children>
+            <ImageView fx:id="ImageViewBattery" fitHeight="39.0" fitWidth="41.0" layoutX="441.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="labelBattery" layoutX="447.0" layoutY="218.0" prefHeight="17.0" prefWidth="48.0" text="Battery" />
+         </children>
+      </Group>
+      <Label fx:id="labelComputer" layoutX="278.0" layoutY="246.0" text="Computer" />
+      <ImageView fx:id="ImageViewComputer" fitHeight="39.0" fitWidth="70.0" layoutX="270.0" layoutY="235.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</Pane>

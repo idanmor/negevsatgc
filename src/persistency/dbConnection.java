@@ -24,7 +24,7 @@ public class dbConnection {
 
     private dbConnection(){
         try{
-            connectionSource =new JdbcConnectionSource("jdbc:sqlite:C:\\sqlite\\negevSatDB.db");
+            connectionSource =new JdbcConnectionSource("jdbc:sqlite:c:\\sqlite\\negevSatDB.db");
             energygDao =DaoManager.createDao(connectionSource, Energy.class);
             tempratureDao =DaoManager.createDao(connectionSource, Temprature.class);
             satelliteDao =DaoManager.createDao(connectionSource, Satellite.class);

@@ -1,6 +1,7 @@
 package Panels;
 
 import SatteliteData.DataTabPane;
+import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
 public class SatteliteStatusPanel extends PanelsWithClickInterface {
@@ -8,6 +9,9 @@ public class SatteliteStatusPanel extends PanelsWithClickInterface {
 		super(mainPane, "sattelite.png");
 	}
 	
+	public SatteliteStatusPanel(BorderPane mainPane , Parent parentTOCopy) {
+		super(mainPane, parentTOCopy);
+	}
 	
 	@Override
 	public void applyClickOnPanel() {

@@ -10,6 +10,7 @@ import MenuItems.MainMenu;
 import Panels.MissionPanel;
 import Panels.SatteliteStatusPanel;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import Utils.Constants;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -110,8 +113,16 @@ public class MainWindow{
 		HBox secondLine = new HBox();
 		VBox logBox = new VBox();
 		HBox buttonBox = SattaliteUtils.getHBox(10);
-		firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane()));
-
+		  try {
+			Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+			//firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane()));
+			//firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),root);
+			firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane(),root));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		demoListView = new TextArea();
 		demoListView.setEditable(false);
 		TextField toLogger = new TextField();
