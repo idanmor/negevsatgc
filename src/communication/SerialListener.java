@@ -69,7 +69,7 @@ public class SerialListener implements SerialPortEventListener {
 	private void dataAvailable(SerialPortEvent event) {
 		CommunicationManager.getInstance().getInputLock().lock();
 		try {
-			CommunicationManager.getInstance().getDataAvailable().signal();
+			CommunicationManager.getInstance().getInputDataAvailable().signal();
 		} finally {
 			CommunicationManager.getInstance().getInputLock().unlock();
 		}
