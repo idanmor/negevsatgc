@@ -6,6 +6,8 @@ import gnu.io.SerialPort;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,12 +20,20 @@ public class CommunicationManager {
 	private SerialPort serialPort;
 	private InputStream in;
 	private OutputStream out;
+	
 	private Lock inputLock;
-	private Condition dataAvailable;
+	private Condition inputDataAvailable;
+	private Lock outputLock;
+	private Condition outputDataAvailable;
+	
+	private BlockingQueue<Message> outputQueue;
 
 	private CommunicationManager() {
 		this.inputLock = new ReentrantLock();
-		this.dataAvailable = this.inputLock.newCondition();
+		this.inputDataAvailable = this.inputLock.newCondition();
+		this.outputLock = new ReentrantLock();
+		this.outputDataAvailable = this.outputLock.newCondition();
+		this.outputQueue = new LinkedBlockingQueue<Message>();
 	}
 	
 	public static CommunicationManager getInstance() {
@@ -51,7 +61,7 @@ public class CommunicationManager {
                 serialPort.notifyOnDataAvailable(true);
                 
                 (new Thread(new SerialReader(in))).start();
-                //(new Thread(new SerialWriter(out))).start();
+                (new Thread(new SerialWriter(out))).start();
             }
             else {
                 System.out.println("Error: Only serial ports are handled by this application");
@@ -59,16 +69,32 @@ public class CommunicationManager {
         }     
     }
 	
-	public void sendData(byte[] dataToSend) throws Exception {
-		
+	public void sendMessage(Message msg) {
+		try {
+			this.outputQueue.put(msg);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public BlockingQueue<Message> getOutputQueue() {
+		return this.outputQueue;
 	}
 	
 	public Lock getInputLock() {
 		return inputLock;
 	}
 	
-	public Condition getDataAvailable() {
-		return dataAvailable;
+	public Lock getOutputLock() {
+		return outputLock;
+	}
+	
+	public Condition getInputDataAvailable() {
+		return inputDataAvailable;
+	}
+	
+	public Condition getOutputDataAvailable() {
+		return outputDataAvailable;
 	}
 
 }
