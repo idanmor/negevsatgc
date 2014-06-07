@@ -14,7 +14,7 @@ public class Message {
 	}
 	
 	public void append (String addition) {
-		this.messageText.concat(addition);
+		messageText = this.messageText.concat(addition);
 	}
 	
 	public boolean validate() {

@@ -33,6 +33,7 @@ public class SerialReader implements Runnable {
 		        		System.out.println(msg.toString());
 	        		}
 	        		msg = new Message(splitted[splitted.length-1]);
+	        		System.out.println(msg.toString());
 	        	}
 	        	else {
 	        		msg.append(str);
