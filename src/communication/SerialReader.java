@@ -43,7 +43,9 @@ public class SerialReader implements Runnable {
 	        		}
 	        	}
 	        	else {
-	        		msg.append(str);
+	        		//msg.append(str);
+	        		msg = new Message(str);
+	        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
 	        	}
 	        	CommunicationManager.getInstance().getInputLock().lock();
 	        	CommunicationManager.getInstance().getInputDataAvailable().await();
