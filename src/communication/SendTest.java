@@ -12,7 +12,7 @@ public class SendTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String[] filenames = {"message4.xml"};
+		String[] filenames = {"message1.xml", "message2.xml", "message3.xml"};
 		
 		for (String filename : filenames) {
 			try {
