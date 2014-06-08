@@ -1,16 +1,13 @@
 package communication;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.charset.Charset;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 public class Message {
 	private String messageText;
@@ -27,6 +24,23 @@ public class Message {
 		messageText = this.messageText.concat(addition);
 	}
 	
+	public Document toDocument () {
+		DOMParser parser = new DOMParser();
+		try {
+		    parser.parse(new InputSource(new java.io.StringReader(messageText)));
+		    Document doc = parser.getDocument();
+		    String message = doc.getDocumentElement().getTextContent();
+		    System.out.println(message);
+		    System.out.println(doc.toString());
+		    return doc;
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/*
 	public Document toDocument() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
@@ -43,7 +57,7 @@ public class Message {
 		}
 		return null;
     }
-	
+	*/
 	public boolean validate() {
 		return true;
 	}

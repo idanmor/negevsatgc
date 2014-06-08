@@ -11,13 +11,13 @@ public class MessageAcceptor implements Runnable {
 				System.out.println("DEBUG: MessageAcceptor waiting for new message");
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
 				System.out.println("DEBUG: Message Accepted");
-				System.out.println(m.toString());
-				/*Document msg = m.toDocument();
-				try {
-					parseMessage(msg);
-				} catch (InvalidMessageException e) {
-					System.out.println("Error: " + e.getMessage());
-				}*/
+				//System.out.println(m.toString());
+				Document msg = m.toDocument();
+//				try {
+//					parseMessage(msg);
+//				} catch (InvalidMessageException e) {
+//					System.out.println("Error: " + e.getMessage());
+//				}
 	        } catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -29,6 +29,7 @@ public class MessageAcceptor implements Runnable {
     	if(nList.getLength() == 0) {
     		throw new InvalidMessageException("No downstreamPacket Element!");
     	}
+    	System.out.println(msg.toString());
     	Node packet = nList.item(0);
     	Node typeNode = packet.getFirstChild();
     	if(!typeNode.getLocalName().equals("type")) {
