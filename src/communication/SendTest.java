@@ -20,6 +20,7 @@ public class SendTest {
 				String msg = new String(filecontent, "UTF-8");
 				msg = msg.replaceAll("\n", "");
 				msg = msg.replaceAll("\t", "");
+				msg = msg.replaceAll("\r", "");
 				msg = msg.replaceAll(" ", "");
 				CommunicationManager.getInstance().sendMessage(new Message(msg));
 			} catch (IOException e) {
