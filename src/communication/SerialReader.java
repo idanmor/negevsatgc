@@ -22,7 +22,7 @@ public class SerialReader implements Runnable {
 	        	len = in.read(buffer, 0, buffer.length);
 	        	System.out.println("DEBUG: Read " + len + " bytes");
 	        	String str = new String(buffer, 0, len);
-	        	if(str.contains(CommunicationManager.msgDelimiter.toString())) {
+	        	if(str.contains(CommunicationManager.msgDelimiter)) {
 	        		boolean isFinished = str.endsWith(CommunicationManager.msgDelimiter.toString());
 	        		String[] splitted = str.split(CommunicationManager.msgDelimiter.toString());
 	        		msg.append(splitted[0]);
@@ -43,9 +43,9 @@ public class SerialReader implements Runnable {
 	        		}
 	        	}
 	        	else {
-	        		//msg.append(str);
-	        		msg = new Message(str);
-	        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
+	        		msg.append(str);
+	        		//msg = new Message(str);
+	        		//CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
 	        	}
 	        	CommunicationManager.getInstance().getInputLock().lock();
 	        	CommunicationManager.getInstance().getInputDataAvailable().await();

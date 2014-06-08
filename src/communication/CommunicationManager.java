@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class CommunicationManager {
-	public static final Byte msgDelimiter = 10;
+	public static final CharSequence msgDelimiter = "\n";
 
 	private static CommunicationManager instance = null;
 	private SerialPort serialPort;
