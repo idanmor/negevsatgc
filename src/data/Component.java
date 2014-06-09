@@ -8,9 +8,9 @@ import javafx.util.Pair;
 public abstract class Component {
 
 	
-	abstract Timestamp getSampleTimestamp();
-	abstract Timestamp getReceivedTimestamp();
-	abstract ArrayList<Pair<String,Float>> getSensorsValues();
+	public abstract Timestamp getSampleTimestamp();
+	public abstract Timestamp getReceivedTimestamp();
+	public abstract ArrayList<Pair<String,Float>> getSensorsValues();
 	
 	
 }

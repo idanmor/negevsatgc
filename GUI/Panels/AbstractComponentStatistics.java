@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import data.Component;
 import Utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -365,4 +366,6 @@ public abstract class AbstractComponentStatistics {
 			return data;
 		}
 	}
+	public abstract List<Component> getComponent(Timestamp oldestTS, Timestamp TS);
+	public abstract String getObjectName();
 }
