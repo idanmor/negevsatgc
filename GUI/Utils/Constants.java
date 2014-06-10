@@ -28,4 +28,8 @@ public interface Constants {
 	
 	//General
 	public static final int MAIN_PANE_WIDTH = MainWindow.getMainWindow().getMainPane().widthProperty().intValue();
+	
+	//Components names
+	public static final String TEMERATURE_COMPONENT_NAME = "Temperature";
+	public static final String ENERGY_COMPONENT_NAME = "Energy";
 }

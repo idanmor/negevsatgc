@@ -51,6 +51,7 @@ public class MainWindow{
 	private BorderPane mainPane;
 	private static MainWindow instance;
 	private ComboBox<SatteliteMods> comboSattelites;
+	private Label satteliteStatus;
 	public MainWindow(){
 		super();
 		synchronized(MainWindow.class){
@@ -79,7 +80,7 @@ public class MainWindow{
 		
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		Label satteliteStatus = new Label(getSatteliteStatus());
+		satteliteStatus = new Label(getSatteliteStatus());
 		satteliteStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
 		mainPane.setBottom(satteliteStatus);
@@ -115,8 +116,6 @@ public class MainWindow{
 		HBox buttonBox = SattaliteUtils.getHBox(10);
 		  try {
 			Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-			//firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane()));
-			//firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),root);
 			firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane(),root));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -232,6 +231,9 @@ public class MainWindow{
         String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
         return generatedStatus[(int)(Math.random()*generatedStatus.length)];
     }
+	public void setSatteliteStatusText(String status) {
+		satteliteStatus.setText(status);
+	}
     
     
     

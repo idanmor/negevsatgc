@@ -23,15 +23,8 @@ public class MainTest {
 	 	
     	final long dayinMS = 86400000;
     	
-//        int startTemp = 50;
-//        int i = 5;
-//	    while(oldestTS.before(TS)){
-//	    	int randomModifier = (int) (Math.random() * 10);
-//	    	int temp = startTemp + i * (randomModifier > 5 ? 1 : -1);
-//	    	
-//	    	db.insertTemprature(temp, temp,temp, oldestTS);
-//	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
-//	    }
+       // addRandomTemp(db, hourInMs, oldestTS, TS);
+        addRandomEnergy(db, hourInMs, oldestTS, TS);
 	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
 	    List<Mission> mission=db.getMission(TS);
 	    for (Mission m: mission)
@@ -50,6 +43,32 @@ public class MainTest {
 	    List<Satellite> stlst=db.getSatelliteData(oldestTS,TS);
 	    for (Satellite item: stlst)
 	    	System.out.println("select from satellite "+item.getSampleTimestamp());
+	}
+
+	private static void addRandomTemp(dbConnection db, final long hourInMs,
+			Timestamp oldestTS, Timestamp TS) {
+		int startTemp = 50;
+        int i = 5;
+	    while(oldestTS.before(TS)){
+	    	int randomModifier = (int) (Math.random() * 10);
+	    	int temp = startTemp + i * (randomModifier > 5 ? 1 : -1);
+	    	
+	    	db.insertTemprature(temp, temp,temp, oldestTS);
+	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
+	    }
+	}
+	
+	private static void addRandomEnergy(dbConnection db, final long hourInMs,
+			Timestamp oldestTS, Timestamp TS) {
+		int startEnergy = 100;
+        int i = 10;
+	    while(oldestTS.before(TS)){
+	    	int randomModifier = (int) (Math.random() * 10);
+	    	int en = startEnergy + i * (randomModifier > 5 ? 1 : -1);
+	    	
+	    	db.insertEnergy(en + randomModifier, en - randomModifier, en - randomModifier, en, en, en - randomModifier, oldestTS);
+	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
+	    }
 	}
 
 }

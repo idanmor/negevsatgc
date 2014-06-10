@@ -3,6 +3,7 @@ package data;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javafx.util.Pair;
 import persistency.dbConnection;
@@ -62,9 +63,9 @@ public class DataManager {
 		return(statusPairs);
 	}
 	
-	public ArrayList<Pair<String,Float>> getReadingsPerSensor(Component component){
-		ArrayList<Pair<String, Float>> sensorsValues=component.getSensorsValues();	
-		return sensorsValues;
+	public Map<String,Float> getReadingsPerSensor(Component component){
+		
+		return component.getSensorsValues();
 	}
 
 	

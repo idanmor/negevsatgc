@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import Utils.Utils;
 import data.DataManager;
+import data.Satellite;
 import data.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,16 +80,29 @@ public class SattelitePictureController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//      DataManager db = DataManager.getInstance();
+
 //      final long monthInMS = 26280000;//need to mult by 100
 //      Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 //	    Timestamp TS=new Timestamp(System.currentTimeMillis());
 //      ArrayList<Pair<String, Status>> statusPairs = db.getListOfStatusPairs(db.getStatus(oldestTS, oldestTS));
-      
+      DataManager db = DataManager.getInstance();
+      Satellite st = db.getLatestSatData();
+  //    db.getListOfStatusPairs(st);
       ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
       ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), Status.MALFUNCTION).getImage());
       ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), Status.STANDBY).getImage());
+      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
+      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
+      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
+  
       
+//      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
+//      ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), st.getTempratureStatus()).getImage());
+//      ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), st.getThermalStatus()).getImage());
+//      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), st.getSbandStatus()).getImage());
+//      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), st.getPayloadStatus()).getImage());
+//      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), st.getSolarPanelsStatus()).getImage());
+//      
     }    
     
 }

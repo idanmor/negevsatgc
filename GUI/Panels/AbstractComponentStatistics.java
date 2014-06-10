@@ -8,9 +8,11 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import data.Component;
 import Utils.Utils;
@@ -110,6 +112,29 @@ public abstract class AbstractComponentStatistics {
 		return box;
 	}
 	
+	protected void populateTableNodes(Timestamp oldestTS,
+			ObservableList<StatisticDataItemInterface> nodes,
+			DateFormat formatter, Timestamp toDate) {
+		boolean hasData = false;
+		List<Component> components = getComponent(oldestTS, toDate);
+		if(components.isEmpty()){
+			return;
+		}
+		Set<String> sensors = components.get(0).getSetOfSensorsNames();
+		for(String sensor : sensors){
+			String[][] data = new String[components.size()][3];
+			for(int i = 0 ; i < components.size() ; i++){
+				hasData = true;
+				Component comp = components.get(i);
+				data[i][0] = formatter.format(new Date(comp.getSampleTimestamp().getTime())).toString();
+				data[i][1] = comp.getSensorValue(sensor).toString();
+				data[i][2] = sensor;
+			}    
+			if(hasData){
+				nodes.add(new StatisticDataItem(formatter.format(new Date(oldestTS.getTime())).toString(), sensor, getObjectName(), data)); //TODO
+			}
+		}
+	}
 	private void filter(String before, String after){
 		GregorianCalendar beforeCal = null;
 		GregorianCalendar afterCal = null;
@@ -215,10 +240,10 @@ public abstract class AbstractComponentStatistics {
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		TableColumn date = new TableColumn("Date Taken");
 		TableColumn component = new TableColumn("Component");
-		TableColumn severity = new TableColumn("Type");
+		TableColumn type = new TableColumn("Type");
 		date.prefWidthProperty().bind(table.widthProperty().multiply(0.5));
 		component.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-		severity.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		type.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 
 		date.setCellValueFactory(
 				new PropertyValueFactory<StatisticDataItemInterface,String>("date")
@@ -226,7 +251,7 @@ public abstract class AbstractComponentStatistics {
 		component.setCellValueFactory(
 				new PropertyValueFactory<StatisticDataItemInterface,String>("component")
 				);
-		severity.setCellValueFactory(
+		type.setCellValueFactory(
 				new PropertyValueFactory<StatisticDataItemInterface,String>("type")
 				);
 		//populateTableDemo();
@@ -242,7 +267,7 @@ public abstract class AbstractComponentStatistics {
 				t.consume();
 			}
 		});
-		table.getColumns().addAll(date, component, severity);
+		table.getColumns().addAll(date, component, type);
 		backUpListItems = table.getItems();
 	}
 	private void populateTable(){
@@ -263,9 +288,6 @@ public abstract class AbstractComponentStatistics {
 		table.getItems().addAll(nodes);
 	}
 	
-	protected abstract void populateTableNodes(Timestamp oldestTS,
-			ObservableList<StatisticDataItemInterface> nodes,
-			DateFormat formatter, Timestamp toDate);
 	
 	private void populateTableDemo(){
 		DemoPopulateTable d = new DemoPopulateTable();
