@@ -5,7 +5,6 @@ import java.io.OutputStream;
 
 public class SerialWriter implements Runnable {
 	OutputStream out;
-	byte[] dataToSend;
     
     public SerialWriter (OutputStream out)
     {
@@ -14,16 +13,19 @@ public class SerialWriter implements Runnable {
 
 	public void run ()
     {
-        try {                
-            int c = 0;
-            while (( c = System.in.read()) > -1 ) {
-                this.out.write(c);
-                System.out.println(c);
-            }                
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-        }            
+		while (true) {
+			try {
+				Message msg = CommunicationManager.getInstance().getOutputQueue().take();
+				this.out.write(msg.getBytes(), 0, msg.getBytes().length);
+				this.out.write(CommunicationManager.msgDelimiter.toString().getBytes(), 0, 
+						CommunicationManager.msgDelimiter.toString().getBytes().length);
+	        }
+	        catch ( IOException e )
+	        {
+	            e.printStackTrace();
+	        } catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}       
     }
 }

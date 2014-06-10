@@ -107,8 +107,8 @@ public class dbConnection {
     }
     
     
-    public void insertSatellite(Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal, Timestamp ts){
-        Satellite sat=new Satellite(ts,temp,energy,Sband,Payload,SolarPanels,Thermal);
+    public void insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, Status Sband, Timestamp sbandTS, Status Payload,Timestamp payloadTS, Status SolarPanels, Timestamp solarPanelsTS, Status Thermal, Timestamp ThermalTS){
+        Satellite sat=new Satellite(temp,tempTS,energy,energyTS,Sband,sbandTS,Payload,payloadTS,SolarPanels,solarPanelsTS,Thermal,ThermalTS);
         try{
             satelliteDao.create(sat);
         }

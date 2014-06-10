@@ -1,11 +1,7 @@
 package communication;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 public class SerialReader implements Runnable {
 	InputStream in;
@@ -16,22 +12,34 @@ public class SerialReader implements Runnable {
     }
     
     public void run ()
-    {
-        
+    {  
         int len = -1;
         byte[] buffer = new byte[1024];
-        //final InputStreamReader isr = new InputStreamReader(in);
-        //final BufferedInputStream bis = new BufferedInputStream(in);
-        final StringBuilder out = new StringBuilder();
+        Message msg = new Message();
         while(true) {
 	        try
 	        {
 	        	len = in.read(buffer, 0, buffer.length);
-	        	System.out.println("Read " + len + " bytes");
+	        	System.out.println("DEBUG: Read " + len + " bytes");
 	        	String str = new String(buffer, 0, len);
-	        	System.out.println(str);
+	        	if(str.contains(CommunicationManager.msgDelimiter)) {
+	        		String[] splitted = str.split(CommunicationManager.msgDelimiter.toString());
+	        		msg.append(splitted[0]);
+	        		//Send message to processing
+	        		System.out.println(msg.toString());
+	        		for(int i=1; i<splitted.length-1; i++) {
+		        		msg = new Message(splitted[i]);
+		        		// Send message to processing
+		        		System.out.println(msg.toString());
+	        		}
+	        		msg = new Message(splitted[splitted.length-1]);
+	        		System.out.println(msg.toString());
+	        	}
+	        	else {
+	        		msg.append(str);
+	        	}
 	        	CommunicationManager.getInstance().getInputLock().lock();
-	        	CommunicationManager.getInstance().getDataAvailable().await();
+	        	CommunicationManager.getInstance().getInputDataAvailable().await();
 	        }
 	        catch ( IOException e )
 	        {

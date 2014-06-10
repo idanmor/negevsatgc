@@ -1,6 +1,6 @@
 package communication;
 
-public class Test {
+public class ReceiveTest {
 
 	public static void main(String[] args) {
 		try {
