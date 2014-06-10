@@ -21,6 +21,7 @@ public abstract class PanelsWithClickInterface  extends Parent{
 	
 	public PanelsWithClickInterface(BorderPane maiPane, Parent panel){
 		this.getChildren().addAll(panel.getChildrenUnmodifiable());
+		applyListeners();
 	}
 	public PanelsWithClickInterface(BorderPane mainPane, Image image){
 		this.mainPane = mainPane;

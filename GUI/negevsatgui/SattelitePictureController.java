@@ -88,6 +88,7 @@ public class SattelitePictureController implements Initializable {
       ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
       ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), Status.MALFUNCTION).getImage());
       ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), Status.STANDBY).getImage());
+      
     }    
     
 }
