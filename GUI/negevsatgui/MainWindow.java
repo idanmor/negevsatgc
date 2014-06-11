@@ -16,9 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -30,13 +27,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -233,6 +225,20 @@ public class MainWindow{
     }
 	public void setSatteliteStatusText(String status) {
 		satteliteStatus.setText(status);
+	}
+	
+	public void addToLog(String... data){
+		if(data == null){
+			return;
+		}
+		for(int i = 0 ; i < data.length ; i++){
+			String toAdd = data[i];
+			if(!toAdd.endsWith("\n")){
+				toAdd = toAdd + "\n";
+			}
+			demoListView.appendText(toAdd);
+		}
+		
 	}
     
     

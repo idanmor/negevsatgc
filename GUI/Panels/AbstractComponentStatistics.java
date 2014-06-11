@@ -41,7 +41,7 @@ import misc.SattaliteUtils;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 
-public abstract class AbstractComponentStatistics {
+public abstract class AbstractComponentStatistics implements CommunicationRefreshInterface {
 	TableView<StatisticDataItemInterface> table;
 	private BorderPane rightPane;
 	private BorderPane mainPane;
@@ -235,6 +235,7 @@ public abstract class AbstractComponentStatistics {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createTable(){
+		if(table == null){
 		table = new TableView<>();
 		table.setPrefWidth(600);
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -255,8 +256,7 @@ public abstract class AbstractComponentStatistics {
 				new PropertyValueFactory<StatisticDataItemInterface,String>("type")
 				);
 		//populateTableDemo();
-		populateTable();
-		//backUpListItems = table.getItems();
+		table.getColumns().addAll(date, component, type);
 		table.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -267,7 +267,11 @@ public abstract class AbstractComponentStatistics {
 				t.consume();
 			}
 		});
-		table.getColumns().addAll(date, component, type);
+		}
+		populateTable();
+		//backUpListItems = table.getItems();
+		
+		
 		backUpListItems = table.getItems();
 	}
 	private void populateTable(){
@@ -387,6 +391,10 @@ public abstract class AbstractComponentStatistics {
 
 			return data;
 		}
+	}
+	@Override
+	public void refreshPanelData(){
+		this.createTable();
 	}
 	public abstract List<Component> getComponent(Timestamp oldestTS, Timestamp TS);
 	public abstract String getObjectName();

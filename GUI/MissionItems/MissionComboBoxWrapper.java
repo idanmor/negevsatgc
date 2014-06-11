@@ -41,6 +41,6 @@ public class MissionComboBoxWrapper extends ComboBox<Object>implements MissionIt
         if(prefix == null){
             return getMissionValue();
         }
-        return prefix.toString().trim() + " " + getMissionValue();
+        return prefix.getText().trim() + " " + getMissionValue();
     }
 }
