@@ -3,7 +3,9 @@ package data;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javafx.util.Pair;
 import persistency.dbConnection;
 
 public class DataManager {
@@ -39,8 +41,8 @@ public class DataManager {
 		return db.getEnergy(startDate, endDate);
 	}
 	
-	public List<Energy> getStatus(Timestamp startDate, Timestamp endDate){
-		return db.getEnergy(startDate, endDate);
+	public List<Satellite> getStatus(Timestamp startDate, Timestamp endDate){
+		return db.getSatelliteData(startDate, endDate);
 	}
 	
 	public List<Mission> getMission(Timestamp creationTimestamp){
@@ -50,23 +52,30 @@ public class DataManager {
 	public Satellite getLatestSatData(){
 		return(this.latestSatData);
 	}
-	public ArrayList<String> getListOfStatusComponents(){
-		ArrayList<String> arr=new ArrayList<String>();
-		arr.add("Temprature");
-		arr.add("Energy");
-		arr.add("Sband");
-		arr.add("Payload");
-		arr.add("SolarPanels");
-		arr.add("Thermal");
-		return(arr);
+	public ArrayList<Pair<String,Pair<Status,Timestamp>>> getListOfStatusPairs(Satellite satellite){
+		ArrayList<Pair<String,Pair<Status,Timestamp>>> statusPairs=new ArrayList<Pair<String,Pair<Status,Timestamp>>>();
+		statusPairs.add(new Pair("Temprature",new Pair(satellite.getTempratureStatus(),satellite.getTempratureTS())));
+		statusPairs.add(new Pair("Energy",new Pair(satellite.getEnergyStatus(),satellite.getEnergyTS())));
+		statusPairs.add(new Pair("Sband",new Pair(satellite.getSbandStatus(),satellite.getSbandTS())));
+		statusPairs.add(new Pair("Payload",new Pair(satellite.getPayloadStatus(),satellite.getPayloadTS())));
+		statusPairs.add(new Pair("SolarPanels",new Pair(satellite.getSolarPanelsStatus(),satellite.getSolarPanelsTS())));
+		statusPairs.add(new Pair("Thermal",new Pair(satellite.getThermalStatus(),satellite.getThermalTS())));
+		
+		return(statusPairs);
 	}
+	
+	public Map<String,Float> getReadingsPerSensor(Component component){
+		
+		return component.getSensorsValues();
+	}
+
 	
 	 public void insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
 		 db.insertMission(_missionExecutionTS, _command, _priority);
 	 }
 	 
-	 public void insertSatellite(Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal, Timestamp ts){
-		 db.insertSatellite(temp, energy, Sband, Payload, SolarPanels, Thermal, ts);
+	 public void insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, Status Sband, Timestamp SbandTS, Status Payload, Timestamp PayloadTS, Status SolarPanels, Timestamp SolarPanelsTS, Status Thermal, Timestamp ThermalTS){
+		 db.insertSatellite(temp, tempTS, energy, energyTS, Sband, SbandTS, Payload, PayloadTS, SolarPanels, SolarPanelsTS, Thermal, ThermalTS);
 	 }
 	 
 	 public void insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp ts){
@@ -77,7 +86,11 @@ public class DataManager {
 		 db.insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
 	 }
 	 
-	    public void delete(String component,Timestamp ts) {
-	    	db.delete(component, ts);
-	    }
+	 public void deleteComponent(String component,Timestamp timeStamp) {
+		 db.deleteComponent(component, timeStamp);
+	 }
+	    
+	 public void deleteCompletedMission(Timestamp creationTimestamp){
+		 db.deleteCompletedMission(creationTimestamp);
+	 }
 }

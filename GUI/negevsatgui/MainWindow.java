@@ -10,30 +10,25 @@ import MenuItems.MainMenu;
 import Panels.MissionPanel;
 import Panels.SatteliteStatusPanel;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import Utils.Constants;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -48,6 +43,7 @@ public class MainWindow{
 	private BorderPane mainPane;
 	private static MainWindow instance;
 	private ComboBox<SatteliteMods> comboSattelites;
+	private Label satteliteStatus;
 	public MainWindow(){
 		super();
 		synchronized(MainWindow.class){
@@ -76,7 +72,7 @@ public class MainWindow{
 		
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		Label satteliteStatus = new Label(getSatteliteStatus());
+		satteliteStatus = new Label(getSatteliteStatus());
 		satteliteStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
 		mainPane.setBottom(satteliteStatus);
@@ -110,8 +106,14 @@ public class MainWindow{
 		HBox secondLine = new HBox();
 		VBox logBox = new VBox();
 		HBox buttonBox = SattaliteUtils.getHBox(10);
-		firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane()));
-
+		  try {
+			Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+			firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane(),root));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		demoListView = new TextArea();
 		demoListView.setEditable(false);
 		TextField toLogger = new TextField();
@@ -221,6 +223,23 @@ public class MainWindow{
         String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
         return generatedStatus[(int)(Math.random()*generatedStatus.length)];
     }
+	public void setSatteliteStatusText(String status) {
+		satteliteStatus.setText(status);
+	}
+	
+	public void addToLog(String... data){
+		if(data == null){
+			return;
+		}
+		for(int i = 0 ; i < data.length ; i++){
+			String toAdd = data[i];
+			if(!toAdd.endsWith("\n")){
+				toAdd = toAdd + "\n";
+			}
+			demoListView.appendText(toAdd);
+		}
+		
+	}
     
     
     

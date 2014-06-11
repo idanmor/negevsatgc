@@ -2,7 +2,13 @@ package data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.util.Pair;
 
 @DatabaseTable(tableName="Energy")
 public class Energy extends Component {
@@ -46,22 +52,35 @@ public class Energy extends Component {
     public Timestamp getReceivedTimestamp(){
         return timeReceivedTimestamp;
     }
-    public float getBatt1v(){
+    public float getBatt1Voltage(){
         return batt1Voltage;
     }
-    public float getBatt2v(){
+    public float getBatt2Voltage(){
         return batt2Voltage;
     }
-    public float getBatt3v(){
+    public float getBatt3Voltage(){
         return batt3Voltage;
     }
-    public float getBatt1c(){
+    public float getBatt1Current(){
         return batt1Current;
     }
-    public float getBatt2c(){
+    public float getBatt2Current(){
         return batt2Current;
     }
-    public float getBatt3c(){
+    public float getBatt3Current(){
         return batt3Current;
     }
+    
+	public 	Map<String, Float> getSensorsValues() {
+		if(sensorsValues == null){
+			sensorsValues= new HashMap<String, Float>();
+			sensorsValues.put("batt1Voltage",new Float(this.getBatt1Voltage()));
+			sensorsValues.put("batt2Voltage",new Float(this.getBatt2Voltage()));
+			sensorsValues.put("batt3Voltage",new Float(this.getBatt3Voltage()));
+			sensorsValues.put("batt1Current",new Float(this.getBatt1Current()));
+			sensorsValues.put("batt2Current",new Float(this.getBatt2Current()));
+			sensorsValues.put("batt3Current",new Float(this.getBatt3Current()));
+		}
+		return sensorsValues;
+	}
 }

@@ -8,7 +8,7 @@ and open the template in the editor.
     Author     : Max
 */
 
-.root {
+.main{
      -fx-background-image: url("background.jpg");
 }
 .label {

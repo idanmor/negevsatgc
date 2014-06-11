@@ -56,7 +56,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	private Button confirmButton;
 	private Button cancelButton;
 
-	private List<String> mission_components_list;
+	private List<MissionTreeItem> mission_components_list;
 	ObservableList<TreeItem> dateAndLocationlist;
 	private final int MISSION_DESC = 0;
 	private final int MISSION_DATE = 1;
@@ -68,13 +68,19 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	public MissionSplitFrameIMPL(BorderPane pane){
 		mainSplitPane = new SplitPane();
 		mainPane = new BorderPane();
-		//   mainPane = new VBox();
 		init();
 		pane.setCenter(mainPane);
-		//pane.setBottom(getConfirmCancelButtons());
 	}
 
-
+	private void createMission(){
+		StringBuilder sb = new StringBuilder();
+		for(MissionTreeItem i : this.mission_components_list ){
+			if(i != null){
+				sb.append(i.toString()).append(i.getMissionStringValue());
+			}
+		}
+		System.out.println(this.mission_components_list);
+	}
 
 	private void init(){
 		populateLeftList();
@@ -107,7 +113,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 
 				@Override
 				public void handle(ActionEvent t) {
-					//TODO
+					createMission();
 
 				}
 			});
@@ -156,7 +162,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 						MissionTreeItem item =  (MissionTreeItem) leftTree.getSelectionModel().getSelectedItem().getValue();
 						if(item == null || item.getMissionItem() == null){ //nothing is selected or there is no actual input item
 							mouseEvent.consume();
-						return;
+							return;
 						}
 						BorderPane box = new BorderPane();
 						Button deletionButton = new Button("-");
@@ -175,14 +181,14 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 							box.setLeft(item.getExplainLabel());
 							box.setRight(new HBox(item.getMissionItem().getWrappedItem(),deletionButton));
 
-							System.out.println(item.getExplainLabel().getText().length());
+							//System.out.println(item.getExplainLabel().getText().length());
 						}else{
 							box.getChildren().addAll(item.getMissionItem().getWrappedItem(),deletionButton); 
 						}
 
 						item.setAlreadySelected(true);
 						rightPane.getChildren().add(item.getMissionArrayLoc(),box);
-						mission_components_list.add(item.getMissionArrayLoc(), item.getMissionStringValue());
+						mission_components_list.add(item);
 					}
 				}
 					});
@@ -190,7 +196,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			dateAndLocation.getChildren().addAll(getDateAndLocationItems());	
 			TreeItem missionGeneral =  new TreeItem(new MissionTreeItem("General mission items"));
 			missionGeneral.getChildren().addAll(getGeneralMissionDescription());
-			
+
 			TreeItem missionComponentsAction = new TreeItem(new MissionTreeItem("Components Actions"));
 			missionComponentsAction.getChildren().addAll(getSatteliteComponentCommands());
 			root.getChildren().addAll(dateAndLocation, missionGeneral, missionComponentsAction);
@@ -211,178 +217,181 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			endPicker.setEditable(false);
 			AbstractMultipleItemsWrapper timeAndDate = new AbstractMultipleItemsWrapper(picker, new TimeTextFieldWrapper(LocalTime.now().toString()));
 			AbstractMultipleItemsWrapper endTimeAndDate = new AbstractMultipleItemsWrapper(endPicker, new TimeTextFieldWrapper(LocalTime.now().toString()));
-			
+
 			dateAndLocationlist.add(new TreeItem (new MissionTreeItem(timeAndDate, "Mission Date", new Label("Date:"), MISSION_DATE)));
 			dateAndLocationlist.add(new TreeItem(new MissionTreeItem(endTimeAndDate, "Mission end time", new Label("End mission:"), MISSION_DATE_END)));
 			dateAndLocationlist.add(new TreeItem (getWebMapMissionItem()));
 		}
 		return dateAndLocationlist;
 	}
-	
-/**
- * The function returns a list of missions that describe the mission for example: Take photo, measure temperature....
- * @return list of mission items 
- */
+
+	/**
+	 * The function returns a list of missions that describe the mission for example: Take photo, measure temperature....
+	 * @return list of mission items 
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-protected ObservableList<TreeItem> getGeneralMissionDescription(){
-	ObservableList<TreeItem> list = FXCollections.observableArrayList();
-	MissionTextWrapper nonEditableField = new MissionTextWrapper("Take photo");
-	nonEditableField.setEditable(false);
-	list.add(new TreeItem (new MissionTreeItem(nonEditableField, "Take photo mission", new Label("Mission description:"),MISSION_DESC)));
-	list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
-	list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
-	return list;
-}
+	protected ObservableList<TreeItem> getGeneralMissionDescription(){
+		ObservableList<TreeItem> list = FXCollections.observableArrayList();
+		MissionTextWrapper nonEditableField = new MissionTextWrapper("Take photo");
+		nonEditableField.setEditable(false);
+		list.add(new TreeItem (new MissionTreeItem(nonEditableField, "Take photo mission", new Label("Mission description:"),MISSION_DESC)));
+		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
+		list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
+		return list;
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-protected ObservableList<TreeItem> getSatteliteComponentCommands(){
-	ObservableList<TreeItem> list = FXCollections.observableArrayList();
-	ObservableList<Object> mode = FXCollections.observableArrayList("Online","Offline");
-	list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(mode), "Change Component Status", new Label("Mode:"),COMPONENT_ON_OFF_LOCATION)));      
-	return list;
-} 
-private ObservableList<Object> getListOfSatteliteComponents(){
-	return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera","Solar Panel");
+	protected ObservableList<TreeItem> getSatteliteComponentCommands(){
+		ObservableList<TreeItem> list = FXCollections.observableArrayList();
+		ObservableList<Object> mode = FXCollections.observableArrayList("Online","Offline");
+		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(mode), "Change Component Status", new Label("Mode:"),COMPONENT_ON_OFF_LOCATION)));      
+		return list;
+	} 
+	private ObservableList<Object> getListOfSatteliteComponents(){
+		return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera","Solar Panel");
 
-}
-private MissionTreeItem getWebMapMissionItem(){
-	MissionTreeItem item = new MissionTreeItem(generateLocationTable(), "SelectLocation", null, MISSION_LOCATION_TABLE){
-		public void doAdditionalActionsOnSelection(){
-			WebMap map = new WebMap();
-			map.start();
-		}
-	};
-	return item;                    
-}
-
-@Override
-public String buildMissionSummary() {
-	return "unsupported";
-}
-@SuppressWarnings({ "unchecked", "rawtypes" })
-private MissionTableWrapper generateLocationTable(){
-	MissionTableWrapper table = new MissionTableWrapper();
-
-	table.setEditable(false);
-	TableColumn lat = new TableColumn("Latitude");
-	TableColumn lng = new TableColumn("Longtitude");
-	// TableColumn Radius = new TableColumn("Radius");
-	table.getColumns().addAll(lat, lng);
-
-	//        Task<List<Coardinate>> task = new Task<List<Coardinate>>() {
-	//
-	//            @Override
-	//            protected List<Coardinate> call() throws Exception {
-	//                WebMap w = new WebMap();
-	//                w.start();
-	//                return w.getMarkers();
-	//             }
-	//        };
-	//       //  w.start();
-	//         task.run();
-	//         
-	//        try {
-	//            addToTable(task.get(),table);
-	//        } catch (InterruptedException ex) {
-	//            Logger.getLogger(MissionItemsTakePhoto.class.getName()).log(Level.SEVERE, null, ex);
-	//        } catch (ExecutionException ex) {
-	//            Logger.getLogger(MissionItemsTakePhoto.class.getName()).log(Level.SEVERE, null, ex);
-	//        }
-	return table;
-}
-
-private void addToTable(List <Coardinate> markers, TableView table){
-	for(int i = 0; i < markers.size() ; i++){
-		Coardinate single = markers.get(i);
-		table.getItems().addAll(single.getLat(),single.getLng(), new DeleteButton(i, table));
 	}
-}
-
-private class MissionTreeItem /*extends TreeItem<MissionTreeItem>*/{
-	private MissionItemWrapper item = null;
-	private String name = null;
-	private Label explainLabel = null;
-	private boolean isInSummary;
-	private int missionArrayLocation = -1;
-
-	public MissionTreeItem(MissionItemWrapper item, String name, Label explainLabel, int missionArrayLocation){
-		this.item = item;
-		this.name = name;
-		this.explainLabel = explainLabel;
-		if(explainLabel != null){
-			this.explainLabel.setText(explainLabel.getText().trim() + getFillerString());
-
-		}
-
-		isInSummary = false;
-		this.missionArrayLocation = missionArrayLocation;
-	}
-
-	private String getFillerString(){
-		StringBuilder b = new StringBuilder();
-		for(int i = 0 ; i < Math.abs(getMaxLabelWidth() - explainLabel.getText().trim().length()); i++){
-			b.append(" ");
-		}
-
-		return b.toString();
-	}
-
-	public MissionTreeItem(String name){
-		this.name = name;
-	}
-
-	@Override
-	public String toString(){
-		return name;
-	}
-
-	public MissionItemWrapper getMissionItem(){
-		return item;
-	}
-	public int getMissionArrayLoc(){
-		return missionArrayLocation;
-	}
-	public Label getExplainLabel(){
-		return explainLabel;
-	}
-
-	@SuppressWarnings("unused")
-	public void doAdditionalActionsOnSelection(){
-		//if any additional actions needed override this function
-	}
-	public void setAlreadySelected(boolean isInSummary){
-		this.isInSummary = isInSummary;
-	}
-
-	public boolean isAlreadyInSummary(){
-		return isInSummary;
-	}
-
-	public String getMissionStringValue(){
-		return item.getValueStringWithPreIfNeeded(explainLabel);
-	}
-}
-
-public class TemporaryMission{
-
-};
-public class DeleteButton extends Button{
-	private int tableIndex;
-
-
-	public DeleteButton(int index, TableView table){
-		index = tableIndex;
-		this.setOnAction(new EventHandler<ActionEvent>(){
-			@Override
-			public void handle(ActionEvent t) {
-				table.getItems().remove(tableIndex);
+	private MissionTreeItem getWebMapMissionItem(){
+		MissionTreeItem item = new MissionTreeItem(generateLocationTable(), "SelectLocation", null, MISSION_LOCATION_TABLE){
+			public void doAdditionalActionsOnSelection(){
+				WebMap map = new WebMap();
+				map.start();
 			}
-		});
+		};
+		return item;                    
 	}
-
 
 	@Override
-	public String toString(){   
-		return "Delete row";
+	public String buildMissionSummary() {
+		return "unsupported";
 	}
-}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private MissionTableWrapper generateLocationTable(){
+		MissionTableWrapper table = new MissionTableWrapper();
+
+		table.setEditable(false);
+		TableColumn lat = new TableColumn("Latitude");
+		TableColumn lng = new TableColumn("Longtitude");
+		// TableColumn Radius = new TableColumn("Radius");
+		table.getColumns().addAll(lat, lng);
+
+		//        Task<List<Coardinate>> task = new Task<List<Coardinate>>() {
+		//
+		//            @Override
+		//            protected List<Coardinate> call() throws Exception {
+		//                WebMap w = new WebMap();
+		//                w.start();
+		//                return w.getMarkers();
+		//             }
+		//        };
+		//       //  w.start();
+		//         task.run();
+		//         
+		//        try {
+		//            addToTable(task.get(),table);
+		//        } catch (InterruptedException ex) {
+		//            Logger.getLogger(MissionItemsTakePhoto.class.getName()).log(Level.SEVERE, null, ex);
+		//        } catch (ExecutionException ex) {
+		//            Logger.getLogger(MissionItemsTakePhoto.class.getName()).log(Level.SEVERE, null, ex);
+		//        }
+		return table;
+	}
+
+	private void addToTable(List <Coardinate> markers, TableView table){
+		for(int i = 0; i < markers.size() ; i++){
+			Coardinate single = markers.get(i);
+			table.getItems().addAll(single.getLat(),single.getLng(), new DeleteButton(i, table));
+		}
+
+	}
+	
+	private class MissionTreeItem /*extends TreeItem<MissionTreeItem>*/{
+		private MissionItemWrapper item = null;
+		private String name = null;
+		private Label explainLabel = null;
+		private boolean isInSummary;
+		private int missionArrayLocation = -1;
+
+		public MissionTreeItem(MissionItemWrapper item, String name, Label explainLabel, int missionArrayLocation){
+			this.item = item;
+			this.name = name;
+			this.explainLabel = explainLabel;
+			if(explainLabel != null){
+				this.explainLabel.setText(explainLabel.getText().trim() + getFillerString());
+
+			}
+
+			isInSummary = false;
+			this.missionArrayLocation = missionArrayLocation;
+		}
+
+		private String getFillerString(){
+			StringBuilder b = new StringBuilder();
+			for(int i = 0 ; i < Math.abs(getMaxLabelWidth() - explainLabel.getText().trim().length()); i++){
+				b.append(" ");
+			}
+
+			return b.toString();
+		}
+
+		public MissionTreeItem(String name){
+			this.name = name;
+		}
+
+		@Override
+		public String toString(){
+			return name;
+		}
+
+		public MissionItemWrapper getMissionItem(){
+			return item;
+		}
+		public int getMissionArrayLoc(){
+			return missionArrayLocation;
+		}
+		public Label getExplainLabel(){
+			return explainLabel;
+		}
+
+		@SuppressWarnings("unused")
+		public void doAdditionalActionsOnSelection(){
+			//if any additional actions needed override this function
+		}
+		public void setAlreadySelected(boolean isInSummary){
+			this.isInSummary = isInSummary;
+		}
+
+		public boolean isAlreadyInSummary(){
+			return isInSummary;
+		}
+
+		public String getMissionStringValue(){
+			return item.getValueStringWithPreIfNeeded(explainLabel);
+		}
+	}
+
+	public class TemporaryMission{
+
+	};
+	public class DeleteButton extends Button{
+		private int tableIndex;
+
+
+		public DeleteButton(int index, TableView table){
+			index = tableIndex;
+			this.setOnAction(new EventHandler<ActionEvent>(){
+				@Override
+				public void handle(ActionEvent t) {
+					table.getItems().remove(tableIndex);
+					mission_components_list.remove(tableIndex);
+					mission_components_list.add(null);
+				}
+			});
+		}
+
+
+		@Override
+		public String toString(){   
+			return "Delete row";
+		}
+	}
 }

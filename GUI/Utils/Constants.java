@@ -16,10 +16,11 @@ public interface Constants {
 	public static final String ICON_TEMPERATURE = CSS_PACKAGE_LOCATION + "thermometer.gif";
 	public static final String ICON_VOLTAGE = CSS_PACKAGE_LOCATION + "Voltage.gif";
 	public static final String ICON_CPU = CSS_PACKAGE_LOCATION + "calc.gif";
-	public static final String ICON_RED = CSS_PACKAGE_LOCATION + "red.jpg";
-	public static final String ICON_YELLOW = CSS_PACKAGE_LOCATION + "yellow.jpg";
-	public static final String ICON_GREEN = CSS_PACKAGE_LOCATION + "green.png";
-	public static final String EXCEL = CSS_PACKAGE_LOCATION + "excel.jpg";
+	public static final String ICON_RED = "red.jpg";
+	public static final String ICON_YELLOW =  "yellow.jpg";
+	public static final String ICON_GREEN =  "green.png";
+	public static final String ICON_ORANGE ="orange.jpg";
+	public static final String EXCEL = "excel.jpg";
 	
 	
 	//MainPane Images
@@ -27,4 +28,8 @@ public interface Constants {
 	
 	//General
 	public static final int MAIN_PANE_WIDTH = MainWindow.getMainWindow().getMainPane().widthProperty().intValue();
+	
+	//Components names
+	public static final String TEMERATURE_COMPONENT_NAME = "Temperature";
+	public static final String ENERGY_COMPONENT_NAME = "Energy";
 }

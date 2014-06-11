@@ -2,7 +2,13 @@ package data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.util.Pair;
 
 @DatabaseTable(tableName="Temprature")
 public class Temprature extends Component {
@@ -18,6 +24,7 @@ public class Temprature extends Component {
     @DatabaseField
     private Timestamp timeReceivedTimestamp;
 
+   
     public Temprature(){}
     
     public Temprature(Timestamp ts, float s1,float s2, float s3){
@@ -45,5 +52,16 @@ public class Temprature extends Component {
     public float getSensor3(){
         return sensor3;
     }
+
+	
+	public 	Map<String, Float> getSensorsValues() {
+		if(sensorsValues == null){
+			sensorsValues = new HashMap<>();
+			sensorsValues.put("Sensor 1",new Float(this.getSensor1()));
+			sensorsValues.put("Sensor 2",new Float(this.getSensor2()));
+			sensorsValues.put("Sensor 3",new Float(this.getSensor3()));
+		}
+		return sensorsValues;
+	}
 	
 }

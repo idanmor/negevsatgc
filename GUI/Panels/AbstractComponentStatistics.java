@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-import data.DataManager;
-import data.Temprature;
+import data.Component;
 import Utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,7 +41,7 @@ import misc.SattaliteUtils;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 
-public abstract class AbstractComponentStatistics {
+public abstract class AbstractComponentStatistics implements CommunicationRefreshInterface {
 	TableView<StatisticDataItemInterface> table;
 	private BorderPane rightPane;
 	private BorderPane mainPane;
@@ -112,6 +112,29 @@ public abstract class AbstractComponentStatistics {
 		return box;
 	}
 	
+	protected void populateTableNodes(Timestamp oldestTS,
+			ObservableList<StatisticDataItemInterface> nodes,
+			DateFormat formatter, Timestamp toDate) {
+		boolean hasData = false;
+		List<Component> components = getComponent(oldestTS, toDate);
+		if(components.isEmpty()){
+			return;
+		}
+		Set<String> sensors = components.get(0).getSetOfSensorsNames();
+		for(String sensor : sensors){
+			String[][] data = new String[components.size()][3];
+			for(int i = 0 ; i < components.size() ; i++){
+				hasData = true;
+				Component comp = components.get(i);
+				data[i][0] = formatter.format(new Date(comp.getSampleTimestamp().getTime())).toString();
+				data[i][1] = comp.getSensorValue(sensor).toString();
+				data[i][2] = sensor;
+			}    
+			if(hasData){
+				nodes.add(new StatisticDataItem(formatter.format(new Date(oldestTS.getTime())).toString(), sensor, getObjectName(), data)); //TODO
+			}
+		}
+	}
 	private void filter(String before, String after){
 		GregorianCalendar beforeCal = null;
 		GregorianCalendar afterCal = null;
@@ -210,17 +233,18 @@ public abstract class AbstractComponentStatistics {
 
 	protected abstract String getCsvFileLocationAndName();
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createTable(){
+		if(table == null){
 		table = new TableView<>();
 		table.setPrefWidth(600);
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		TableColumn date = new TableColumn("Date Taken");
 		TableColumn component = new TableColumn("Component");
-		TableColumn severity = new TableColumn("Type");
+		TableColumn type = new TableColumn("Type");
 		date.prefWidthProperty().bind(table.widthProperty().multiply(0.5));
 		component.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-		severity.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		type.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 
 		date.setCellValueFactory(
 				new PropertyValueFactory<StatisticDataItemInterface,String>("date")
@@ -228,12 +252,11 @@ public abstract class AbstractComponentStatistics {
 		component.setCellValueFactory(
 				new PropertyValueFactory<StatisticDataItemInterface,String>("component")
 				);
-		severity.setCellValueFactory(
+		type.setCellValueFactory(
 				new PropertyValueFactory<StatisticDataItemInterface,String>("type")
 				);
 		//populateTableDemo();
-		populateTable();
-		//backUpListItems = table.getItems();
+		table.getColumns().addAll(date, component, type);
 		table.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -244,7 +267,11 @@ public abstract class AbstractComponentStatistics {
 				t.consume();
 			}
 		});
-		table.getColumns().addAll(date, component, severity);
+		}
+		populateTable();
+		//backUpListItems = table.getItems();
+		
+		
 		backUpListItems = table.getItems();
 	}
 	private void populateTable(){
@@ -254,33 +281,26 @@ public abstract class AbstractComponentStatistics {
 		Timestamp TS=new Timestamp(System.currentTimeMillis());
 		ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
 		oldestTS = Utils.stripTimePortion(oldestTS);
+		DateFormat formatter = DateFormat.getDateTimeInstance(
+				DateFormat.SHORT, 
+				DateFormat.SHORT,Locale.getDefault());
 		while(oldestTS.before(TS)){
-			boolean hasData = false;
-
-			DateFormat formatter = DateFormat.getDateTimeInstance(
-					DateFormat.SHORT, 
-					DateFormat.SHORT,Locale.getDefault());
 			Timestamp toDate = new Timestamp(oldestTS.getTime() + dayinMS);
-			populateTableNodes(oldestTS, nodes, hasData, formatter, toDate);
+			populateTableNodes(oldestTS, nodes, formatter, toDate);
 			oldestTS.setTime(oldestTS.getTime() + dayinMS);
 		}
 		table.getItems().addAll(nodes);
 	}
 	
-	protected abstract void populateTableNodes(Timestamp oldestTS,
-			ObservableList<StatisticDataItemInterface> nodes, boolean hasData,
-			DateFormat formatter, Timestamp toDate);
 	
 	private void populateTableDemo(){
 		DemoPopulateTable d = new DemoPopulateTable();
 		table.setItems(d.getNodes());
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createStatisicsWindow(LineChart<String,Number> lineChart){
 		lineChart.getData().clear();
-		final Comparator<XYChart.Data<String, Number>> comparator = 
-				(XYChart.Data<String, Number> o1, XYChart.Data<String, Number> o2) -> 
-		o1.getXValue().compareTo(o2.getXValue());
 		lineChart.setTitle("Diagnostics");
 		ObservableList<StatisticDataItemInterface> selected = table.getSelectionModel().getSelectedItems();
 		for(int i = 0 ; i < selected.size(); i++){
@@ -372,4 +392,10 @@ public abstract class AbstractComponentStatistics {
 			return data;
 		}
 	}
+	@Override
+	public void refreshPanelData(){
+		this.createTable();
+	}
+	public abstract List<Component> getComponent(Timestamp oldestTS, Timestamp TS);
+	public abstract String getObjectName();
 }
