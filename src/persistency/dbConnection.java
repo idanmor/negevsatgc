@@ -14,9 +14,9 @@ import java.sql.Timestamp;
 public class dbConnection {
     private static dbConnection dbcon;
     static ConnectionSource connectionSource;
-    static Dao<Energy, Timestamp> egDao;
-    static Dao<Temprature, Timestamp> tmpDao;
-    static Dao<Satellite, Timestamp> satDao;
+    static Dao<Energy, Timestamp> energygDao;
+    static Dao<Temprature, Timestamp> tempratureDao;
+    static Dao<Satellite, Timestamp> satelliteDao;
     static Dao<Mission, Timestamp> missionDao;
     
 
@@ -24,10 +24,10 @@ public class dbConnection {
 
     private dbConnection(){
         try{
-            connectionSource =new JdbcConnectionSource("jdbc:sqlite:C:\\sqlite\\negevSatDB.db");
-            egDao =DaoManager.createDao(connectionSource, Energy.class);
-            tmpDao =DaoManager.createDao(connectionSource, Temprature.class);
-            satDao =DaoManager.createDao(connectionSource, Satellite.class);
+            connectionSource =new JdbcConnectionSource("jdbc:sqlite:d:\\sqlite\\negevSatDB.db");
+            energygDao =DaoManager.createDao(connectionSource, Energy.class);
+            tempratureDao =DaoManager.createDao(connectionSource, Temprature.class);
+            satelliteDao =DaoManager.createDao(connectionSource, Satellite.class);
             missionDao = DaoManager.createDao(connectionSource, Mission.class);
             
        
@@ -59,7 +59,7 @@ public class dbConnection {
     public List<Satellite> getSatelliteData(Timestamp startDate, Timestamp endDate){
     	List<Satellite> data=null;
     	try{
-    		data=satDao.queryBuilder().where().between(Satellite.DATE_FIELD_NAME, startDate, endDate).query();
+    		data=satelliteDao.queryBuilder().where().between(Satellite.DATE_FIELD_NAME, startDate, endDate).query();
     		}
     	catch( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -72,7 +72,7 @@ public class dbConnection {
         
         List<Temprature> data=null;
         try{
-            data = tmpDao.queryBuilder().where().between(Temprature.DATE_FIELD_NAME, startDate, endDate).query();
+            data = tempratureDao.queryBuilder().where().between(Temprature.DATE_FIELD_NAME, startDate, endDate).query();
         }
         catch( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -84,7 +84,7 @@ public class dbConnection {
         
         List<Energy> data=null;
         try{
-           data = egDao.queryBuilder().where().between(Energy.DATE_FIELD_NAME, startDate, endDate).query();          
+           data = energygDao.queryBuilder().where().between(Energy.DATE_FIELD_NAME, startDate, endDate).query();          
         }
         catch( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -107,10 +107,10 @@ public class dbConnection {
     }
     
     
-    public void insertSatellite(Status temp, Status energy, Status Sband, Status Payload,Status SolarPanels, Status Thermal, Timestamp ts){
-        Satellite sat=new Satellite(ts,temp,energy,Sband,Payload,SolarPanels,Thermal);
+    public void insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, Status Sband, Timestamp sbandTS, Status Payload,Timestamp payloadTS, Status SolarPanels, Timestamp solarPanelsTS, Status Thermal, Timestamp ThermalTS){
+        Satellite sat=new Satellite(temp,tempTS,energy,energyTS,Sband,sbandTS,Payload,payloadTS,SolarPanels,solarPanelsTS,Thermal,ThermalTS);
         try{
-            satDao.create(sat);
+            satelliteDao.create(sat);
         }
         catch ( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -121,7 +121,7 @@ public class dbConnection {
     public void insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp ts){
         Temprature tmp=new Temprature(ts,sensor1,sensor2,sensor3);
         try{
-            tmpDao.create(tmp);
+            tempratureDao.create(tmp);
         }
         catch ( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -132,7 +132,7 @@ public class dbConnection {
     public void insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp ts){
         Energy eng=new Energy(ts,batt1V,batt2V,batt3V,batt1C,batt2C,batt3C);  
         try{
-            egDao.create(eng);
+            energygDao.create(eng);
         }
         catch ( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -142,18 +142,28 @@ public class dbConnection {
    
 
     
-    public void delete(String component,Timestamp ts) {
+    public void deleteComponent(String component,Timestamp timestamp) {
         try{
             if(component.equals("Energy"))
-                egDao.deleteById(ts);
+                energygDao.deleteById(timestamp);
              else if(component.equals("Temprature"))
-                      tmpDao.deleteById(ts);
+                      tempratureDao.deleteById(timestamp);
             }
             catch ( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
                System.exit(0);
             } 
             
+    }
+    
+    public void deleteCompletedMission(Timestamp creationTimestamp){
+    	try{
+    		missionDao.deleteById(creationTimestamp);
+    	}
+    	catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+         }
     }
 
 }

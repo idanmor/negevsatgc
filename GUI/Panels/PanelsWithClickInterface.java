@@ -1,25 +1,39 @@
 package Panels;
 
+import java.awt.Panel;
+import java.io.IOException;
+
 import Utils.Utils;
 import javafx.animation.ScaleTransition;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
-public abstract class PanelsWithClickInterface  extends ImageView{
+public abstract class PanelsWithClickInterface  extends Parent{
 	protected BorderPane mainPane;
 	private ScaleTransition mouseEnteredTransition;
 	private ScaleTransition mouseExitedTransition;
 	private final double MAX_TRANSITION_SIZE = 1.05;
 	
-	public PanelsWithClickInterface(BorderPane mainPane, String imageLocation) {
+	public PanelsWithClickInterface(BorderPane maiPane, Parent panel){
+		this.getChildren().addAll(panel.getChildrenUnmodifiable());
+		applyListeners();
+	}
+	public PanelsWithClickInterface(BorderPane mainPane, Image image){
 		this.mainPane = mainPane;
-		this.setImage(Utils.getImageViewFromLocation(this.getClass(),imageLocation));
-		this.setPreserveRatio(true);
-		this.setSmooth(true);
-		this.setCache(true);
-
+		ImageView view = new ImageView(image);
+		//this.setImage(image);
+		view.setPreserveRatio(true);
+		view.setSmooth(true);
+		view.setCache(true);
+		this.getChildren().add(view);
+		applyListeners();
+	}
+	private void applyListeners() {
 		this.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
@@ -29,6 +43,9 @@ public abstract class PanelsWithClickInterface  extends ImageView{
 			}
 		});
 		applyOnHover();
+	}
+	public PanelsWithClickInterface(BorderPane mainPane, String imageLocation) {
+		this(mainPane, Utils.getImageViewFromLocation(PanelsWithClickInterface.class.getClass(), imageLocation));
 	}
 	public abstract void applyClickOnPanel();
 	
