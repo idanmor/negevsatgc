@@ -21,7 +21,6 @@ public class SendTest {
 				msg = msg.replaceAll("\n", "");
 				msg = msg.replaceAll("\t", "");
 				msg = msg.replaceAll("\r", "");
-				msg = msg.replaceAll(" ", "");
 				CommunicationManager.getInstance().sendMessage(new Message(msg));
 			} catch (IOException e) {
 				System.out.println("Cannot read from file " + filename);
