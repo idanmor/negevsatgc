@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class CommunicationManager {
-	public static final CharSequence msgDelimiter = "###";
+	public static final CharSequence msgDelimiter = "\n";
 
 	private static CommunicationManager instance = null;
 	private SerialPort serialPort;
@@ -23,17 +23,15 @@ public class CommunicationManager {
 	
 	private Lock inputLock;
 	private Condition inputDataAvailable;
-	private Lock outputLock;
-	private Condition outputDataAvailable;
 	
 	private BlockingQueue<Message> outputQueue;
+	private BlockingQueue<Message> messageAcceptorQueue;
 
 	private CommunicationManager() {
 		this.inputLock = new ReentrantLock();
 		this.inputDataAvailable = this.inputLock.newCondition();
-		this.outputLock = new ReentrantLock();
-		this.outputDataAvailable = this.outputLock.newCondition();
 		this.outputQueue = new LinkedBlockingQueue<Message>();
+		this.messageAcceptorQueue = new LinkedBlockingQueue<Message>();
 	}
 	
 	public static CommunicationManager getInstance() {
@@ -43,31 +41,41 @@ public class CommunicationManager {
 	}
 	
 	public void connect (String portName) throws Exception {
-        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-        if ( portIdentifier.isCurrentlyOwned() ) {
-            System.out.println("Error: Port is currently in use");
-        }
-        else {
-            CommPort commPort = portIdentifier.open(this.getClass().getName(),2000);
-            
-            if ( commPort instanceof SerialPort ){
-                serialPort = (SerialPort) commPort;
-                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-                
-                in = serialPort.getInputStream();
-                out = serialPort.getOutputStream();
-                
-                serialPort.addEventListener(new SerialListener(in));
-                serialPort.notifyOnDataAvailable(true);
-                
-                (new Thread(new SerialReader(in))).start();
-                (new Thread(new SerialWriter(out))).start();
-            }
-            else {
-                System.out.println("Error: Only serial ports are handled by this application");
-            }
-        }     
+		if (portName.equals("LOCAL")) {
+			(new Thread(new MessageParser())).start();
+		}
+		else {
+			CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+	        if ( portIdentifier.isCurrentlyOwned() ) {
+	            System.out.println("Error: Port is currently in use");
+	        }
+	        else {
+	            CommPort commPort = portIdentifier.open(this.getClass().getName(),2000);
+	            
+	            if ( commPort instanceof SerialPort ){
+	                serialPort = (SerialPort) commPort;
+	                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+	                
+	                in = serialPort.getInputStream();
+	                out = serialPort.getOutputStream();
+	                
+	                serialPort.addEventListener(new SerialListener(in));
+	                serialPort.notifyOnDataAvailable(true);
+	                
+	                (new Thread(new SerialReader(in))).start();
+	                (new Thread(new SerialWriter(out))).start();
+	                (new Thread(new MessageParser())).start();
+	            }
+	            else {
+	                System.out.println("Error: Only serial ports are handled by this application");
+	            }
+	        }
+		}
     }
+	
+	public void sendMission() {
+		
+	}
 	
 	public void sendMessage(Message msg) {
 		try {
@@ -77,24 +85,28 @@ public class CommunicationManager {
 		}
 	}
 	
+	public void sendLocalMessage(Message msg) {
+		try {
+			this.messageAcceptorQueue.put(msg);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public BlockingQueue<Message> getOutputQueue() {
 		return this.outputQueue;
+	}
+	
+	public BlockingQueue<Message> getMessageAcceptorQueue() {
+		return this.messageAcceptorQueue;
 	}
 	
 	public Lock getInputLock() {
 		return inputLock;
 	}
 	
-	public Lock getOutputLock() {
-		return outputLock;
-	}
-	
 	public Condition getInputDataAvailable() {
 		return inputDataAvailable;
-	}
-	
-	public Condition getOutputDataAvailable() {
-		return outputDataAvailable;
 	}
 
 }

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class SendTest {
+public class LocalIncomingTest {
 
 	public static void main(String[] args) {
 		try {
-			CommunicationManager.getInstance().connect("COM2");
+			CommunicationManager.getInstance().connect("LOCAL");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -21,14 +21,11 @@ public class SendTest {
 				msg = msg.replaceAll("\n", "");
 				msg = msg.replaceAll("\t", "");
 				msg = msg.replaceAll("\r", "");
-				CommunicationManager.getInstance().sendMessage(new Message(msg));
+				CommunicationManager.getInstance().sendLocalMessage(new Message(msg));
 			} catch (IOException e) {
 				System.out.println("Cannot read from file " + filename);
 			}
-		}
-		while(true) {
-			
-		}
+		}	
 	}
 
 }
