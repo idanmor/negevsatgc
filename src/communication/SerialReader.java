@@ -5,10 +5,12 @@ import java.io.InputStream;
 
 public class SerialReader implements Runnable {
 	InputStream in;
+	private boolean isRunning;
     
     public SerialReader ( InputStream in )
     {
         this.in = in;
+        isRunning = true;
     }
     
     public void run ()
@@ -16,7 +18,7 @@ public class SerialReader implements Runnable {
         int len = -1;
         byte[] buffer = new byte[1024];
         Message msg = new Message();
-        while(true) {
+        while(isRunning) {
 	        try
 	        {
 	        	len = in.read(buffer, 0, buffer.length);
@@ -60,5 +62,9 @@ public class SerialReader implements Runnable {
 	        	CommunicationManager.getInstance().getInputLock().unlock();
 	        }
         }
+    }
+    
+    public void stopThread() {
+    	this.isRunning = false;
     }
 }
