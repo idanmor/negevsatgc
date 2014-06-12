@@ -167,7 +167,8 @@ public class MessageParser implements Runnable {
 				"Solar Panels Status: " + solarPanelsStatus + " at " + solarPanelsStatusTS + "\n" +
 				"Thermal Control Status: " + thermalCtrlStatus + " at " + thermalCtrlStatusTS);
 		System.out.println("===========");
-		//DataManager.getInstance.insertSatellite
+		//DataManager.getInstance().insertSatellite(temp, tempTS, energy, energyTS, Sband, SbandTS, 
+		//						Payload, PayloadTS, SolarPanels, SolarPanelsTS, Thermal, ThermalTS);
 	}
 	
 	public void parseTemperaturePacket (Node packet) {
@@ -207,7 +208,7 @@ public class MessageParser implements Runnable {
 									"Sensor2 temperature: " + sensor2 + "C\n" +
 									"Sensor3 temperature: " + sensor3 + "C");
 				System.out.println("===========");
-				//DataManager.getInstance().insertTemprature(sensor1, sensor2, sensor3, ts);
+				DataManager.getInstance().insertTemprature(sensor1, sensor2, sensor3, ts);
 			}
 		}
 	}
@@ -253,7 +254,7 @@ public class MessageParser implements Runnable {
 									"Battery2: " + batt2V + "V " + batt2C + "A\n" +
 									"Battery3: " + batt3V + "V " + batt3C + "A");
 				System.out.println("===========");
-				//DataManager.getInstance().insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
+				DataManager.getInstance().insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
 			}
 		}
 	}
