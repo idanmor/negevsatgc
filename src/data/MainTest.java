@@ -25,6 +25,7 @@ public class MainTest {
     	
        // addRandomTemp(db, hourInMs, oldestTS, TS);
         addRandomEnergy(db, hourInMs, oldestTS, TS);
+        addRandomTemp(db, hourInMs, oldestTS, TS);
 	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
 	    List<Mission> mission=db.getMission(TS);
 	    for (Mission m: mission)
@@ -32,7 +33,7 @@ public class MainTest {
 //	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
 //	    dbConnection.insertTemprature(1, 2, 3, TS);
-//	    db.insertSatellite(Status.ON, Status.ON,Status.ON, Status.ON, Status.ON, Status.ON, TS);
+	    db.insertSatellite(Status.ON, TS, Status.ON,TS, Status.ON, TS, Status.ON, TS, Status.ON, TS, Status.ON, TS);
 //	    Timestamp t=new Timestamp(date.getTime());
 //	    List<? extends Component> tlst=dm.getTemprature(oldestTS,t);
 //	    for (Component item: tlst)
@@ -40,7 +41,7 @@ public class MainTest {
 //	    List<? extends Component> elst=dm.getEnergy(oldestTS,t);
 //	    for (Component item: elst)
 //	    	System.out.println("select from energy "+item.getSampleTimestamp());
-//	    List<Satellite> stlst=db.getSatelliteData(oldestTS,TS);
+	    List<Satellite> stlst=db.getSatelliteData(oldestTS,TS);
 //	    for (Satellite item: stlst)
 //	    	System.out.println("select from satellite "+item.getSampleTimestamp());
 	}

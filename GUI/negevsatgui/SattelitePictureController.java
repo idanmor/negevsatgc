@@ -103,6 +103,16 @@ public class SattelitePictureController implements Initializable {
 //      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), st.getPayloadStatus()).getImage());
 //      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), st.getSolarPanelsStatus()).getImage());
 //      
-    }    
+    }
+    
+    public void updateSateliteStatus(Satellite st){
+      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
+      ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), st.getTempratureStatus()).getImage());
+      ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), st.getThermalStatus()).getImage());
+      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), st.getSbandStatus()).getImage());
+      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), st.getPayloadStatus()).getImage());
+      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), st.getSolarPanelsStatus()).getImage());
+      
+    }
     
 }

@@ -17,7 +17,6 @@ import MissionItems.TimeTextFieldWrapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -26,15 +25,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -360,10 +356,6 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			this.isInSummary = isInSummary;
 		}
 
-		public boolean isAlreadyInSummary(){
-			return isInSummary;
-		}
-
 		public String getMissionStringValue(){
 			return item.getValueStringWithPreIfNeeded(explainLabel);
 		}
@@ -383,7 +375,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 				public void handle(ActionEvent t) {
 					table.getItems().remove(tableIndex);
 					mission_components_list.remove(tableIndex);
-					mission_components_list.add(null);
+					mission_components_list.add(tableIndex, null);
 				}
 			});
 		}
