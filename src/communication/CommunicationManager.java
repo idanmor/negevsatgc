@@ -2,10 +2,15 @@ package communication;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import gnu.io.UnsupportedCommOperationException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.TooManyListenersException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -26,6 +31,10 @@ public class CommunicationManager {
 	
 	private BlockingQueue<Message> outputQueue;
 	private BlockingQueue<Message> messageAcceptorQueue;
+	
+	private SerialReader serialReaderThread;
+	private SerialWriter serialWriterThread;
+	private MessageParser messageParserThread;
 
 	private CommunicationManager() {
 		this.inputLock = new ReentrantLock();
@@ -40,7 +49,10 @@ public class CommunicationManager {
 		return instance;
 	}
 	
-	public void connect (String portName) throws Exception {
+	public void connect (String portName) throws NoSuchPortException, 
+												PortInUseException, 
+												UnsupportedCommOperationException, 
+												IOException, TooManyListenersException {
 		if (portName.equals("LOCAL")) {
 			(new Thread(new MessageParser())).start();
 		}
@@ -62,9 +74,14 @@ public class CommunicationManager {
 	                serialPort.addEventListener(new SerialListener(in));
 	                serialPort.notifyOnDataAvailable(true);
 	                
-	                (new Thread(new SerialReader(in))).start();
-	                (new Thread(new SerialWriter(out))).start();
-	                (new Thread(new MessageParser())).start();
+	                
+	                serialReaderThread = new SerialReader(in);
+	                serialWriterThread = new SerialWriter(out);
+	                messageParserThread = new MessageParser();
+	                
+	                (new Thread(serialReaderThread)).start();
+	                (new Thread(serialWriterThread)).start();
+	                (new Thread(messageParserThread)).start();
 	            }
 	            else {
 	                System.out.println("Error: Only serial ports are handled by this application");
@@ -91,6 +108,10 @@ public class CommunicationManager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void disconnect() {
+		
 	}
 	
 	public BlockingQueue<Message> getOutputQueue() {

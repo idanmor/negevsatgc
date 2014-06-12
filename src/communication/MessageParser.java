@@ -44,10 +44,15 @@ public class MessageParser implements Runnable {
 	private static final String tagModuleSolarPanels = "SolarPanels";
 	private static final String tagModuleThermalCtrl = "ThermalCtrl";
 	
+	private boolean isRunning;
+	
+	public MessageParser () {
+		this.isRunning = true;
+	}
 	
 	public void run ()
     {
-		while (true) {
+		while (isRunning) {
 			try {
 				System.out.println("DEBUG: MessageAcceptor waiting for new message");
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
@@ -265,7 +270,7 @@ public class MessageParser implements Runnable {
 	 * @return
 	 */
 	public static long parseRTEMSTimestamp (String timestamp) {
-		DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss");
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		//df.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			return df.parse(timestamp).getTime();
@@ -274,4 +279,8 @@ public class MessageParser implements Runnable {
 			return 0;
 		}
 	}
+	
+	public void stopThread() {
+    	this.isRunning = false;
+    }
 }

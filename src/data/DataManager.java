@@ -1,26 +1,40 @@
 package data;
 
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
+
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TooManyListenersException;
 
+import communication.CommunicationManager;
 import javafx.util.Pair;
 import persistency.dbConnection;
 
 public class DataManager {
+	private static final String comPort = "COM2";
 	private dbConnection db;
-	public static final String tle = 
-					"ISS (ZARYA)\n"
-					+ "1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927\n"
-					+ "2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391563537";
+	private CommunicationManager comm;
 	
 	private static DataManager instance = null;
 	
 	private Satellite latestSatData;
 	
 	private DataManager() {
-		db= dbConnection.getdbCon();
+		db = dbConnection.getdbCon();
+		comm = CommunicationManager.getInstance();
+			try {
+				comm.connect(comPort);
+			} catch (NoSuchPortException | PortInUseException
+					| UnsupportedCommOperationException | IOException
+					| TooManyListenersException e) {
+				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
+				System.out.println("Error message: " + e.getMessage());
+			}
 	}
 	
 	public static DataManager getInstance() {
