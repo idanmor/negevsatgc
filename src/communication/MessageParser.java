@@ -63,8 +63,7 @@ public class MessageParser implements Runnable {
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
 				System.out.println("DEBUG: Message Accepted");
 				System.out.println(m.toString());
-				Document msg;
-				/*
+				Document msg;			
 				try {
 					msg = m.toDocument();
 				}
@@ -83,7 +82,7 @@ public class MessageParser implements Runnable {
 					}
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-				}*/
+				}
 	        } catch (InterruptedException e) {
 				e.printStackTrace();
 			}
