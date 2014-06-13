@@ -2,6 +2,7 @@ package Utils;
 
 import java.sql.Timestamp;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import communication.CommunicationManager;
 import data.Command;
@@ -47,13 +48,22 @@ public class GuiManager {
 
 	public void sendImmidiateComponentStatusChange(Command command) {
 		Mission newMission =  new Mission(null,command, 1);
-		refreshSatelliteController(new Satellite(Status.ON, new Timestamp(0), Status.ON,new Timestamp(0), Status.ON, new Timestamp(0), Status.ON, new Timestamp(0), Status.ON, new Timestamp(0), Status.ON, new Timestamp(0)));
+		refreshSatelliteController(new Satellite(Status.ON, new Timestamp(1), Status.ON,new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1)));
 		//TODO 
 	}
 
 	public void refreshSatelliteController(Satellite st){
-		SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
-		cont.updateSateliteStatus(st);
+	
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				//SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
+				SattelitePictureController.updateSateliteStatus(st);
+				
+			}
+		});
+	
 	}
 
 }

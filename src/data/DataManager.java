@@ -1,8 +1,8 @@
 package data;
 
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
+//import gnu.io.NoSuchPortException;
+//import gnu.io.PortInUseException;
+//import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -26,15 +26,15 @@ public class DataManager {
 	
 	private DataManager() {
 		db = dbConnection.getdbCon();
-		comm = CommunicationManager.getInstance();
-			try {
-				comm.connect(comPort);
-			} catch (NoSuchPortException | PortInUseException
-					| UnsupportedCommOperationException | IOException
-					| TooManyListenersException e) {
-				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
-				System.out.println("Error message: " + e.getMessage());
-			}
+//		comm = CommunicationManager.getInstance();
+//			try {
+//				comm.connect(comPort);
+//			} catch (NoSuchPortException | PortInUseException
+//					| UnsupportedCommOperationException | IOException
+//					| TooManyListenersException e) {
+//				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
+//				System.out.println("Error message: " + e.getMessage());
+//			}
 	}
 	
 	public static DataManager getInstance() {

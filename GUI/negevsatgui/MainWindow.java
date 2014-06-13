@@ -51,6 +51,7 @@ public class MainWindow{
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
 	private Label satteliteStatus;
+	private FXMLLoader fxmlLoader;
 	public MainWindow(){
 		super();
 		synchronized(MainWindow.class){
@@ -122,9 +123,15 @@ public class MainWindow{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		FXMLLoader fxmlLoader = new FXMLLoader();
-		  fxmlLoader.setLocation(NegevSatGui.class.getResource("FXMLDocument.fxml"));
-		pictureController = fxmlLoader.<SattelitePictureController>getController();
+//		 fxmlLoader = new FXMLLoader();
+//		  fxmlLoader.setLocation(getClass().getResource("FXMLDocument.fxml"));
+//		  try {
+//			fxmlLoader.load(getClass().getResource("FXMLDocument.fxml").openStream());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		pictureController = fxmlLoader.<SattelitePictureController>getController();
 		firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane(),root));
 	
 		demoListView = new TextArea();
@@ -357,6 +364,7 @@ public class MainWindow{
 		
 	}
 	public SattelitePictureController getSatellitePictureController() {	
+		
 		return this.pictureController;
 	}
     
