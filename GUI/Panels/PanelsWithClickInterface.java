@@ -18,15 +18,17 @@ public abstract class PanelsWithClickInterface  extends Parent{
 	private ScaleTransition mouseEnteredTransition;
 	private ScaleTransition mouseExitedTransition;
 	private final double MAX_TRANSITION_SIZE = 1.05;
-	
+	protected ImageView view;
 	public PanelsWithClickInterface(BorderPane maiPane, Parent panel){
 		this.getChildren().addAll(panel.getChildrenUnmodifiable());
 		applyListeners();
 	}
 	public PanelsWithClickInterface(BorderPane mainPane, Image image){
 		this.mainPane = mainPane;
-		ImageView view = new ImageView(image);
+		 view = new ImageView(image);
 		//this.setImage(image);
+		view.setFitWidth(400);
+		view.setFitHeight(400);
 		view.setPreserveRatio(true);
 		view.setSmooth(true);
 		view.setCache(true);

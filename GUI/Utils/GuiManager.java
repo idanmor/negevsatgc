@@ -58,8 +58,10 @@ public class GuiManager {
 			
 			@Override
 			public void run() {
-				//SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
-				SattelitePictureController.updateSateliteStatus(st);
+				
+				SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
+				cont.nonSupdateSateliteStatus(st);
+				//SattelitePictureController.updateSateliteStatus(st);
 				
 			}
 		});
