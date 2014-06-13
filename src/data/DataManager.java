@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
 
+import Utils.GuiManager;
 import communication.CommunicationManager;
 import javafx.util.Pair;
 import persistency.dbConnection;
@@ -47,6 +48,7 @@ public class DataManager {
 	
 	public void setLatestSatData(Satellite sat){
 		this.latestSatData=sat;
+		GuiManager.getInstance().refreshSatelliteController(sat);
 	}
 	
 	public List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){

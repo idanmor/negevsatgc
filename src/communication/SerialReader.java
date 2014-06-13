@@ -2,60 +2,53 @@ package communication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SerialReader implements Runnable {
 	InputStream in;
 	private boolean isRunning;
     
-    public SerialReader ( InputStream in )
-    {
+    public SerialReader ( InputStream in ) {
         this.in = in;
         isRunning = true;
     }
     
-    public void run ()
-    {  
-        int len = -1;
-        byte[] buffer = new byte[1024];
+    public void run () {  
+        int len = -1;      
         Message msg = new Message();
+        StringBuffer remainder = new StringBuffer();
         while(isRunning) {
 	        try
 	        {
+	        	byte[] buffer = new byte[1024];
 	        	len = in.read(buffer, 0, buffer.length);
-	        	System.out.println("DEBUG: Read " + len + " bytes");
-	        	String str = new String(buffer, 0, len);
-	        	if(str.contains(CommunicationManager.msgDelimiter)) {
-	        		boolean isFinished = str.endsWith(CommunicationManager.msgDelimiter.toString());
-	        		String[] splitted = str.split(CommunicationManager.msgDelimiter.toString());
-	        		msg.append(splitted[0]);
-	        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-	        		//System.out.println(msg.toString());
-	        		for(int i=1; i<splitted.length-1; i++) {
-		        		msg = new Message(splitted[i]);
-		        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-		        		//System.out.println(msg.toString());
-	        		}
-	        		if(splitted.length!=1) {
-	        			msg = new Message(splitted[splitted.length-1]);
-	        			if(isFinished) {
-	        				CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-	        				//System.out.println(msg.toString());
-	        				msg = new Message();
-	        			}
-	        		}
-	        	}
-	        	else {
-	        		msg.append(str);
-	        		//msg = new Message(str);
-	        		//CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-	        	}
-	        	CommunicationManager.getInstance().getInputLock().lock();
-	        	CommunicationManager.getInstance().getInputDataAvailable().await();
+	        	if (len > 0) {
+		        	System.out.println("DEBUG: Read " + len + " bytes");
+		        	StringBuffer str = new StringBuffer(new String(buffer, 0, len));
+		        	str = remainder.append(str);
+		        	
+		        	Pattern pattern = Pattern.compile(CommunicationManager.msgStartDelimiter 
+		        							+ "(.*?)" + CommunicationManager.msgStopDelimiter, Pattern.DOTALL);
+		        	Matcher matcher = pattern.matcher(str);
+		        	while (matcher.find())
+		        	{
+		        		String foundMsg = matcher.group(1);
+		        		StringBuffer trash = new StringBuffer();
+		        		matcher.appendReplacement(trash, foundMsg);
+		        	    System.out.println(foundMsg);
+		        	    CommunicationManager.getInstance().getMessageAcceptorQueue().put(new Message(foundMsg));
+		        	}
+		        	remainder = new StringBuffer();
+		        	matcher.appendTail(remainder);
+	        	}	
+		        CommunicationManager.getInstance().getInputLock().lock();
+		        CommunicationManager.getInstance().getInputDataAvailable().await();
 	        }
-	        catch ( IOException e )
-	        {
+	        catch ( IOException e ) {
 	            e.printStackTrace();
-	        } catch (InterruptedException e) {
+	        } 
+	        catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 	        finally {

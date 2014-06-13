@@ -18,9 +18,6 @@ public class SendTest {
 			try {
 				byte[] filecontent = Files.readAllBytes(Paths.get("C:\\negevsat\\" + filename));
 				String msg = new String(filecontent, "UTF-8");
-				msg = msg.replaceAll("\n", "");
-				msg = msg.replaceAll("\t", "");
-				msg = msg.replaceAll("\r", "");
 				CommunicationManager.getInstance().sendMessage(new Message(msg));
 			} catch (IOException e) {
 				System.out.println("Cannot read from file " + filename);
