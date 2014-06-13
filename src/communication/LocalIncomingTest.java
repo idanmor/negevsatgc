@@ -3,6 +3,12 @@ package communication;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.LinkedList;
+
+import data.Command;
+import data.Mission;
 
 public class LocalIncomingTest {
 
@@ -13,6 +19,14 @@ public class LocalIncomingTest {
 			e.printStackTrace();
 		}
 		String[] filenames = {"message1.xml", "message2.xml", "message3.xml"};
+		
+		/*
+		LinkedList<Mission> missions = new LinkedList<Mission>();
+		missions.add(new Mission(null, Command.FORMAT_TEMP, 2));
+		missions.add(new Mission(new Timestamp((new Date()).getTime()), Command.MOVE_TO_OP, 1));
+		
+		CommunicationManager.getInstance().sendMissions(missions);
+		*/
 		
 		for (String filename : filenames) {
 			try {
@@ -25,7 +39,7 @@ public class LocalIncomingTest {
 			} catch (IOException e) {
 				System.out.println("Cannot read from file " + filename);
 			}
-		}	
+		}
 	}
 
 }
