@@ -10,6 +10,7 @@ import java.util.TimeZone;
 import org.w3c.dom.*;
 
 import data.DataManager;
+import data.Status;
 
 public class MessageParser implements Runnable {
 	private static final String tagType = "type";
@@ -28,6 +29,10 @@ public class MessageParser implements Runnable {
 	private static final String tagCurrent = "current";
 	private static final String tagTemp = "temp";
 	
+	private static final String tagStatusOn = "ON";
+	private static final String tagStatusMalfunction = "MALFUNCTION";
+	private static final String tagStatusStandby = "STANDBY";
+	private static final String tagStatusNonOperational = "NON_OPERATIONAL";
 	
 	private static final String tagEnergyPacketItem1 = "Battery1";
 	private static final String tagEnergyPacketItem2 = "Battery2";
@@ -102,19 +107,20 @@ public class MessageParser implements Runnable {
 	
 	public void parseStaticPacket (Node packet) {
 		System.out.println("DEBUG: Static packet parsing");
+		Status defaultStatus = Status.UNKNOWN;
 		NodeList children = packet.getChildNodes();
 		String satState = "";
-		String energyStatus = "";
+		Status energyStatus = defaultStatus;
 		Timestamp energyStatusTS = null;
-		String temperatureStatus = "";
+		Status temperatureStatus = defaultStatus;
 		Timestamp temperatureStatusTS = null;
-		String payloadStatus = "";
+		Status payloadStatus = defaultStatus;
 		Timestamp payloadStatusTS = null;
-		String sbandStatus = "";
+		Status sbandStatus = defaultStatus;
 		Timestamp sbandStatusTS = null;
-		String solarPanelsStatus = "";
+		Status solarPanelsStatus = defaultStatus;
 		Timestamp solarPanelsStatusTS = null;
-		String thermalCtrlStatus = "";
+		Status thermalCtrlStatus = defaultStatus;
 		Timestamp thermalCtrlStatusTS = null;
 		
 		for (int i=0; i < children.getLength(); i++) { //For each packet element
@@ -131,7 +137,7 @@ public class MessageParser implements Runnable {
 					Node info = infos.item(j);
 					NamedNodeMap infoattrs = info.getAttributes();
 					String moduleName = infoattrs.getNamedItem(tagName).getNodeValue();
-					String moduleStatus = infoattrs.getNamedItem(tagStatus).getNodeValue();
+					Status moduleStatus = stringToStatus(infoattrs.getNamedItem(tagStatus).getNodeValue());
 					switch (moduleName) {
 					case tagModuleTemperature:
 						temperatureStatus = moduleStatus;
@@ -165,15 +171,16 @@ public class MessageParser implements Runnable {
 		}
 		System.out.println("===========");
 		System.out.println("Inserting Static Update. Satellite State: " + satState + "\n" +
-				"Energy Status: " + energyStatus + " at " + energyStatusTS + "\n" +
-				"Temperature Status: " + temperatureStatus + " at " + temperatureStatusTS + "\n" +
-				"SBand Status: " + sbandStatus + " at " + sbandStatusTS + "\n" +
-				"Payload Status: " + payloadStatus + " at " + payloadStatusTS + "\n" +
-				"Solar Panels Status: " + solarPanelsStatus + " at " + solarPanelsStatusTS + "\n" +
-				"Thermal Control Status: " + thermalCtrlStatus + " at " + thermalCtrlStatusTS);
+				"Energy Status: " + energyStatus.toString() + " at " + energyStatusTS + "\n" +
+				"Temperature Status: " + temperatureStatus.toString() + " at " + temperatureStatusTS + "\n" +
+				"SBand Status: " + sbandStatus.toString() + " at " + sbandStatusTS + "\n" +
+				"Payload Status: " + payloadStatus.toString() + " at " + payloadStatusTS + "\n" +
+				"Solar Panels Status: " + solarPanelsStatus.toString() + " at " + solarPanelsStatusTS + "\n" +
+				"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS);
 		System.out.println("===========");
-		//DataManager.getInstance().insertSatellite(temp, tempTS, energy, energyTS, Sband, SbandTS, 
-		//						Payload, PayloadTS, SolarPanels, SolarPanelsTS, Thermal, ThermalTS);
+		DataManager.getInstance().insertSatellite(temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
+								sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
+								solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
 	}
 	
 	public void parseTemperaturePacket (Node packet) {
@@ -280,7 +287,34 @@ public class MessageParser implements Runnable {
 		}
 	}
 	
+	public static String toRTEMSTimestamp (Timestamp timestamp) {
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		return df.format(timestamp.getTime());
+	}
+	
 	public void stopThread() {
     	this.isRunning = false;
     }
+	
+	public Status stringToStatus (String strst) {
+		Status st;
+		switch (strst) {
+		case tagStatusOn:
+			st = Status.ON;
+			break;
+		case tagStatusMalfunction:
+			st = Status.MALFUNCTION;
+			break;
+		case tagStatusStandby:
+			st = Status.STANDBY;
+			break;
+		case tagStatusNonOperational:
+			st = Status.NON_OPERATIONAL;
+			break;
+		default:
+			st = null;
+			break;
+		}
+		return st;
+	}
 }

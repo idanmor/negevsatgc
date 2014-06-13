@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import Utils.Constants;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,8 +32,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import misc.SattaliteUtils;
@@ -51,6 +54,7 @@ public class MainWindow{
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
 	private Label satteliteStatus;
+	private FXMLLoader fxmlLoader;
 	public MainWindow(){
 		super();
 		synchronized(MainWindow.class){
@@ -70,13 +74,13 @@ public class MainWindow{
 
 	public void start(Stage primaryStage) {
 		int height = 600;
-		int width = 810;
+		int width = 910;
 		mainPane = new BorderPane();  
 		BorderPane root = new BorderPane();
 		root.setTop(new MainMenu());
 		root.setCenter(mainPane);
 		mainPane.setId("mainPane");
-		
+
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
 		satteliteStatus = new Label(getSatteliteStatus());
@@ -89,17 +93,12 @@ public class MainWindow{
 		(NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
 		//mainPane.getStylesheets().add("mainClass.css");
 		mainPane.getStyleClass().add("main");
-//		try {
-//			Thread.sleep(2000);
-//		} catch (InterruptedException ex) {
-//			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-//		}
-	
+		
 		mainPane.prefHeightProperty().bind(scene.heightProperty());
 		mainPane.prefWidthProperty().bind(scene.widthProperty());
 		showMainScreen(mainPane);
-		
-		
+
+
 	}
 
 	public BorderPane getMainPane(){
@@ -107,26 +106,34 @@ public class MainWindow{
 	}
 
 	TextArea demoListView;
-	
+
 	public void showMainScreen(BorderPane mainPane){
 		VBox mainScreen = new VBox();
 		HBox firtsLine = new HBox();
+		firtsLine.setSpacing(10);
 		HBox secondLine = new HBox();
 		VBox logBox = new VBox();
 		HBox buttonBox = SattaliteUtils.getHBox(10);
-		  
-		Parent root = null;
+		firtsLine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		fxmlLoader = new FXMLLoader();
+		fxmlLoader.setLocation(getClass().getResource("FXMLDocument.fxml"));
 		try {
-			root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+			fxmlLoader.load(getClass().getResource("FXMLDocument.fxml").openStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
-		FXMLLoader fxmlLoader = new FXMLLoader();
-		  fxmlLoader.setLocation(NegevSatGui.class.getResource("FXMLDocument.fxml"));
 		pictureController = fxmlLoader.<SattelitePictureController>getController();
-		firtsLine.getChildren().addAll(new MissionPanel(getMainPane()),new SatteliteStatusPanel(getMainPane(),root));
-	
+		Pane left = new Pane();
+		Pane right = new Pane();
+		MissionPanel mp = new MissionPanel(getMainPane(),left);
+		left.getChildren().add(mp);
+		right.getChildren().add(new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
+	//	left.setPrefSize(300, 400);
+		//right.setPrefSize(300, arg1);
+		//firtsLine.getChildren().addAll(new MissionPanel(getMainPane(),left),new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
+		firtsLine.getChildren().addAll(left,right);
+		
 		demoListView = new TextArea();
 		demoListView.setEditable(false);
 		TextField toLogger = new TextField();
@@ -151,36 +158,54 @@ public class MainWindow{
 		mainPane.setCenter(mainScreen);
 		firtsLine.autosize();
 	}
-	private List<VBox> generateButtonHolders(){
-		final String[] logOutPut = {"Moving to power save mode... ", "Moving to maintenece mode...",
-				"Restart command initiated..", "Sending telemetry file...", "Sending scheduled commands", "Running system analasys"};
-		String[] buttonNames = {"Power Save", "Maitenance Mode",
-				"Restart systems", "Send Telemetry", "Send shceduled command", "Analyze systems"};
-		VBox one = SattaliteUtils.getVbox(15);
+	private List<HBox> generateButtonHolders(){
+	//	final String[] logOutPut = {"Moving to power save mode... ", "Moving to maintenece mode...",
+	//			"Restart command initiated..", "Sending telemetry file...", "Sending scheduled commands", "Running system analasys"};
+	//	String[] buttonNames = {"Power Save", "Maitenance Mode",
+	//			"Restart systems", "Send Telemetry", "Send shceduled command", "Analyze systems"};
+		HBox one = new HBox();
+		one.setSpacing(10);
 		VBox two =  SattaliteUtils.getVbox(15);
-		int numOfButton = logOutPut.length;
-
-		List<VBox> buttonList = new ArrayList<VBox>();
-		for(int i = 0; i < numOfButton; i++){
-			Button b = new Button(buttonNames[i]);
-			final String a = logOutPut[i];
-			b.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent t) {
-
-					demoListView.appendText(addDateToString(a) + "\n");
-				}
-			});
-			if(i < numOfButton/2){
-				one.getChildren().add(b);
-			}else{
-				two.getChildren().add(b);
-			}
+//		int numOfButton = logOutPut.length;
+//
+		List<HBox> buttonList = new ArrayList<HBox>();
+//		for(int i = 0; i < numOfButton; i++){
+//			Button b = new Button(buttonNames[i]);
+//			final String a = logOutPut[i];
+//			b.setOnAction(new EventHandler<ActionEvent>() {
+//
+//				@Override
+//				public void handle(ActionEvent t) {
+//
+//					demoListView.appendText(addDateToString(a) + "\n");
+//				}
+//			});
+//			if(i < numOfButton/2){
+//				one.getChildren().add(b);
+//			}else{
+//				two.getChildren().add(b);
+//			}
+//		}
+		List<Node[]> listOfImmediateActions = new ArrayList<>();
+		listOfImmediateActions.add(getImmidiateModeChangeBox());
+		listOfImmediateActions.add(getDataAcquisitionModeBox());
+		listOfImmediateActions.add(getComponentsStatusModeBox());
+		VBox first = new VBox();
+		first.setSpacing(20);
+		VBox second = new VBox();
+		second.setSpacing(10);
+		VBox third = new VBox();
+		third.setSpacing(13);
+		for(int i = 0 ; i < listOfImmediateActions.size() ; i++){
+			first.getChildren().add(listOfImmediateActions.get(i)[0]);
+			second.getChildren().add(listOfImmediateActions.get(i)[1]);
+			third.getChildren().add(listOfImmediateActions.get(i)[2]);
 		}
-		one.getChildren().addAll(getImmidiateModeChangeBox(), getDataAcquisitionModeBox(), getComponentsStatusModeBox());
+		
+		//one.getChildren().addAll(getImmidiateModeChangeBox(), getDataAcquisitionModeBox(), getComponentsStatusModeBox());
+		one.getChildren().addAll(first,second,third);
 		buttonList.add(one);
-		buttonList.add(two);
+		//buttonList.add(two);
 
 		return buttonList;
 	}
@@ -192,59 +217,82 @@ public class MainWindow{
 
 	}
 
-	
 
-	private HBox getImmidiateModeChangeBox(){
+
+	private Node[] getImmidiateModeChangeBox(){
 		comboSattelites = new ComboBox<>();
+		Node[] nodes = new Node[3];
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				SatteliteMods item = getMainWindow().comboSattelites.getSelectionModel().getSelectedItem();
+				if(item == null){
+					return;
+				}
 				GuiManager.getInstance().sendImmidiateSatelliteModeCommand(getMainWindow().comboSattelites.getSelectionModel().getSelectedItem());
 			}
 		});
 		comboSattelites.getItems().addAll(SatteliteMods.values());
-		HBox container = new HBox();
-		container.setSpacing(10);
-		container.getChildren().addAll(comboSattelites,send);
-		return container; 	
+		Label immidiateLabel = new Label("Send Immidiate status chagne:");
+		nodes[0] = immidiateLabel;
+		nodes[1] = comboSattelites;
+		nodes[2] = send;
+		//HBox container =  new HBox();
+		//container.setSpacing(10);
+		//container.getChildren().addAll(immidiateLabel,comboSattelites,send);
+		return nodes; 	
 	}
-	
-	private HBox getDataAcquisitionModeBox(){
+
+	private Node[] getDataAcquisitionModeBox(){
 		dataAquisitionModeBox = new ComboBox<>();
+		Node[] nodes = new Node[3];
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				DataAcquisitionMode item = getMainWindow().dataAquisitionModeBox.getSelectionModel().getSelectedItem();
+				if(item == null){
+					return;
+				}
 				GuiManager.getInstance().sendImmidiateDataAquisitionCommand(getMainWindow().dataAquisitionModeBox.getSelectionModel().getSelectedItem());
 			}
 		});
+		Label changeTypeOfDataRecieved = new Label("Change type of data recieved:");
 		dataAquisitionModeBox.getItems().addAll(DataAcquisitionMode.values());
-		HBox container = new HBox();
-		container.setSpacing(10);
-		container.getChildren().addAll(dataAquisitionModeBox,send);
-		return container; 	
+		nodes[0] = changeTypeOfDataRecieved;
+		nodes[1] = dataAquisitionModeBox;
+		nodes[2] = send;
+//		HBox container = new HBox();
+//		container.setSpacing(10);
+//		container.getChildren().addAll(changeTypeOfDataRecieved,dataAquisitionModeBox,send);
+		return nodes; 	
 	}
-	
-	private HBox getComponentsStatusModeBox(){
+
+	private  Node[] getComponentsStatusModeBox(){
 		componentStatusBox = new ComboBox<>();
+		Node[] nodes = new Node[3];
 		buttonBox = new ComboBox<>();
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				Component item = getMainWindow().componentStatusBox.getSelectionModel().getSelectedItem();
+				if(item == null){
+					return;
+				}
 				GuiManager.getInstance().sendImmidiateComponentStatusChange(getMainWindow().componentStatusBox.getSelectionModel().getSelectedItem().getCommand(buttonBox.getValue()));
 			}
 		});
+		Label changeComponentStatus = new Label("Change component status:");
 		componentStatusBox.getItems().addAll(Component.values());
-		buttonBox.getItems().addAll(State.values());
-		HBox container = new HBox();
-		container.setSpacing(10);
-		container.getChildren().addAll(componentStatusBox,buttonBox,send);
-		return container; 	
+		nodes[0] = changeComponentStatus;
+		nodes[1] = componentStatusBox;
+		nodes[2] = send;
+		return nodes; 	
 	}
 
 	public enum SatteliteMods{
@@ -267,7 +315,7 @@ public class MainWindow{
 			return presentationCommand;
 		}
 	}
-	
+
 	public enum DataAcquisitionMode{
 		FORMAT_ENERGY("Send only Energy", Command.FORMAT_ENERGY),
 		FORMAT_TEMP("Send only Temperature", Command.FORMAT_TEMP),
@@ -288,19 +336,19 @@ public class MainWindow{
 		public String toString(){
 			return presentationCommand;
 		}
-		
-		
+
+
 	}
 	public enum State{
 		ON("On"),
 		OFF("Standby");
-		
+
 		private String presentationCommand;
 		private State(String presentationCommand){
 			this.presentationCommand = presentationCommand;
-			
+
 		}
-		
+
 		@Override
 		public String toString(){
 			return presentationCommand;
@@ -310,11 +358,11 @@ public class MainWindow{
 		SBAND("Sband"),
 		PAYLOAD("Payload (Camera)"),
 		THERMAL("Thermal");
-		
+
 		private String presentationCommand;
 		private Component(String presentationCommand){
 			this.presentationCommand = presentationCommand;
-			
+
 		}
 
 		public Command getCommand(State state){
@@ -335,14 +383,14 @@ public class MainWindow{
 			return presentationCommand;
 		}
 	}
-    private String getSatteliteStatus() {
-        String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
-        return generatedStatus[(int)(Math.random()*generatedStatus.length)];
-    }
+	private String getSatteliteStatus() {
+		String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
+		return generatedStatus[(int)(Math.random()*generatedStatus.length)];
+	}
 	public void setSatteliteStatusText(String status) {
 		satteliteStatus.setText(status);
 	}
-	
+
 	public void addToLog(String... data){
 		if(data == null){
 			return;
@@ -354,12 +402,13 @@ public class MainWindow{
 			}
 			demoListView.appendText(toAdd);
 		}
-		
+
 	}
 	public SattelitePictureController getSatellitePictureController() {	
+
 		return this.pictureController;
 	}
-    
-    
-    
+
+
+
 }

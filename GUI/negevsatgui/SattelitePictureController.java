@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import Utils.Constants;
 import Utils.Utils;
 import data.DataManager;
 import data.Satellite;
@@ -19,8 +20,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.util.Pair;
 
 /**
@@ -28,7 +32,7 @@ import javafx.util.Pair;
  * @author Max
  */
 public class SattelitePictureController implements Initializable {
-    
+   // private static SattelitePictureController instance;
     @FXML
     private ImageView ImageViewSunSensor;
     @FXML
@@ -77,35 +81,29 @@ public class SattelitePictureController implements Initializable {
     private ImageView ImageViewBattery;
     @FXML
     private Label labelBattery;
-    
+    Satellite st = null;
+    URL url = null;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-//      final long monthInMS = 26280000;//need to mult by 100
-//      Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
-//	    Timestamp TS=new Timestamp(System.currentTimeMillis());
-//      ArrayList<Pair<String, Status>> statusPairs = db.getListOfStatusPairs(db.getStatus(oldestTS, oldestTS));
+ 
       DataManager db = DataManager.getInstance();
-      Satellite st = db.getLatestSatData();
-  //    db.getListOfStatusPairs(st);
-      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-      ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), Status.MALFUNCTION).getImage());
-      ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), Status.STANDBY).getImage());
-      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-  
-      
-//      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
-//      ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), st.getTempratureStatus()).getImage());
-//      ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), st.getThermalStatus()).getImage());
-//      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), st.getSbandStatus()).getImage());
-//      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), st.getPayloadStatus()).getImage());
-//      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), st.getSolarPanelsStatus()).getImage());
-//      
+      st = db.getLatestSatData();
+
+    if(st == null){
+    	  ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewSP.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          return;
+    }
+      nonSupdateSateliteStatus(st);
+
     }
     
-    public void updateSateliteStatus(Satellite st){
+    public  void nonSupdateSateliteStatus(Satellite st){
+        
       ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
       ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), st.getTempratureStatus()).getImage());
       ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), st.getThermalStatus()).getImage());
@@ -113,6 +111,6 @@ public class SattelitePictureController implements Initializable {
       ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), st.getPayloadStatus()).getImage());
       ImageViewSP.setImage(Utils.getIconForStatus(getClass(), st.getSolarPanelsStatus()).getImage());
       
-    }
-    
+        
+      }
 }

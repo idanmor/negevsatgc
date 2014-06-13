@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
@@ -281,9 +282,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		Timestamp TS=new Timestamp(System.currentTimeMillis());
 		ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
 		oldestTS = Utils.stripTimePortion(oldestTS);
-		DateFormat formatter = DateFormat.getDateTimeInstance(
-				DateFormat.SHORT, 
-				DateFormat.SHORT,Locale.getDefault());
+		DateFormat formatter = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss");
 		while(oldestTS.before(TS)){
 			Timestamp toDate = new Timestamp(oldestTS.getTime() + dayinMS);
 			populateTableNodes(oldestTS, nodes, formatter, toDate);

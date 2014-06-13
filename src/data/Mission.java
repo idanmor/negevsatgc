@@ -38,7 +38,12 @@ public class Mission {
     public int getPriority(){
     	return this.priority;
     }
-        
+          
+    public Timestamp getExecutionTime () {
+    	return missionExecutionTS;
+    }
+
+      
     public Timestamp getCreationTimestamp(){
     	return this.creationTimestamp;
     }

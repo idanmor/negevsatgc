@@ -23,9 +23,9 @@ public class AbstractMultipleItemsWrapper extends HBox implements MissionItemWra
 	public String getMissionValue() {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < missionItemWrappers.size() ; i++){
-			sb.append(missionItemWrappers.get(i).getMissionValue());
+			sb.append(missionItemWrappers.get(i).getMissionValue()).append(" ");
 		}
-		return sb.toString();
+		return sb.toString().trim();
 	}
 
 	@Override
