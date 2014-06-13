@@ -20,7 +20,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.Command;
 import negevsatgui.MainWindow.Component;
+import negevsatgui.MainWindow.State;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -84,9 +86,10 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	}
 	private void createComponentMission(){
 		MissionTreeItem date = mission_components_list.get(MISSION_DATE);
-		MissionComboBoxWrapper<Component> s = (MissionComboBoxWrapper<Component>)mission_components_list.get(MISSION_DESC).getMissionItem();
-		
-		//s.getSelectionModel().getSelectedItem().getCommand(state);
+		MissionComboBoxWrapper<Component> ComponentBox = (MissionComboBoxWrapper<Component>)mission_components_list.get(MISSION_DESC).getMissionItem();
+		MissionComboBoxWrapper<State> stateBox = (MissionComboBoxWrapper<State>)mission_components_list.get(COMPONENT_ON_OFF_LOCATION).getMissionItem();
+		Command c = ComponentBox.getSelectionModel().getSelectedItem().getCommand(stateBox.getSelectionModel().getSelectedItem());
+		//;
 		String dateString = date.getMissionStringValue();
 		
 		
@@ -252,7 +255,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ObservableList<TreeItem> getSatteliteComponentCommands(){
 		ObservableList<TreeItem> list = FXCollections.observableArrayList();
-		ObservableList<Object> mode = FXCollections.observableArrayList("On","Standby");
+		ObservableList<State> mode = FXCollections.observableArrayList(State.values());
 		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(mode), "Change Component Status", new Label("Mode:"),COMPONENT_ON_OFF_LOCATION)));      
 		return list;
 	} 
