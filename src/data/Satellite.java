@@ -8,9 +8,16 @@ import java.util.ArrayList;
 
 @DatabaseTable(tableName="Satellite")
 public class Satellite {
+	
+	public enum SatelliteState {
+		Unknown, OPerational, SafeMode
+	}
+	 
     public static final String DATE_FIELD_NAME = "creationTimestamp";
     @DatabaseField(id = true) 
     private Timestamp creationTimestamp;
+    @DatabaseField
+    private SatelliteState sateliteState;
     @DatabaseField
     private Status TempratureStatus;
     @DatabaseField
@@ -43,6 +50,23 @@ public class Satellite {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.creationTimestamp=t;
+        this.sateliteState=SatelliteState.OPerational;
+        this.TempratureStatus=temp;
+        this.EnergyStatus=energy;
+        this.SbandStatus=Sband;
+        this.PayloadStatus=Payload;
+        this.SolarPanelsStatus=SolarPanels;
+        this.ThermalStatus=Thermal;
+        
+        dm=DataManager.getInstance();
+        dm.setLatestSatData(this);
+	}
+    
+    public Satellite(SatelliteState state, Status temp, Timestamp tempratureTS, Status energy,  Timestamp energyTS, Status Sband,  Timestamp SbandTS, Status Payload,  Timestamp PayloadTS, Status SolarPanels,  Timestamp SolarPanelsTS, Status Thermal,Timestamp ThermalTS) {
+        java.util.Date date= new java.util.Date();
+        Timestamp t=new Timestamp(date.getTime());
+        this.creationTimestamp=t;
+        this.sateliteState=state;
         this.TempratureStatus=temp;
         this.EnergyStatus=energy;
         this.SbandStatus=Sband;

@@ -27,6 +27,8 @@ public class DataManager {
 	private DataManager() {
 		db = dbConnection.getdbCon();
 		comm = CommunicationManager.getInstance();
+		db.creatTables();
+		latestSatData=db.getLatestSatelliteData();
 			try {
 				comm.connect(comPort);
 			} catch (NoSuchPortException | PortInUseException
@@ -77,6 +79,8 @@ public class DataManager {
 		
 		return(statusPairs);
 	}
+	
+	
 	
 	public Map<String,Float> getReadingsPerSensor(Component component){
 		

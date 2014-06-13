@@ -34,6 +34,10 @@ public class MainTest {
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
 //	    dbConnection.insertTemprature(1, 2, 3, TS);
 	    db.insertSatellite(Status.ON, TS, Status.ON,TS, Status.ON, TS, Status.ON, TS, Status.ON, TS, Status.ON, TS);
+	    db.insertSatellite(Status.STANDBY, TS, Status.STANDBY,TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS);
+	    db.insertSatellite(Status.MALFUNCTION, TS, Status.MALFUNCTION,TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS);
+	    Satellite sat=db.getLatestSatelliteData();
+	    System.out.println("*******"+sat.getObjectCreationTimestamp()+"*******"+ sat.getEnergyStatus()+"*******");
 //	    Timestamp t=new Timestamp(date.getTime());
 //	    List<? extends Component> tlst=dm.getTemprature(oldestTS,t);
 //	    for (Component item: tlst)

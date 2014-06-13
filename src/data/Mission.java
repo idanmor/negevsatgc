@@ -38,9 +38,7 @@ public class Mission {
     public int getPriority(){
     	return this.priority;
     }
-    
-
-    
+        
     public Timestamp getCreationTimestamp(){
     	return this.creationTimestamp;
     }
