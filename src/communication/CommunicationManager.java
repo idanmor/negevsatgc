@@ -10,12 +10,18 @@ import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.TooManyListenersException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import data.Mission;
 
 
 public class CommunicationManager {
@@ -90,8 +96,36 @@ public class CommunicationManager {
 		}
     }
 	
-	public void sendMission() {
+	public void sendMission(Mission mission) {
+		Collection<Mission> missions = new LinkedList<Mission>();
+		missions.add(mission);
+		sendMissions(missions);
+	}
+	
+	public void sendMissions(Collection<Mission> missions) {
+		Date now = new Date();
+		String msg = 
+				"<?xml version=\"1.0\"?>" +
+                "<packet>" +
+                "<upstreamPacket time=\""+ MessageParser.toRTEMSTimestamp(new Timestamp(now.getTime())) +"\">";
+		for (Mission mission : missions) {
+			String exeTimeString;
+			if (mission.getExecutionTime() == null) {
+				exeTimeString = "0";
+			}
+			else {
+				exeTimeString = MessageParser.toRTEMSTimestamp(mission.getExecutionTime());
+			}
+			msg = msg.concat("<mission time=\"" + exeTimeString + 
+					"\" opcode=\"" + mission.getcommand().getValue() + "\" priority=\"" +
+					mission.getPriority() + "\"/>");
+		}
 		
+		msg = msg.concat("</upstreamPacket>" + 
+							"</packet>");
+		
+		System.out.println("DEBUG: Sending message:\n" + msg);
+		this.sendMessage(new Message(msg));
 	}
 	
 	public void sendMessage(Message msg) {
