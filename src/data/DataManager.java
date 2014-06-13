@@ -1,8 +1,8 @@
 package data;
 
-//import gnu.io.NoSuchPortException;
-//import gnu.io.PortInUseException;
-//import gnu.io.UnsupportedCommOperationException;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
 
+import Utils.GuiManager;
 import communication.CommunicationManager;
 import javafx.util.Pair;
 import persistency.dbConnection;
@@ -26,15 +27,15 @@ public class DataManager {
 	
 	private DataManager() {
 		db = dbConnection.getdbCon();
-//		comm = CommunicationManager.getInstance();
-//			try {
-//				comm.connect(comPort);
-//			} catch (NoSuchPortException | PortInUseException
-//					| UnsupportedCommOperationException | IOException
-//					| TooManyListenersException e) {
-//				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
-//				System.out.println("Error message: " + e.getMessage());
-//			}
+		comm = CommunicationManager.getInstance();
+			try {
+				comm.connect(comPort);
+			} catch (NoSuchPortException | PortInUseException
+					| UnsupportedCommOperationException | IOException
+					| TooManyListenersException e) {
+				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
+				System.out.println("Error message: " + e.getMessage());
+			}
 	}
 	
 	public static DataManager getInstance() {
@@ -45,6 +46,7 @@ public class DataManager {
 	
 	public void setLatestSatData(Satellite sat){
 		this.latestSatData=sat;
+		GuiManager.getInstance().refreshSatelliteController(sat);
 	}
 	
 	public List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){

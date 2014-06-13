@@ -25,7 +25,8 @@ import data.Mission;
 
 
 public class CommunicationManager {
-	public static final CharSequence msgDelimiter = "\n";
+	public static final Character delimiter = 11;
+	public static final CharSequence msgDelimiter = delimiter.toString();
 
 	private static CommunicationManager instance = null;
 	private SerialPort serialPort;
@@ -72,7 +73,8 @@ public class CommunicationManager {
 	            
 	            if ( commPort instanceof SerialPort ){
 	                serialPort = (SerialPort) commPort;
-	                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+	                serialPort.setSerialPortParams(19200,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+	                //serialPort.setFlowControlMode(serialPort.FLOWCONTROL_RTSCTS_IN);
 	                
 	                in = serialPort.getInputStream();
 	                out = serialPort.getOutputStream();

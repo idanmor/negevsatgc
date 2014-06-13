@@ -15,12 +15,12 @@ public class SerialReader implements Runnable {
     
     public void run ()
     {  
-        int len = -1;
-        byte[] buffer = new byte[1024];
+        int len = -1;      
         Message msg = new Message();
         while(isRunning) {
 	        try
 	        {
+	        	byte[] buffer = new byte[4096];
 	        	len = in.read(buffer, 0, buffer.length);
 	        	System.out.println("DEBUG: Read " + len + " bytes");
 	        	String str = new String(buffer, 0, len);
@@ -55,7 +55,8 @@ public class SerialReader implements Runnable {
 	        catch ( IOException e )
 	        {
 	            e.printStackTrace();
-	        } catch (InterruptedException e) {
+	        } 
+	        catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 	        finally {

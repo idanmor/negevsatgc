@@ -47,7 +47,7 @@ public class MessageParser implements Runnable {
 	private static final String tagModuleSband = "Sband";
 	private static final String tagModulePayload = "Payload";
 	private static final String tagModuleSolarPanels = "SolarPanels";
-	private static final String tagModuleThermalCtrl = "ThermalCtrl";
+	private static final String tagModuleThermalCtrl = "ThermalControl";
 	
 	private boolean isRunning;
 	
@@ -62,7 +62,15 @@ public class MessageParser implements Runnable {
 				System.out.println("DEBUG: MessageAcceptor waiting for new message");
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
 				System.out.println("DEBUG: Message Accepted");
-				Document msg = m.toDocument();
+				System.out.println(m.toString());
+				Document msg;
+				try {
+					msg = m.toDocument();
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());
+					continue;
+				}
 				try {
 					parseMessage(msg);
 				} catch (InvalidMessageException e) {
@@ -72,6 +80,8 @@ public class MessageParser implements Runnable {
 					else {
 						System.out.println("PARSING ERROR: " + e.getMessage());
 					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
 				}
 	        } catch (InterruptedException e) {
 				e.printStackTrace();
