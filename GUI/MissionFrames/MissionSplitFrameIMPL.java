@@ -13,12 +13,14 @@ import MissionItems.MissionItemWrapper;
 import MissionItems.MissionTableWrapper;
 import MissionItems.MissionTextWrapper;
 import MissionItems.TimeTextFieldWrapper;
+import Utils.GuiManager;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import negevsatgui.MainWindow.Component;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -75,9 +77,20 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 				sb.append(i.toString()).append(i.getMissionStringValue());
 			}
 		}
+		
+		MissionTreeItem missionDesc = mission_components_list.get(MISSION_DESC);
+		createComponentMission();
 		System.out.println(this.mission_components_list);
 	}
-
+	private void createComponentMission(){
+		MissionTreeItem date = mission_components_list.get(MISSION_DATE);
+		MissionComboBoxWrapper<Component> s = (MissionComboBoxWrapper<Component>)mission_components_list.get(MISSION_DESC).getMissionItem();
+		
+		//s.getSelectionModel().getSelectedItem().getCommand(state);
+		String dateString = date.getMissionStringValue();
+		
+		
+	}
 	private void init(){
 		populateLeftList();
 		mainSplitPane.setOrientation(Orientation.HORIZONTAL);
@@ -184,7 +197,8 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 
 						item.setAlreadySelected(true);
 						rightPane.getChildren().add(item.getMissionArrayLoc(),box);
-						mission_components_list.add(item);
+						mission_components_list.remove(item.getMissionArrayLoc());
+						mission_components_list.add(item.getMissionArrayLoc(),item);
 					}
 				}
 					});
@@ -231,19 +245,20 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		MissionTextWrapper nonEditableField = new MissionTextWrapper("Take photo");
 		nonEditableField.setEditable(false);
 		list.add(new TreeItem (new MissionTreeItem(nonEditableField, "Take photo mission", new Label("Mission description:"),MISSION_DESC)));
-		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
+		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper<Component>(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
 		list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
 		return list;
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ObservableList<TreeItem> getSatteliteComponentCommands(){
 		ObservableList<TreeItem> list = FXCollections.observableArrayList();
-		ObservableList<Object> mode = FXCollections.observableArrayList("Online","Offline");
+		ObservableList<Object> mode = FXCollections.observableArrayList("On","Standby");
 		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(mode), "Change Component Status", new Label("Mode:"),COMPONENT_ON_OFF_LOCATION)));      
 		return list;
 	} 
-	private ObservableList<Object> getListOfSatteliteComponents(){
-		return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera","Solar Panel");
+	private ObservableList<Component> getListOfSatteliteComponents(){
+		return FXCollections.observableArrayList(Component.values());
+		//return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera","Solar Panel");
 
 	}
 	private MissionTreeItem getWebMapMissionItem(){
@@ -304,7 +319,6 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		private MissionItemWrapper item = null;
 		private String name = null;
 		private Label explainLabel = null;
-		private boolean isInSummary;
 		private int missionArrayLocation = -1;
 
 		public MissionTreeItem(MissionItemWrapper item, String name, Label explainLabel, int missionArrayLocation){
@@ -316,7 +330,6 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 
 			}
 
-			isInSummary = false;
 			this.missionArrayLocation = missionArrayLocation;
 		}
 
@@ -353,17 +366,14 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			//if any additional actions needed override this function
 		}
 		public void setAlreadySelected(boolean isInSummary){
-			this.isInSummary = isInSummary;
 		}
 
 		public String getMissionStringValue(){
-			return item.getValueStringWithPreIfNeeded(explainLabel);
+			return item.getValueStringWithPreIfNeeded(null);
 		}
 	}
 
-	public class TemporaryMission{
-
-	};
+	
 	public class DeleteButton extends Button{
 		private int tableIndex;
 

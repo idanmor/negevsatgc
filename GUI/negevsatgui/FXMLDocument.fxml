@@ -31,7 +31,7 @@
       <Group fx:id="groupPDU" layoutX="-137.0" layoutY="-182.0">
          <children>
             <ImageView fx:id="ImageViewPDU" fitHeight="39.0" fitWidth="60.0" layoutX="407.0" layoutY="213.0" pickOnBounds="true" />
-            <Label fx:id="labelPDU" layoutX="420.0" layoutY="224.0" prefHeight="17.0" prefWidth="49.0" text="Thermal" />
+            <Label fx:id="labelPDU" layoutX="413.0" layoutY="224.0" prefHeight="17.0" prefWidth="49.0" text="Thermal" />
          </children>
       </Group>
       <Group fx:id="groupRadio" layoutX="-267.0" layoutY="-176.0">
@@ -48,7 +48,7 @@
       </Group>
       <Group>
          <children>
-            <ImageView fx:id="ImageViewComputer" fitHeight="39.0" fitWidth="80.0" layoutX="270.0" layoutY="235.0" pickOnBounds="true" />
+            <ImageView fx:id="ImageViewComputer" fitHeight="39.0" fitWidth="60.0" layoutX="270.0" layoutY="235.0" pickOnBounds="true" />
             <Label fx:id="labelComputer" layoutX="278.0" layoutY="246.0" prefHeight="17.0" prefWidth="47.0" text="S Band" />
          </children>
       </Group>

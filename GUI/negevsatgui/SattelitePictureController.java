@@ -85,51 +85,26 @@ public class SattelitePictureController implements Initializable {
     URL url = null;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    	//instance = this;
-//      final long monthInMS = 26280000;//need to mult by 100
-//      Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
-//	    Timestamp TS=new Timestamp(System.currentTimeMillis());
-//      ArrayList<Pair<String, Status>> statusPairs = db.getListOfStatusPairs(db.getStatus(oldestTS, oldestTS));
+ 
       DataManager db = DataManager.getInstance();
-      
-//       this.url = url;
-//       if(st == null ){
-//    	   return;
-//       }else{
-//    	   updateSateliteStatus(st);
-//       }
-      //db.getListOfStatusPairs(st);
-      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-      ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), Status.MALFUNCTION).getImage());
-      ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), Status.STANDBY).getImage());
-      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), Status.ON).getImage());
-  
-      
-//      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
-//      ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), st.getTempratureStatus()).getImage());
-//      ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), st.getThermalStatus()).getImage());
-//      ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), st.getSbandStatus()).getImage());
-//      ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), st.getPayloadStatus()).getImage());
-//      ImageViewSP.setImage(Utils.getIconForStatus(getClass(), st.getSolarPanelsStatus()).getImage());
-//      
+      st = db.getLatestSatData();
+
+    if(st == null){
+    	  ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewPayload.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          ImageViewSP.setImage(Utils.getIconForStatus(getClass(), Status.UNKNOWN).getImage());
+          return;
+    }
+      nonSupdateSateliteStatus(st);
+
     }
     
-    
-//    public static void updateSateliteStatus(Satellite st){
-//    
-//      instance.ImageViewBattery.setImage(Utils.getIconForStatus(instance.getClass(), st.getEnergyStatus()).getImage());
-//      instance.ImageViewRadio.setImage(Utils.getIconForStatus(instance.getClass(), st.getTempratureStatus()).getImage());
-//      instance. ImageViewPDU.setImage(Utils.getIconForStatus(instance.getClass(), st.getThermalStatus()).getImage());
-//      instance. ImageViewComputer.setImage(Utils.getIconForStatus(instance.getClass(), st.getSbandStatus()).getImage());
-//      instance.  ImageViewPayload.setImage(Utils.getIconForStatus(instance.getClass(), st.getPayloadStatus()).getImage());
-//      instance. ImageViewSP.setImage(Utils.getIconForStatus(instance.getClass(), st.getSolarPanelsStatus()).getImage());
-//      
-//    }
     public  void nonSupdateSateliteStatus(Satellite st){
         
-    	      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
+      ImageViewBattery.setImage(Utils.getIconForStatus(getClass(), st.getEnergyStatus()).getImage());
       ImageViewRadio.setImage(Utils.getIconForStatus(getClass(), st.getTempratureStatus()).getImage());
       ImageViewPDU.setImage(Utils.getIconForStatus(getClass(), st.getThermalStatus()).getImage());
       ImageViewComputer.setImage(Utils.getIconForStatus(getClass(), st.getSbandStatus()).getImage());

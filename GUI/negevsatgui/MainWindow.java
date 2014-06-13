@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import Utils.Constants;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,6 +32,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -72,7 +74,7 @@ public class MainWindow{
 
 	public void start(Stage primaryStage) {
 		int height = 600;
-		int width = 1010;
+		int width = 910;
 		mainPane = new BorderPane();  
 		BorderPane root = new BorderPane();
 		root.setTop(new MainMenu());
@@ -91,12 +93,7 @@ public class MainWindow{
 		(NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
 		//mainPane.getStylesheets().add("mainClass.css");
 		mainPane.getStyleClass().add("main");
-		//		try {
-		//			Thread.sleep(2000);
-		//		} catch (InterruptedException ex) {
-		//			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-		//		}
-
+		
 		mainPane.prefHeightProperty().bind(scene.heightProperty());
 		mainPane.prefWidthProperty().bind(scene.widthProperty());
 		showMainScreen(mainPane);
@@ -123,7 +120,7 @@ public class MainWindow{
 		try {
 			fxmlLoader.load(getClass().getResource("FXMLDocument.fxml").openStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		pictureController = fxmlLoader.<SattelitePictureController>getController();
@@ -161,16 +158,17 @@ public class MainWindow{
 		mainPane.setCenter(mainScreen);
 		firtsLine.autosize();
 	}
-	private List<VBox> generateButtonHolders(){
+	private List<HBox> generateButtonHolders(){
 	//	final String[] logOutPut = {"Moving to power save mode... ", "Moving to maintenece mode...",
 	//			"Restart command initiated..", "Sending telemetry file...", "Sending scheduled commands", "Running system analasys"};
 	//	String[] buttonNames = {"Power Save", "Maitenance Mode",
 	//			"Restart systems", "Send Telemetry", "Send shceduled command", "Analyze systems"};
-		VBox one = SattaliteUtils.getVbox(15);
+		HBox one = new HBox();
+		one.setSpacing(10);
 		VBox two =  SattaliteUtils.getVbox(15);
 //		int numOfButton = logOutPut.length;
 //
-		List<VBox> buttonList = new ArrayList<VBox>();
+		List<HBox> buttonList = new ArrayList<HBox>();
 //		for(int i = 0; i < numOfButton; i++){
 //			Button b = new Button(buttonNames[i]);
 //			final String a = logOutPut[i];
@@ -188,9 +186,26 @@ public class MainWindow{
 //				two.getChildren().add(b);
 //			}
 //		}
-		one.getChildren().addAll(getImmidiateModeChangeBox(), getDataAcquisitionModeBox(), getComponentsStatusModeBox());
+		List<Node[]> listOfImmediateActions = new ArrayList<>();
+		listOfImmediateActions.add(getImmidiateModeChangeBox());
+		listOfImmediateActions.add(getDataAcquisitionModeBox());
+		listOfImmediateActions.add(getComponentsStatusModeBox());
+		VBox first = new VBox();
+		first.setSpacing(20);
+		VBox second = new VBox();
+		second.setSpacing(10);
+		VBox third = new VBox();
+		third.setSpacing(13);
+		for(int i = 0 ; i < listOfImmediateActions.size() ; i++){
+			first.getChildren().add(listOfImmediateActions.get(i)[0]);
+			second.getChildren().add(listOfImmediateActions.get(i)[1]);
+			third.getChildren().add(listOfImmediateActions.get(i)[2]);
+		}
+		
+		//one.getChildren().addAll(getImmidiateModeChangeBox(), getDataAcquisitionModeBox(), getComponentsStatusModeBox());
+		one.getChildren().addAll(first,second,third);
 		buttonList.add(one);
-		buttonList.add(two);
+		//buttonList.add(two);
 
 		return buttonList;
 	}
@@ -204,60 +219,80 @@ public class MainWindow{
 
 
 
-	private HBox getImmidiateModeChangeBox(){
+	private Node[] getImmidiateModeChangeBox(){
 		comboSattelites = new ComboBox<>();
+		Node[] nodes = new Node[3];
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				SatteliteMods item = getMainWindow().comboSattelites.getSelectionModel().getSelectedItem();
+				if(item == null){
+					return;
+				}
 				GuiManager.getInstance().sendImmidiateSatelliteModeCommand(getMainWindow().comboSattelites.getSelectionModel().getSelectedItem());
 			}
 		});
 		comboSattelites.getItems().addAll(SatteliteMods.values());
 		Label immidiateLabel = new Label("Send Immidiate status chagne:");
-		HBox container =  new HBox();
-		container.setSpacing(10);
-		container.getChildren().addAll(immidiateLabel,comboSattelites,send);
-		return container; 	
+		nodes[0] = immidiateLabel;
+		nodes[1] = comboSattelites;
+		nodes[2] = send;
+		//HBox container =  new HBox();
+		//container.setSpacing(10);
+		//container.getChildren().addAll(immidiateLabel,comboSattelites,send);
+		return nodes; 	
 	}
 
-	private HBox getDataAcquisitionModeBox(){
+	private Node[] getDataAcquisitionModeBox(){
 		dataAquisitionModeBox = new ComboBox<>();
+		Node[] nodes = new Node[3];
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				DataAcquisitionMode item = getMainWindow().dataAquisitionModeBox.getSelectionModel().getSelectedItem();
+				if(item == null){
+					return;
+				}
 				GuiManager.getInstance().sendImmidiateDataAquisitionCommand(getMainWindow().dataAquisitionModeBox.getSelectionModel().getSelectedItem());
 			}
 		});
 		Label changeTypeOfDataRecieved = new Label("Change type of data recieved:");
 		dataAquisitionModeBox.getItems().addAll(DataAcquisitionMode.values());
-		HBox container = new HBox();
-		container.setSpacing(10);
-		container.getChildren().addAll(changeTypeOfDataRecieved,dataAquisitionModeBox,send);
-		return container; 	
+		nodes[0] = changeTypeOfDataRecieved;
+		nodes[1] = dataAquisitionModeBox;
+		nodes[2] = send;
+//		HBox container = new HBox();
+//		container.setSpacing(10);
+//		container.getChildren().addAll(changeTypeOfDataRecieved,dataAquisitionModeBox,send);
+		return nodes; 	
 	}
 
-	private HBox getComponentsStatusModeBox(){
+	private  Node[] getComponentsStatusModeBox(){
 		componentStatusBox = new ComboBox<>();
+		Node[] nodes = new Node[3];
 		buttonBox = new ComboBox<>();
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				Component item = getMainWindow().componentStatusBox.getSelectionModel().getSelectedItem();
+				if(item == null){
+					return;
+				}
 				GuiManager.getInstance().sendImmidiateComponentStatusChange(getMainWindow().componentStatusBox.getSelectionModel().getSelectedItem().getCommand(buttonBox.getValue()));
 			}
 		});
 		Label changeComponentStatus = new Label("Change component status:");
 		componentStatusBox.getItems().addAll(Component.values());
-		buttonBox.getItems().addAll(State.values());
-		HBox container = new HBox();
-		container.setSpacing(10);
-		container.getChildren().addAll(changeComponentStatus,componentStatusBox,buttonBox,send);
-		return container; 	
+		nodes[0] = changeComponentStatus;
+		nodes[1] = componentStatusBox;
+		nodes[2] = send;
+		return nodes; 	
 	}
 
 	public enum SatteliteMods{

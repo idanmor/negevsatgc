@@ -14,12 +14,13 @@ import javafx.scene.control.Label;
 /**
  *
  * @author Max
+ * @param <T>
  */
-public class MissionComboBoxWrapper extends ComboBox<Object>implements MissionItemWrapper{
+public class MissionComboBoxWrapper<T> extends ComboBox<T>implements MissionItemWrapper{
 
     
     
-    public MissionComboBoxWrapper(ObservableList<Object> lst){
+    public MissionComboBoxWrapper(ObservableList<T> lst){
         super(lst);
     }
     @Override
