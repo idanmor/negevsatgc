@@ -2,6 +2,8 @@ package communication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SerialReader implements Runnable {
 	InputStream in;
@@ -24,31 +26,15 @@ public class SerialReader implements Runnable {
 	        	len = in.read(buffer, 0, buffer.length);
 	        	System.out.println("DEBUG: Read " + len + " bytes");
 	        	String str = new String(buffer, 0, len);
-	        	if(str.contains(CommunicationManager.msgDelimiter)) {
-	        		boolean isFinished = str.endsWith(CommunicationManager.msgDelimiter.toString());
-	        		String[] splitted = str.split(CommunicationManager.msgDelimiter.toString());
-	        		msg.append(splitted[0]);
-	        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-	        		//System.out.println(msg.toString());
-	        		for(int i=1; i<splitted.length-1; i++) {
-		        		msg = new Message(splitted[i]);
-		        		CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-		        		//System.out.println(msg.toString());
-	        		}
-	        		if(splitted.length!=1) {
-	        			msg = new Message(splitted[splitted.length-1]);
-	        			if(isFinished) {
-	        				CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-	        				//System.out.println(msg.toString());
-	        				msg = new Message();
-	        			}
-	        		}
+	        	
+	        	Pattern pattern = Pattern.compile(CommunicationManager.msgStartDelimiter 
+	        							+ "(.*?)" + CommunicationManager.msgStopDelimiter);
+	        	Matcher matcher = pattern.matcher(str);
+	        	if (matcher.find())
+	        	{
+	        	    System.out.println(matcher.group(1));
 	        	}
-	        	else {
-	        		msg.append(str);
-	        		//msg = new Message(str);
-	        		//CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
-	        	}
+	        	
 	        	CommunicationManager.getInstance().getInputLock().lock();
 	        	CommunicationManager.getInstance().getInputDataAvailable().await();
 	        }

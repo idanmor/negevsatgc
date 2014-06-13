@@ -18,8 +18,9 @@ public class SerialWriter implements Runnable {
 		while (isRunning) {
 			try {
 				Message msg = CommunicationManager.getInstance().getOutputQueue().take();
+				this.out.write(CommunicationManager.startDelimiter);
 				this.out.write(msg.getBytes(), 0, msg.getBytes().length);
-				this.out.write(CommunicationManager.delimiter);
+				this.out.write(CommunicationManager.stopDelimiter);
 	        }
 	        catch ( IOException e )
 	        {

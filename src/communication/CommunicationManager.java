@@ -25,8 +25,10 @@ import data.Mission;
 
 
 public class CommunicationManager {
-	public static final Character delimiter = 11;
-	public static final CharSequence msgDelimiter = delimiter.toString();
+	public static final Character startDelimiter = 11;
+	public static final Character stopDelimiter = 12;
+	public static final CharSequence msgStartDelimiter = startDelimiter.toString();
+	public static final CharSequence msgStopDelimiter = stopDelimiter.toString();
 
 	private static CommunicationManager instance = null;
 	private SerialPort serialPort;
