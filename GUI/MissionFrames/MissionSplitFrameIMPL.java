@@ -83,7 +83,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		mainSplitPane.setOrientation(Orientation.HORIZONTAL);
 		rightPane = new VBox();
 		mainSplitPane.getItems().addAll(leftTree,rightPane);
-		//  mainPane.getChildren().addAll(mainSplitPane/*,getConfirmCancelButtons()*/);
+
 		mainPane.setCenter(mainSplitPane);
 		mainPane.setBottom(getConfirmCancelButtons());
 		mission_components_list = new ArrayList<>(MISSION_MAX_NUM_ITEMS);
