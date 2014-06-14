@@ -145,6 +145,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		Timestamp afterCal = null;
 		before = before.replace("/", "-");
 		after = after.replace("/", "-");
+		long dayinMS = 86400000;
 		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy");
 		if(before != null && !before.isEmpty()){
 			
@@ -157,7 +158,8 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 			}
 			
 		}else{
-			beforeCal = new Timestamp(Calendar.getInstance().getTimeInMillis());
+			 
+			beforeCal = new Timestamp(Calendar.getInstance().getTimeInMillis() + dayinMS);
 		}
 		if(after != null && !after.isEmpty()){
 			Date afterDate;
