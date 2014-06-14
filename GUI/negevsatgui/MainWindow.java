@@ -43,7 +43,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import misc.SattaliteUtils;
+import misc.SatalliteUtils;
 import Utils.*;
 
 /**
@@ -55,12 +55,12 @@ public class MainWindow{
 	private static MainWindow instance;
 	private VBox mainScreen;
 	private SattelitePictureController pictureController;
-	private ComboBox<SatteliteMods> comboSattelites;
+	private ComboBox<SatelliteMods> comboSatellites;
 	private ComboBox<DataAcquisitionMode> dataAquisitionModeBox;
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
-	private Label sattelitePassStatus;
-	private Text satteliteStatus;
+	//private Label satellitePassStatus;
+	private Text satelliteStatus;
 	private FXMLLoader fxmlLoader;
 	public MainWindow(){
 		super();
@@ -90,10 +90,10 @@ public class MainWindow{
 
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		sattelitePassStatus = new Label(getSattelitePassStatus());
-		sattelitePassStatus.setStyle("-fx-font-size:20;");
+		//satellitePassStatus = new Label(getSatellitePassStatus());
+		//satellitePassStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
-		mainPane.setBottom(sattelitePassStatus);
+		//mainPane.setBottom(satellitePassStatus);
 		Scene scene = new Scene(root, width, height);         
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add
@@ -121,7 +121,7 @@ public class MainWindow{
 			firtsLine.setSpacing(140);
 			HBox secondLine = new HBox();
 			VBox logBox = new VBox();
-			HBox buttonBox = SattaliteUtils.getHBox(10);
+			HBox buttonBox = SatalliteUtils.getHBox(10);
 			firtsLine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			fxmlLoader = new FXMLLoader();
 			fxmlLoader.setLocation(getClass().getResource("FXMLDocument.fxml"));
@@ -165,14 +165,14 @@ public class MainWindow{
 		mainPane.setCenter(mainScreen);
 	}
 	
-	public Text getSatteliteStatus(){
-		if(satteliteStatus == null){
+	public Text getSatelliteStatus(){
+		if(satelliteStatus == null){
 			SatelliteState state = GuiManager.getInstance().getLastSatelliteState();
-			satteliteStatus = new Text(state.toString());
-			satteliteStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-			satteliteStatus.setFill(getFillForStatusText(state));
+			satelliteStatus = new Text(state.toString());
+			satelliteStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+			satelliteStatus.setFill(getFillForStatusText(state));
 		}
-		return satteliteStatus;
+		return satelliteStatus;
 	}
 	
 	private Color getFillForStatusText(SatelliteState state){
@@ -197,7 +197,7 @@ public class MainWindow{
 		borderPane.setTop(textHolder);
 		BorderPane.setMargin(textHolder, new Insets(0, 0, 10, 0));
 		
-		textHolder.getChildren().addAll(stLabelText,getSatteliteStatus());
+		textHolder.getChildren().addAll(stLabelText,getSatelliteStatus());
 		textHolder.setSpacing(10);
 	
 		List<HBox> buttonList = new ArrayList<HBox>();
@@ -236,24 +236,24 @@ public class MainWindow{
 
 
 	private Node[] getImmidiateModeChangeBox(){
-		comboSattelites = new ComboBox<>();
+		comboSatellites = new ComboBox<>();
 		Node[] nodes = new Node[3];
 		Button send = new Button("Send");
 		send.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				SatteliteMods item = getMainWindow().comboSattelites.getSelectionModel().getSelectedItem();
+				SatelliteMods item = getMainWindow().comboSatellites.getSelectionModel().getSelectedItem();
 				if(item == null){
 					return;
 				}
-				GuiManager.getInstance().sendImmidiateSatelliteModeCommand(getMainWindow().comboSattelites.getSelectionModel().getSelectedItem());
+				GuiManager.getInstance().sendImmidiateSatelliteModeCommand(getMainWindow().comboSatellites.getSelectionModel().getSelectedItem());
 			}
 		});
-		comboSattelites.getItems().addAll(SatteliteMods.values());
+		comboSatellites.getItems().addAll(SatelliteMods.values());
 		Label immidiateLabel = new Label("Send Immidiate status chagne:");
 		nodes[0] = immidiateLabel;
-		nodes[1] = comboSattelites;
+		nodes[1] = comboSatellites;
 		nodes[2] = send;
 		return nodes; 	
 	}
@@ -309,14 +309,14 @@ public class MainWindow{
 		return nodes; 	
 	}
 
-	public enum SatteliteMods{
+	public enum SatelliteMods{
 		SAFE("Safe mode", Command.MOVE_TO_SAFE),
 		OPERATION("Operation mode", Command.MOVE_TO_OP),
 		STANDBYE("Standby mode", Command.MOVE_TO_STANDBY);
 
 		private String presentationCommand;
 		private Command command ;
-		private SatteliteMods(String presentationCommand, Command command){
+		private SatelliteMods(String presentationCommand, Command command){
 			this.presentationCommand = presentationCommand;
 			this.command = command;
 		}
@@ -397,13 +397,13 @@ public class MainWindow{
 			return presentationCommand;
 		}
 	}
-	private String getSattelitePassStatus() {
+	private String getSatellitePassStatus() {
 		//String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
-		String[] generatedStatus = {"Sattelite in pass"};
+		String[] generatedStatus = {"Satellite in pass"};
 		return generatedStatus[(int)(Math.random()*generatedStatus.length)];
 	}
-	public void setSatteliteStatusText(String status) {
-		sattelitePassStatus.setText(status);
+	public void setSatelliteStatusText(String status) {
+		//satellitePassStatus.setText(status);
 	}
 
 	public void addToLog(String... data){
@@ -424,7 +424,7 @@ public class MainWindow{
 		return this.pictureController;
 	}
 	public void setSatelliteState(Satellite st) {
-		Text satelliteStatus = getSatteliteStatus();
+		Text satelliteStatus = getSatelliteStatus();
 		SatelliteState state = st.getSatelliteState();
 		satelliteStatus.setText(state.toString());
 		satelliteStatus.setFill(getFillForStatusText(state));

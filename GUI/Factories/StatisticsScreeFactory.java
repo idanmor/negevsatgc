@@ -45,7 +45,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import misc.SattaliteUtils;
+import misc.SatalliteUtils;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 
@@ -63,8 +63,8 @@ public class StatisticsScreeFactory implements InternalScreenFactory{
     
     private void initialize(BorderPane border){
         createTable();
-        VBox anchor = SattaliteUtils.getVbox(10);
-        HBox filterBox = SattaliteUtils.getHBox(10);
+        VBox anchor = SatalliteUtils.getVbox(10);
+        HBox filterBox = SatalliteUtils.getHBox(10);
         Label filterBy = new Label("Filter");
         ComboBox<StatisticsComboFiltersStrat> filterCombo = new ComboBox<>();
         filterCombo.getItems().addAll(new StatisticsTemperatureFilter());

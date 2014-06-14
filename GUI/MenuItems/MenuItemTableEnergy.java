@@ -3,10 +3,10 @@ package MenuItems;
 import Panels.EnergyComponentStatistics;
 import javafx.scene.layout.BorderPane;
 
-public class MenuItemTableVoltage extends AbstractMenuItem {
+public class MenuItemTableEnergy extends AbstractMenuItem {
 
-	public MenuItemTableVoltage() {
-		super("Components Voltage");
+	public MenuItemTableEnergy() {
+		super("Components Energy");
 	}
 
 	@Override
