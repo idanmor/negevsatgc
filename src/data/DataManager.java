@@ -13,6 +13,7 @@ import java.util.TooManyListenersException;
 
 import Utils.GuiManager;
 import communication.CommunicationManager;
+import data.Satellite.SatelliteState;
 import javafx.util.Pair;
 import persistency.dbConnection;
 
@@ -121,5 +122,12 @@ public class DataManager {
 	    
 	 public void deleteCompletedMission(Timestamp creationTimestamp){
 		 db.deleteCompletedMission(creationTimestamp);
+	 }
+	 
+	 public SatelliteState getLastSateliteState(){
+		 if(latestSatData == null){
+			 return SatelliteState.UNKNOWN;
+		 }
+		 return latestSatData.getSatelliteState();
 	 }
 }

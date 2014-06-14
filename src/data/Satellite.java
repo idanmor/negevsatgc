@@ -3,6 +3,8 @@ package data;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import data.Satellite.SatelliteState;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -141,4 +143,9 @@ public class Satellite {
     	statList.add(getThermalStatus());
     	return statList;
     }
+
+	public SatelliteState getSatelliteState() {
+		
+		return satelliteState;
+	}
 }
