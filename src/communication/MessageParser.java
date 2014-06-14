@@ -35,6 +35,7 @@ public class MessageParser implements Runnable {
 	
 	private static final String tagStateOperational = "OPERATIONAL_STATE";
 	private static final String tagStateSafe = "SAFE_STATE";
+	private static final String tagStateInit = "INIT_STATE";
 	
 	private static final String tagEnergyPacketItem1 = "Battery1";
 	private static final String tagEnergyPacketItem2 = "Battery2";
@@ -337,6 +338,9 @@ public class MessageParser implements Runnable {
 			break;
 		case tagStateSafe:
 			satst = Satellite.SatelliteState.SAFE_MODE;
+			break;
+		case tagStateInit:
+			satst = Satellite.SatelliteState.Operational;
 			break;
 		default:
 			satst = Satellite.SatelliteState.UNKNOWN;

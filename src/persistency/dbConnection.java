@@ -166,11 +166,11 @@ public class dbConnection {
     
     public Temprature insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp timeStamp){
         try{
-        	List<Temprature> dataFromTable=tempratureDao.queryBuilder().where().eq(Temprature.DATE_FIELD_NAME, timeStamp).query();
-        	if (dataFromTable!=null){
-        		System.err.println("TimeStamp already exists");
-        		return null;
-        	}
+//        	List<Temprature> dataFromTable=tempratureDao.queryBuilder().where().eq(Temprature.DATE_FIELD_NAME, timeStamp).query();
+//        	if (dataFromTable!=null){
+//        		System.err.println("TimeStamp already exists");
+//        		return null;
+//        	}
             Temprature tmp=new Temprature(timeStamp,sensor1,sensor2,sensor3);
             tempratureDao.create(tmp);
             return tmp;
@@ -183,11 +183,11 @@ public class dbConnection {
     
     public Energy insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp timeStamp){
         try{
-        	List<Energy> dataFromTable=energyDao.queryBuilder().where().eq(Energy.DATE_FIELD_NAME, timeStamp).query();
-        	if(dataFromTable!=null){
-        		System.err.println("TimeStamp already exists");
-        		return null;
-        	}
+//        	List<Energy> dataFromTable=energyDao.queryBuilder().where().eq(Energy.DATE_FIELD_NAME, timeStamp).query();
+//        	if(dataFromTable!=null){
+//        		System.err.println("TimeStamp already exists");
+//        		return null;
+//        	}
         	Energy eng=new Energy(timeStamp,batt1V,batt2V,batt3V,batt1C,batt2C,batt3C);  
             energyDao.create(eng);
             return eng;
