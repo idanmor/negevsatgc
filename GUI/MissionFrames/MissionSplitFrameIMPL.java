@@ -105,7 +105,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		StringBuilder logUpdate = new StringBuilder();
 		logUpdate.append(" A mission for component: ").append(selectedComponent.toString()).append(" is sent.");
 		setSuccessStatus(logUpdate.toString());
-		rightPane.getChildren().clear();
+		init();
 	
 		
 		
@@ -133,7 +133,10 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	
 			mainPane.setCenter(mainSplitPane);
 			mainPane.setBottom(getConfirmCancelButtons());
+			mission_components_list = new ArrayList<>(MISSION_MAX_NUM_ITEMS);
 			}
+		rightPane.getChildren().clear();
+		mission_components_list.clear();
 		mission_components_list = new ArrayList<>(MISSION_MAX_NUM_ITEMS);
 		for(int i = 0 ; i < MISSION_MAX_NUM_ITEMS ; i++){
 			mission_components_list.add(null);
@@ -245,6 +248,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 						rightPane.getChildren().add(item.getMissionArrayLoc(),box);
 						mission_components_list.remove(item.getMissionArrayLoc());
 						mission_components_list.add(item.getMissionArrayLoc(),item);
+						item.getMissionItem().clearSelection();
 					}
 				}
 					});

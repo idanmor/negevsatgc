@@ -39,6 +39,11 @@ public class AbstractMultipleItemsWrapper extends HBox implements MissionItemWra
 	        }
 	        return prefix.toString().trim() + " " + getMissionValue();
 	  }
+
+	@Override
+	public  void clearSelection(){
+		return;
+	}
 	 
 
 }

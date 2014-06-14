@@ -113,7 +113,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 				filter(before.getEditor().getText(), after.getEditor().getText());
 			}
 		});
-		box.getChildren().addAll(afterDate,after,filterButton,beforeDate,before);
+		box.getChildren().addAll(afterDate,after,beforeDate,before, filterButton);
 		return box;
 	}
 	
@@ -178,7 +178,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		}
 
 		ObservableList<StatisticDataItemInterface> filteredItems = FXCollections.observableArrayList();
-		populateTableNodes(afterCal, filteredItems, writeFormat, beforeCal);
+		populateTableNodes(afterCal, filteredItems, new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss"), beforeCal);
 		table.setItems(filteredItems);
 	}
 	public void writeExcel() throws Exception {
@@ -293,6 +293,8 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 	private void populateTable(){
 		final long monthInMS = 26280000;//need to mult by 100
 		final long dayinMS = 86400000;
+		DateFormat simpleFormatter = new SimpleDateFormat( "dd-MM-yyyy");
+		
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 		Timestamp TS=new Timestamp(System.currentTimeMillis());
 		ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
