@@ -29,7 +29,7 @@ public class SerialListener implements SerialPortEventListener {
         case SerialPortEvent.DATA_AVAILABLE:
             dataAvailable(event);
             break;
-        
+
         /*
         case SerialPortEvent.BI:
             breakInterrupt(event);
