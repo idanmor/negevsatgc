@@ -84,13 +84,23 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		createComponentMission();
 		System.out.println(this.mission_components_list);
 	}
+	@SuppressWarnings("unchecked")
 	private void createComponentMission(){
 		MissionTreeItem date = mission_components_list.get(MISSION_DATE);
 		MissionComboBoxWrapper<Component> ComponentBox = (MissionComboBoxWrapper<Component>)mission_components_list.get(MISSION_DESC).getMissionItem();
 		MissionComboBoxWrapper<State> stateBox = (MissionComboBoxWrapper<State>)mission_components_list.get(COMPONENT_ON_OFF_LOCATION).getMissionItem();
-		Command c = ComponentBox.getSelectionModel().getSelectedItem().getCommand(stateBox.getSelectionModel().getSelectedItem());
+		Component selectedComponent = ComponentBox.getSelectionModel().getSelectedItem();
+		Command c = selectedComponent.getCommand(stateBox.getSelectionModel().getSelectedItem());
 		//;
 		String dateString = date.getMissionStringValue();
+		GuiManager.getInstance().sendSatelliteModeCommand(dateString, c);
+		MissionTreeItem endDate = mission_components_list.get(MISSION_DATE_END);
+		if(endDate != null){
+			String endDateString = date.getMissionStringValue();
+			State originalState = stateBox.getSelectionModel().getSelectedItem();
+			State endState = originalState == State.ON ? State.OFF : State.ON;
+			GuiManager.getInstance().sendSatelliteModeCommand(endDateString, selectedComponent.getCommand(endState));
+		}
 		
 		
 	}
