@@ -193,8 +193,9 @@ public class MainWindow{
 		BorderPane borderPane = new BorderPane();
 		HBox textHolder = new HBox();
 		Text stLabelText = new Text("Satellite Status: ");
-		borderPane.setTop(getSatteliteStatus());
-		BorderPane.setMargin(getSatteliteStatus(), new Insets(0, 0, 10, 0));
+		stLabelText.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		borderPane.setTop(textHolder);
+		BorderPane.setMargin(textHolder, new Insets(0, 0, 10, 0));
 		
 		textHolder.getChildren().addAll(stLabelText,getSatteliteStatus());
 		textHolder.setSpacing(10);
