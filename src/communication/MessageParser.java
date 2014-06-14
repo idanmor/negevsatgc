@@ -4,12 +4,11 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import org.w3c.dom.*;
 
 import data.DataManager;
+import data.Satellite;
 import data.Status;
 
 public class MessageParser implements Runnable {
@@ -33,6 +32,9 @@ public class MessageParser implements Runnable {
 	private static final String tagStatusMalfunction = "MALFUNCTION";
 	private static final String tagStatusStandby = "STANDBY";
 	private static final String tagStatusNonOperational = "NON_OPERATIONAL";
+	
+	private static final String tagStateOperational = "OPERATIONAL_STATE";
+	private static final String tagStateSafe = "SAFE_STATE";
 	
 	private static final String tagEnergyPacketItem1 = "Battery1";
 	private static final String tagEnergyPacketItem2 = "Battery2";
@@ -119,7 +121,7 @@ public class MessageParser implements Runnable {
 		System.out.println("DEBUG: Static packet parsing");
 		Status defaultStatus = Status.UNKNOWN;
 		NodeList children = packet.getChildNodes();
-		String satState = "";
+		Satellite.SatelliteState satState = Satellite.SatelliteState.Unknown;
 		Status energyStatus = defaultStatus;
 		Timestamp energyStatusTS = null;
 		Status temperatureStatus = defaultStatus;
@@ -136,9 +138,8 @@ public class MessageParser implements Runnable {
 		for (int i=0; i < children.getLength(); i++) { //For each packet element
 			Node child = children.item(i);
 			if (child.getNodeName().equals(tagState)) {
-				satState = child.getTextContent();
+				satState = stringToSatState(child.getTextContent());
 			} else if (child.getNodeName().equals(tagModule)) {
-				Timestamp ts;
 				NamedNodeMap attr = child.getAttributes();
 				String moduleTimestamp = attr.getNamedItem(tagTime).getNodeValue();
 				
@@ -188,7 +189,7 @@ public class MessageParser implements Runnable {
 				"Solar Panels Status: " + solarPanelsStatus.toString() + " at " + solarPanelsStatusTS + "\n" +
 				"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS);
 		System.out.println("===========");
-		DataManager.getInstance().insertSatellite(temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
+		DataManager.getInstance().insertSatellite(satState, temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
 								sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
 								solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
 	}
@@ -326,5 +327,20 @@ public class MessageParser implements Runnable {
 			break;
 		}
 		return st;
+	}
+	
+	public Satellite.SatelliteState stringToSatState (String satstate) {
+		Satellite.SatelliteState satst;
+		switch (satstate) {
+		case tagStateOperational:
+			satst = Satellite.SatelliteState.Operational;
+			break;
+		case tagStateSafe:
+			satst = Satellite.SatelliteState.SafeMode;
+			break;
+		default:
+			satst = Satellite.SatelliteState.Unknown;
+		}
+		return satst;
 	}
 }
