@@ -8,12 +8,14 @@ import java.util.Locale;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.PieChart.Data;
 import communication.CommunicationManager;
 import data.Command;
 import data.DataManager;
 import data.Mission;
 import data.Satellite;
 import data.Status;
+import data.Satellite.SatelliteState;
 import negevsatgui.MainWindow;
 import negevsatgui.MainWindow.DataAcquisitionMode;
 import negevsatgui.MainWindow.SatteliteMods;
@@ -55,7 +57,6 @@ public class GuiManager {
 	public void sendImmidiateComponentStatusChange(Command command) {
 		Mission newMission =  DataManager.getInstance().insertMission(null,command, 1);
 		addToLog("Sending change component status mission to Sattelite");
-		refreshSatelliteController(new Satellite(Status.ON, new Timestamp(1), Status.ON,new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1)));
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
 
@@ -68,7 +69,7 @@ public class GuiManager {
 				addToLog("Sattelite status data recieved");
 				SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
 				cont.nonSupdateSateliteStatus(st);
-				//SattelitePictureController.updateSateliteStatus(st);
+				
 				
 			}
 		});
@@ -101,6 +102,11 @@ public class GuiManager {
 		Mission mission = new Mission(new Timestamp(writeFormat.getCalendar().getTimeInMillis()), c, 1);
 		
 		
+	}
+	
+	public SatelliteState getLastSatelliteState(){
+		DataManager dm = DataManager.getInstance();
+		return dm.getLastSateliteState();
 	}
 
 }

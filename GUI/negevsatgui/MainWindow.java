@@ -21,7 +21,10 @@ import data.Command;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import Utils.Constants;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,6 +35,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -113,7 +118,7 @@ public class MainWindow{
 		if(mainScreen == null){
 			mainScreen = new VBox();
 			HBox firtsLine = new HBox();
-			firtsLine.setSpacing(10);
+			firtsLine.setSpacing(140);
 			HBox secondLine = new HBox();
 			VBox logBox = new VBox();
 			HBox buttonBox = SattaliteUtils.getHBox(10);
@@ -148,7 +153,6 @@ public class MainWindow{
 				}
 			});
 			Label logTitle = new Label("Log Screen");
-			//demoListView.setText("(1/1/2014)Sattelite status: = Good \n(1/1/2014)Mulfunction in Power supply \n(1/1/2014)Battery status: 60% \n");
 			demoListView.setPrefWidth(400);
 			logBox.getChildren().addAll(logTitle,demoListView,toLogger);
 			buttonBox.getChildren().addAll(generateButtonHolders());
@@ -160,11 +164,17 @@ public class MainWindow{
 		}
 		mainPane.setCenter(mainScreen);
 	}
-	private List<HBox> generateButtonHolders(){
+	private BorderPane generateButtonHolders(){
 		HBox one = new HBox();
 		one.setSpacing(10);
-		BorderPane pane = new BorderPane();
-		Label status = new Label();
+		BorderPane borderPane = new BorderPane();
+	
+		satteliteStatus = new Label();
+		satteliteStatus.setPadding(new Insets(10, 0, 0, 10));
+		satteliteStatus.setAlignment(Pos.CENTER);
+		satteliteStatus.setText("Sattelite status: " + GuiManager.getInstance().getLastSatelliteState().toString());
+	
+		borderPane.setTop(satteliteStatus);
 		List<HBox> buttonList = new ArrayList<HBox>();
 		List<Node[]> listOfImmediateActions = new ArrayList<>();
 		listOfImmediateActions.add(getImmidiateModeChangeBox());
@@ -184,9 +194,11 @@ public class MainWindow{
 
 		one.getChildren().addAll(first,second,third);
 		buttonList.add(one);
+		HBox containerBox = new HBox();
+		containerBox.getChildren().addAll(buttonList);
+		borderPane.setCenter(containerBox);
 
-
-		return buttonList;
+		return borderPane;
 	}
 
 	private String addDateToString(String text){
