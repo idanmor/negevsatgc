@@ -19,9 +19,11 @@ import Utils.GuiManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import data.Command;
+import negevsatgui.MainWindow;
 import negevsatgui.MainWindow.Component;
 import negevsatgui.MainWindow.State;
 import javafx.animation.FadeTransition;
@@ -100,16 +102,20 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			State endState = originalState == State.ON ? State.OFF : State.ON;
 			GuiManager.getInstance().sendSatelliteModeCommand(endDateString, selectedComponent.getCommand(endState));
 		}
-		setSuccessStatus();
+		StringBuilder logUpdate = new StringBuilder();
+		logUpdate.append(" A mission for component: ").append(selectedComponent.toString()).append(" is sent.");
+		setSuccessStatus(logUpdate.toString());
 		rightPane.getChildren().clear();
 	
 		
 		
 	}
-	private void setSuccessStatus(){
+	private void setSuccessStatus(String data){
 		missionSentStatus.setText(Constants.MISSION_SENT);
 		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		missionSentStatus.setFill(Color.GREEN);
+		GuiManager.getInstance().addToLog(data);
+		//MainWindow.getMainWindow().addToLog("(" + Calendar.getInstance().getTime().toString() + ") " + data);
 	}
 	private void init(){
 		if(leftTree == null || rightPane == null){
