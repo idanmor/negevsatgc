@@ -148,7 +148,7 @@ public class MainWindow{
 			}
 		});
 		Label logTitle = new Label("Log Screen");
-		demoListView.setText("(1/1/2014)Sattelite status: = Good \n(1/1/2014)Mulfunction in Power supply \n(1/1/2014)Battery status: 60% \n");
+		//demoListView.setText("(1/1/2014)Sattelite status: = Good \n(1/1/2014)Mulfunction in Power supply \n(1/1/2014)Battery status: 60% \n");
 		demoListView.setPrefWidth(400);
 		logBox.getChildren().addAll(logTitle,demoListView,toLogger);
 		buttonBox.getChildren().addAll(generateButtonHolders());
@@ -159,33 +159,9 @@ public class MainWindow{
 		firtsLine.autosize();
 	}
 	private List<HBox> generateButtonHolders(){
-	//	final String[] logOutPut = {"Moving to power save mode... ", "Moving to maintenece mode...",
-	//			"Restart command initiated..", "Sending telemetry file...", "Sending scheduled commands", "Running system analasys"};
-	//	String[] buttonNames = {"Power Save", "Maitenance Mode",
-	//			"Restart systems", "Send Telemetry", "Send shceduled command", "Analyze systems"};
 		HBox one = new HBox();
 		one.setSpacing(10);
-		VBox two =  SattaliteUtils.getVbox(15);
-//		int numOfButton = logOutPut.length;
-//
 		List<HBox> buttonList = new ArrayList<HBox>();
-//		for(int i = 0; i < numOfButton; i++){
-//			Button b = new Button(buttonNames[i]);
-//			final String a = logOutPut[i];
-//			b.setOnAction(new EventHandler<ActionEvent>() {
-//
-//				@Override
-//				public void handle(ActionEvent t) {
-//
-//					demoListView.appendText(addDateToString(a) + "\n");
-//				}
-//			});
-//			if(i < numOfButton/2){
-//				one.getChildren().add(b);
-//			}else{
-//				two.getChildren().add(b);
-//			}
-//		}
 		List<Node[]> listOfImmediateActions = new ArrayList<>();
 		listOfImmediateActions.add(getImmidiateModeChangeBox());
 		listOfImmediateActions.add(getDataAcquisitionModeBox());
@@ -202,10 +178,9 @@ public class MainWindow{
 			third.getChildren().add(listOfImmediateActions.get(i)[2]);
 		}
 		
-		//one.getChildren().addAll(getImmidiateModeChangeBox(), getDataAcquisitionModeBox(), getComponentsStatusModeBox());
 		one.getChildren().addAll(first,second,third);
 		buttonList.add(one);
-		//buttonList.add(two);
+	
 
 		return buttonList;
 	}
@@ -239,9 +214,6 @@ public class MainWindow{
 		nodes[0] = immidiateLabel;
 		nodes[1] = comboSattelites;
 		nodes[2] = send;
-		//HBox container =  new HBox();
-		//container.setSpacing(10);
-		//container.getChildren().addAll(immidiateLabel,comboSattelites,send);
 		return nodes; 	
 	}
 
@@ -265,9 +237,6 @@ public class MainWindow{
 		nodes[0] = changeTypeOfDataRecieved;
 		nodes[1] = dataAquisitionModeBox;
 		nodes[2] = send;
-//		HBox container = new HBox();
-//		container.setSpacing(10);
-//		container.getChildren().addAll(changeTypeOfDataRecieved,dataAquisitionModeBox,send);
 		return nodes; 	
 	}
 
@@ -288,9 +257,13 @@ public class MainWindow{
 			}
 		});
 		Label changeComponentStatus = new Label("Change component status:");
+		buttonBox.getItems().addAll(State.values());
 		componentStatusBox.getItems().addAll(Component.values());
+		HBox box = new HBox();
+		box.setSpacing(5);
+		box.getChildren().addAll(componentStatusBox,buttonBox);
 		nodes[0] = changeComponentStatus;
-		nodes[1] = componentStatusBox;
+		nodes[1] = box;
 		nodes[2] = send;
 		return nodes; 	
 	}
