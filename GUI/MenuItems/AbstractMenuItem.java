@@ -18,10 +18,10 @@ import negevsatgui.MainWindow;
  *
  * @author Max
  */
-public abstract class MenuItemStrategy extends MenuItem{ 
+public abstract class AbstractMenuItem extends MenuItem{ 
    
     
-    public MenuItemStrategy(String name){
+    public AbstractMenuItem(String name){
        super(name);
       this.setOnAction(new EventHandler<ActionEvent>() {
           @Override

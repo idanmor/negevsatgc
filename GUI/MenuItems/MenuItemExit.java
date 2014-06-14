@@ -16,7 +16,7 @@ import negevsatgui.MainWindow;
  *
  * @author Max
  */
-public class MenuItemExit extends MenuItemStrategy {
+public class MenuItemExit extends AbstractMenuItem {
     
     public MenuItemExit(){
         super("Exit");

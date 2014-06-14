@@ -10,7 +10,15 @@ import java.util.ArrayList;
 public class Satellite {
 	
 	public enum SatelliteState {
-		Unknown, Operational, SafeMode
+		UNKNOWN("Unknown"), OPERATIONAL("Operational"), SAFE_MODE("Safe Mode");
+		private String name;
+		private SatelliteState(String state){
+			this.name = state;
+		}
+		@Override
+		public String toString(){
+			return name;
+		}
 	}
 	 
     public static final String DATE_FIELD_NAME = "creationTimestamp";
@@ -52,7 +60,7 @@ public class Satellite {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.creationTimestamp=t;
-        this.satelliteState=SatelliteState.Operational;
+        this.satelliteState=SatelliteState.OPERATIONAL;
         this.TempratureStatus=temp;
         this.EnergyStatus=energy;
         this.SbandStatus=Sband;
