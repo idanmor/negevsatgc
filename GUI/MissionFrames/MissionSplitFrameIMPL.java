@@ -81,7 +81,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		
 	}
 
-	private void createMission(){
+	private void createMission() throws Exception{
 		createComponentMission();
 		
 	}
@@ -115,7 +115,14 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		missionSentStatus.setFill(Color.GREEN);
 		GuiManager.getInstance().addToLog(data);
-		//MainWindow.getMainWindow().addToLog("(" + Calendar.getInstance().getTime().toString() + ") " + data);
+	}
+	private void setFailStatus(String data){
+		missionSentStatus.setText(Constants.MISSION_SEND_FAILED);
+		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		missionSentStatus.setFill(Color.RED);
+		if(data != null){
+			GuiManager.getInstance().addToLog(data);
+		}
 	}
 	private void init(){
 		if(leftTree == null || rightPane == null){
@@ -153,7 +160,12 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 
 				@Override
 				public void handle(ActionEvent t) {
-					createMission();
+					try {
+						createMission();
+					} catch (Exception e) {
+						setFailStatus(null);
+						e.printStackTrace();
+					}
 
 				}
 			});

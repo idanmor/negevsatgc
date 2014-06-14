@@ -6,8 +6,11 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -98,9 +101,10 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 	protected HBox createTopHBox(){
 		HBox box = SatalliteUtils.getHBox(10);
 		Label beforeDate = new Label("Before: ");
-		DatePicker before = new DatePicker();   
+		DatePicker before = new DatePicker(LocalDate.now());   
 		Label afterDate = new Label("After :");
-		DatePicker after = new DatePicker();   
+		DatePicker after = new DatePicker(LocalDate.now());  
+		after.setUserData(Calendar.getInstance().getTimeInMillis());
 		Button filterButton = new Button("Filter");
 		filterButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -137,33 +141,42 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		}
 	}
 	private void filter(String before, String after){
-		GregorianCalendar beforeCal = null;
-		GregorianCalendar afterCal = null;
+		Timestamp beforeCal = null;
+		Timestamp afterCal = null;
+		before = before.replace("/", "-");
+		after = after.replace("/", "-");
+		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy");
 		if(before != null && !before.isEmpty()){
-			beforeCal = Utils.createCalendar(before);
-
+			
+			try {
+				Date beforeDate = writeFormat.parse(before);
+				beforeCal = new Timestamp(beforeDate.getTime());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else{
+			beforeCal = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		}
 		if(after != null && !after.isEmpty()){
-			afterCal = Utils.createCalendar(after);
-
+			Date afterDate;
+			try {
+				afterDate = writeFormat.parse(after);
+				afterCal = new Timestamp(afterDate.getTime());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}else{
+			 long monthInMS = 26280000;//need to mult by 100
+			 afterCal = new Timestamp(Calendar.getInstance().getTimeInMillis() - monthInMS * 100);
 		}
 
 		ObservableList<StatisticDataItemInterface> filteredItems = FXCollections.observableArrayList();
-		List<StatisticDataItemInterface> items = backUpListItems;
-		for(StatisticDataItemInterface item: items){
-			boolean valid = true;
-
-			if(beforeCal != null && beforeCal.compareTo(Utils.createCalendar(item.getSimpleDate())) < 0){
-				valid = false;
-			}else if (afterCal != null && afterCal.compareTo(Utils.createCalendar(item.getSimpleDate())) > 0){
-				valid = false;
-			}
-			if(valid){
-				filteredItems.add(item);
-			}
-
-
-		}
+		populateTableNodes(afterCal, filteredItems, writeFormat, beforeCal);
 		table.setItems(filteredItems);
 	}
 	public void writeExcel() throws Exception {
@@ -237,37 +250,37 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createTable(){
 		if(table == null){
-		table = new TableView<>();
-		table.setPrefWidth(600);
-		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		TableColumn date = new TableColumn("Date Taken");
-		TableColumn component = new TableColumn("Component");
-		TableColumn type = new TableColumn("Type");
-		date.prefWidthProperty().bind(table.widthProperty().multiply(0.5));
-		component.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-		type.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-
-		date.setCellValueFactory(
-				new PropertyValueFactory<StatisticDataItemInterface,String>("date")
-				);
-		component.setCellValueFactory(
-				new PropertyValueFactory<StatisticDataItemInterface,String>("component")
-				);
-		type.setCellValueFactory(
-				new PropertyValueFactory<StatisticDataItemInterface,String>("type")
-				);
-		//populateTableDemo();
-		table.getColumns().addAll(date, component, type);
-		table.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent t) {
-				if(t.getClickCount() == 2 && table.getSelectionModel().getSelectedItem() != null){
-					createStatisicsWindow(lineChart);
+			table = new TableView<>();
+			table.setPrefWidth(600);
+			table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+			TableColumn date = new TableColumn("Date Taken");
+			TableColumn component = new TableColumn("Component");
+			TableColumn type = new TableColumn("Type");
+			date.prefWidthProperty().bind(table.widthProperty().multiply(0.5));
+			component.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+			type.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+	
+			date.setCellValueFactory(
+					new PropertyValueFactory<StatisticDataItemInterface,String>("date")
+					);
+			component.setCellValueFactory(
+					new PropertyValueFactory<StatisticDataItemInterface,String>("component")
+					);
+			type.setCellValueFactory(
+					new PropertyValueFactory<StatisticDataItemInterface,String>("type")
+					);
+			//populateTableDemo();
+			table.getColumns().addAll(date, component, type);
+			table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	
+				@Override
+				public void handle(MouseEvent t) {
+					if(t.getClickCount() == 2 && table.getSelectionModel().getSelectedItem() != null){
+						createStatisicsWindow(lineChart);
+					}
+					t.consume();
 				}
-				t.consume();
-			}
-		});
+			});
 		}
 		populateTable();
 		//backUpListItems = table.getItems();
@@ -368,8 +381,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 					minutes = "0" + minutes;
 				}
 				hour = hourBuilder.append((int)(Math.random()*24)).append(":").append((int)(Math.random()*60)).toString();
-				// hour = hourBuilder.append(data).append(" ").append(i + DATA_SIZE).toString();
-				//   hourForSort[i] = Integer.valueOf(hour);
 				hourForSort[i] = date + " " + hour;
 				hourBuilder.setLength(0);
 			}
