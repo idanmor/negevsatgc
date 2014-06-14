@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import javafx.application.Platform;
@@ -18,7 +19,7 @@ import data.Status;
 import data.Satellite.SatelliteState;
 import negevsatgui.MainWindow;
 import negevsatgui.MainWindow.DataAcquisitionMode;
-import negevsatgui.MainWindow.SatteliteMods;
+import negevsatgui.MainWindow.SatelliteMods;
 import negevsatgui.SattelitePictureController;
 
 public class GuiManager {
@@ -39,12 +40,12 @@ public class GuiManager {
 	 * @param status
 	 */
 	public void setNewSatteliteStatusInGui(String status){
-		mainWindow.setSatteliteStatusText(status);
+		mainWindow.setSatelliteStatusText(status);
 	}
 
-	public void sendImmidiateSatelliteModeCommand(SatteliteMods selectedItem) {
+	public void sendImmidiateSatelliteModeCommand(SatelliteMods selectedItem) {
 		Mission newMission = DataManager.getInstance().insertMission(null, selectedItem.getCommand(), 1);
-		addToLog("Sending mission to Sattelite -" + selectedItem.toString());
+		addToLog("Sending mission to Satellite -" + selectedItem.toString());
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
 
@@ -56,7 +57,7 @@ public class GuiManager {
 
 	public void sendImmidiateComponentStatusChange(Command command) {
 		Mission newMission =  DataManager.getInstance().insertMission(null,command, 1);
-		addToLog("Sending change component status mission to Sattelite");
+		addToLog("Sending change component status mission to Satellite");
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
 
@@ -66,7 +67,7 @@ public class GuiManager {
 			@Override
 			public void run() {
 				
-				addToLog("Sattelite status data recieved");
+				addToLog("Satellite status data recieved");
 				SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
 				cont.nonSupdateSateliteStatus(st);
 				MainWindow.getMainWindow().setSatelliteState(st);
@@ -98,9 +99,10 @@ public class GuiManager {
 		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss");
 		
 		String date = writeFormat.format(dateString);
-		
+		//Date d = new Date(arg0)
 		Mission mission = new Mission(new Timestamp(writeFormat.getCalendar().getTimeInMillis()), c, 1);
-		
+		DataManager.getInstance().insertMission(new Timestamp(writeFormat.getCalendar().getTimeInMillis()), c, 1);
+		CommunicationManager.getInstance().sendMission(mission);
 		
 	}
 	

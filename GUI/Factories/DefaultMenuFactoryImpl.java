@@ -14,7 +14,7 @@ import MenuItems.MenuItemSchedule;
 import MenuItems.MenuItemStatistics;
 import MenuItems.AbstractMenuItem;
 import MenuItems.MenuItemTableTemperature;
-import MenuItems.MenuItemTableVoltage;
+import MenuItems.MenuItemTableEnergy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
         List<AbstractMenuItem> listOfTablesItems = new ArrayList<>();
         listOfTablesItems.add(new MenuItemTableTemperature());
-        listOfTablesItems.add(new MenuItemTableVoltage());
+        listOfTablesItems.add(new MenuItemTableEnergy());
         Menu tableScreens = this.createExpandMenu("View Tables", listOfTablesItems);
         menuView.getItems().addAll(menuSceens,tableScreens, new MenuItemSchedule());
         return menuView;

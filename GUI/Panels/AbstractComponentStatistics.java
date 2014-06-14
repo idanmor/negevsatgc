@@ -38,7 +38,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import misc.SattaliteUtils;
+import misc.SatalliteUtils;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 
@@ -56,7 +56,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		split.setOrientation(Orientation.HORIZONTAL);
 		rightPane = new BorderPane();
 		mainPane = new BorderPane();
-		HBox chartHbox = SattaliteUtils.getHBox(10);
+		HBox chartHbox = SatalliteUtils.getHBox(10);
 
 		final CategoryAxis xAxis = new CategoryAxis();
 		final NumberAxis yAxis = new NumberAxis();
@@ -96,7 +96,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 
 	}
 	protected HBox createTopHBox(){
-		HBox box = SattaliteUtils.getHBox(10);
+		HBox box = SatalliteUtils.getHBox(10);
 		Label beforeDate = new Label("Before: ");
 		DatePicker before = new DatePicker();   
 		Label afterDate = new Label("After :");
