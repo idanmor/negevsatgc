@@ -43,19 +43,20 @@ public class GuiManager {
 	public void sendImmidiateSatelliteModeCommand(SatteliteMods selectedItem) {
 		Mission newMission = new Mission(null, selectedItem.getCommand(), 1);
 		addToLog("Sending mission to Sattelite -" + selectedItem.toString());
-		//TODO 
+		CommunicationManager.getInstance().sendMission(newMission);
 	}
 
 	public void sendImmidiateDataAquisitionCommand(DataAcquisitionMode dataAcquisitionMode) {
 		Mission newMission =  new Mission(null, dataAcquisitionMode.getCommand(), 1);
 		addToLog("Sending mission to Sattelite -" + dataAcquisitionMode.toString());
+		CommunicationManager.getInstance().sendMission(newMission);
 	}
 
 	public void sendImmidiateComponentStatusChange(Command command) {
 		Mission newMission =  new Mission(null,command, 1);
 		addToLog("Sending change component status mission to Sattelite");
 		refreshSatelliteController(new Satellite(Status.ON, new Timestamp(1), Status.ON,new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1), Status.ON, new Timestamp(1)));
-		//TODO 
+		CommunicationManager.getInstance().sendMission(newMission);
 	}
 
 	public void refreshSatelliteController(Satellite st){
