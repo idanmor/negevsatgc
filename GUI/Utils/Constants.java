@@ -32,4 +32,7 @@ public interface Constants {
 	//Components names
 	public static final String TEMERATURE_COMPONENT_NAME = "Temperature";
 	public static final String ENERGY_COMPONENT_NAME = "Energy";
+	
+	
+	public static final String MISSION_SENT = "Mission sent successfully";
 }

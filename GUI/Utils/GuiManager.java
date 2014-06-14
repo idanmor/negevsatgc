@@ -2,6 +2,7 @@ package Utils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -97,11 +98,19 @@ public class GuiManager {
 
 	public void sendSatelliteModeCommand(String dateString, Command c) {
 		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss");
-		
-		String date = writeFormat.format(dateString);
+		dateString = dateString.replace("/", "-");
+		Date date = null;
+		try {
+			date = writeFormat.parse(dateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
 		//Date d = new Date(arg0)
-		Mission mission = new Mission(new Timestamp(writeFormat.getCalendar().getTimeInMillis()), c, 1);
-		DataManager.getInstance().insertMission(new Timestamp(writeFormat.getCalendar().getTimeInMillis()), c, 1);
+		Timestamp ts = new Timestamp(date.getTime());
+		Mission mission = new Mission(ts, c, 1);
+		DataManager.getInstance().insertMission(ts, c, 1);
 		CommunicationManager.getInstance().sendMission(mission);
 		
 	}
