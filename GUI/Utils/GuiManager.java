@@ -69,7 +69,7 @@ public class GuiManager {
 				addToLog("Sattelite status data recieved");
 				SattelitePictureController cont = MainWindow.getMainWindow().getSatellitePictureController();
 				cont.nonSupdateSateliteStatus(st);
-				
+				MainWindow.getMainWindow().setSatelliteState(st);
 				
 			}
 		});

@@ -30,8 +30,8 @@
       </Group>
       <Group fx:id="groupPDU" layoutX="-137.0" layoutY="-182.0">
          <children>
-            <ImageView fx:id="ImageViewPDU" fitHeight="39.0" fitWidth="60.0" layoutX="407.0" layoutY="213.0" pickOnBounds="true" />
-            <Label fx:id="labelPDU" layoutX="413.0" layoutY="224.0" prefHeight="17.0" prefWidth="49.0" text="Thermal" />
+            <ImageView fx:id="ImageViewPDU" fitHeight="39.0" fitWidth="102.0" layoutX="407.0" layoutY="213.0" pickOnBounds="true" />
+            <Label fx:id="labelPDU" layoutX="413.0" layoutY="224.0" prefHeight="17.0" prefWidth="96.0" text="Thermal Cooler" />
          </children>
       </Group>
       <Group fx:id="groupRadio" layoutX="-267.0" layoutY="-176.0">

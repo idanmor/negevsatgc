@@ -17,16 +17,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javafx.scene.paint.Color;
 import data.Command;
+import data.Satellite;
+import data.Satellite.SatelliteState;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import Utils.Constants;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -35,13 +35,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import misc.SattaliteUtils;
 import Utils.*;
@@ -60,7 +60,7 @@ public class MainWindow{
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
 	private Label sattelitePassStatus;
-	private Label satteliteStatus;
+	private Text satteliteStatus;
 	private FXMLLoader fxmlLoader;
 	public MainWindow(){
 		super();
@@ -90,7 +90,7 @@ public class MainWindow{
 
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		sattelitePassStatus = new Label(getSatteliteStatus());
+		sattelitePassStatus = new Label(getSattelitePassStatus());
 		sattelitePassStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
 		mainPane.setBottom(sattelitePassStatus);
@@ -164,17 +164,41 @@ public class MainWindow{
 		}
 		mainPane.setCenter(mainScreen);
 	}
+	
+	public Text getSatteliteStatus(){
+		if(satteliteStatus == null){
+			SatelliteState state = GuiManager.getInstance().getLastSatelliteState();
+			satteliteStatus = new Text(state.toString());
+			satteliteStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+			satteliteStatus.setFill(getFillForStatusText(state));
+		}
+		return satteliteStatus;
+	}
+	
+	private Color getFillForStatusText(SatelliteState state){
+		switch (state) {
+		case OPERATIONAL:
+			
+			return Color.GREEN;
+		case SAFE_MODE:
+			
+			return Color.RED;
+		default:
+			return Color.BLACK;
+		}
+	}
 	private BorderPane generateButtonHolders(){
 		HBox one = new HBox();
 		one.setSpacing(10);
 		BorderPane borderPane = new BorderPane();
+		HBox textHolder = new HBox();
+		Text stLabelText = new Text("Satellite Status: ");
+		borderPane.setTop(getSatteliteStatus());
+		BorderPane.setMargin(getSatteliteStatus(), new Insets(0, 0, 10, 0));
+		
+		textHolder.getChildren().addAll(stLabelText,getSatteliteStatus());
+		textHolder.setSpacing(10);
 	
-		satteliteStatus = new Label();
-		satteliteStatus.setPadding(new Insets(10, 0, 0, 10));
-		satteliteStatus.setAlignment(Pos.CENTER);
-		satteliteStatus.setText("Sattelite status: " + GuiManager.getInstance().getLastSatelliteState().toString());
-	
-		borderPane.setTop(satteliteStatus);
 		List<HBox> buttonList = new ArrayList<HBox>();
 		List<Node[]> listOfImmediateActions = new ArrayList<>();
 		listOfImmediateActions.add(getImmidiateModeChangeBox());
@@ -372,7 +396,7 @@ public class MainWindow{
 			return presentationCommand;
 		}
 	}
-	private String getSatteliteStatus() {
+	private String getSattelitePassStatus() {
 		//String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
 		String[] generatedStatus = {"Sattelite in pass"};
 		return generatedStatus[(int)(Math.random()*generatedStatus.length)];
@@ -397,6 +421,13 @@ public class MainWindow{
 	public SattelitePictureController getSatellitePictureController() {	
 
 		return this.pictureController;
+	}
+	public void setSatelliteState(Satellite st) {
+		Text satelliteStatus = getSatteliteStatus();
+		SatelliteState state = st.getSatelliteState();
+		satelliteStatus.setText(state.toString());
+		satelliteStatus.setFill(getFillForStatusText(state));
+		
 	}
 
 
