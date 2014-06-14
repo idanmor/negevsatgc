@@ -70,6 +70,7 @@ public class DataManager {
 	public Satellite getLatestSatData(){
 		return(this.latestSatData);
 	}
+	
 	public ArrayList<Pair<String,Pair<Status,Timestamp>>> getListOfStatusPairs(Satellite satellite){
 		ArrayList<Pair<String,Pair<Status,Timestamp>>> statusPairs=new ArrayList<Pair<String,Pair<Status,Timestamp>>>();
 		statusPairs.add(new Pair("Temprature",new Pair(satellite.getTempratureStatus(),satellite.getTempratureTS())));
@@ -82,28 +83,36 @@ public class DataManager {
 		return(statusPairs);
 	}
 	
-	
-	
 	public Map<String,Float> getReadingsPerSensor(Component component){
 		
 		return component.getSensorsValues();
 	}
 
 	
-	 public void insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
-		 db.insertMission(_missionExecutionTS, _command, _priority);
+	 public Mission insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
+		 return db.insertMission(_missionExecutionTS, _command, _priority);
 	 }
 	 
-	 public void insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, Status Sband, Timestamp SbandTS, Status Payload, Timestamp PayloadTS, Status SolarPanels, Timestamp SolarPanelsTS, Status Thermal, Timestamp ThermalTS){
-		 db.insertSatellite(temp, tempTS, energy, energyTS, Sband, SbandTS, Payload, PayloadTS, SolarPanels, SolarPanelsTS, Thermal, ThermalTS);
+	 public Satellite insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, 
+			 							Status Sband, Timestamp SbandTS, Status Payload, Timestamp PayloadTS, 
+			 							Status SolarPanels, Timestamp SolarPanelsTS, Status Thermal, Timestamp ThermalTS){
+		 return db.insertSatellite(temp, tempTS, energy, energyTS, Sband, SbandTS, Payload, PayloadTS, SolarPanels, 
+				 					SolarPanelsTS, Thermal, ThermalTS);
 	 }
 	 
-	 public void insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp ts){
-		 db.insertTemprature(sensor1, sensor2, sensor3, ts);
+	 public Satellite insertSatellite(Satellite.SatelliteState state, Status temp, Timestamp tempTS, Status energy, 
+			 					Timestamp energyTS, Status Sband, Timestamp SbandTS, Status Payload, Timestamp PayloadTS, 
+			 					Status SolarPanels, Timestamp SolarPanelsTS, Status Thermal, Timestamp ThermalTS){
+		 return db.insertSatellite(state, temp, tempTS, energy, energyTS, Sband, SbandTS, Payload, PayloadTS, 
+				 				SolarPanels, SolarPanelsTS, Thermal, ThermalTS);
 	 }
 	 
-	 public void insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp ts){
-		 db.insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
+	 public Temprature insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp ts){
+		 return db.insertTemprature(sensor1, sensor2, sensor3, ts);
+	 }
+	 
+	 public Energy insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp ts){
+		 return db.insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
 	 }
 	 
 	 public void deleteComponent(String component,Timestamp timeStamp) {

@@ -10,6 +10,7 @@ import com.j256.ormlite.support.*;
 import com.j256.ormlite.table.TableUtils;
 
 import java.util.List;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class dbConnection {
@@ -50,10 +51,9 @@ public class dbConnection {
     	TableUtils.createTableIfNotExists(connectionSource, Satellite.class);
     	TableUtils.createTableIfNotExists(connectionSource, Mission.class);
     	}
-    	catch ( Exception e ) {
+    	catch ( SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-    	}
+        }
     }
  
     public List<Mission> getMission(Timestamp creationTimestamp){
@@ -61,10 +61,10 @@ public class dbConnection {
     	try{
     		mission=missionDao.queryBuilder().where().eq(Mission.DATE_FIELD_NAME, creationTimestamp).query();
     		}
-    	catch( Exception e ) {
+    	catch ( SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-    	}	
+            return null;
+        }
     	return mission;
     }
     
@@ -75,10 +75,10 @@ public class dbConnection {
     		// now perform a second query to get the max row
     	satellite = satelliteDao.queryBuilder().where().eq("creationTimestamp", max).queryForFirst();
     	}
-    	catch( Exception e ) {
+    	catch ( SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-    	}	
+            return null;
+        }
     	
     	return satellite;
     }
@@ -88,10 +88,10 @@ public class dbConnection {
     	try{
     		data=satelliteDao.queryBuilder().where().between(Satellite.DATE_FIELD_NAME, startDate, endDate).query();
     		}
-    	catch( Exception e ) {
+    	catch ( SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-    	}	
+            return null;
+        }
     	return data;
     }
     
@@ -101,9 +101,9 @@ public class dbConnection {
         try{
             data = tempratureDao.queryBuilder().where().between(Temprature.DATE_FIELD_NAME, startDate, endDate).query();
         }
-        catch( Exception e ) {
-               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
+        catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
         }
         return data;
     }
@@ -113,68 +113,89 @@ public class dbConnection {
         try{
            data = energyDao.queryBuilder().where().between(Energy.DATE_FIELD_NAME, startDate, endDate).query();          
         }
-        catch( Exception e ) {
-               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
+        catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
         }
         return data;
     }
 
  
 
-    public void insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
+    public Mission insertMission(Timestamp _missionExecutionTS, Command _command, int _priority){
         Mission mission=new Mission(_missionExecutionTS,_command,_priority);
         try{
             missionDao.create(mission);
+            return mission;
         }
-        catch ( Exception e ) {
+        catch ( SQLException e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
-         }
+               return null;
+        }
     }
     
     
-    public void insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, Status Sband, Timestamp sbandTS, Status Payload,Timestamp payloadTS, Status SolarPanels, Timestamp solarPanelsTS, Status Thermal, Timestamp ThermalTS){
+    public Satellite insertSatellite(Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, 
+    									Status Sband, Timestamp sbandTS, Status Payload,Timestamp payloadTS, 
+    									Status SolarPanels, Timestamp solarPanelsTS, Status Thermal, Timestamp ThermalTS){
         Satellite sat=new Satellite(temp,tempTS,energy,energyTS,Sband,sbandTS,Payload,payloadTS,SolarPanels,solarPanelsTS,Thermal,ThermalTS);
         try{
             satelliteDao.create(sat);
+            return sat;
         }
-        catch ( Exception e ) {
-               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
-         }
+        catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
+        }
     }
     
-    public void insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp timeStamp){
+    public Satellite insertSatellite(Satellite.SatelliteState state, Status temp, Timestamp tempTS, Status energy, Timestamp energyTS, 
+    										Status Sband, Timestamp sbandTS, Status Payload,Timestamp payloadTS, Status SolarPanels, 
+    										Timestamp solarPanelsTS, Status Thermal, Timestamp ThermalTS){
+        Satellite sat=new Satellite(state,temp,tempTS,energy,energyTS,Sband,sbandTS,Payload,payloadTS,
+        							SolarPanels,solarPanelsTS,Thermal,ThermalTS);
+        try{
+            satelliteDao.create(sat);
+            return sat;
+        }
+        catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
+        }
+    }
+    
+    public Temprature insertTemprature(float sensor1,float sensor2, float sensor3, Timestamp timeStamp){
         try{
         	List<Temprature> dataFromTable=tempratureDao.queryBuilder().where().eq(Temprature.DATE_FIELD_NAME, timeStamp).query();
         	if (dataFromTable!=null){
         		System.err.println("TimeStamp already exists");
-        		return;
+        		return null;
         	}
             Temprature tmp=new Temprature(timeStamp,sensor1,sensor2,sensor3);
             tempratureDao.create(tmp);
+            return tmp;
         }
-        catch ( Exception e ) {
-               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
-         }
+        catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
+        }
     }
     
-    public void insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp timeStamp){
+    public Energy insertEnergy(float batt1V,float batt2V,float batt3V, float batt1C,float batt2C,float batt3C, Timestamp timeStamp){
         try{
         	List<Energy> dataFromTable=energyDao.queryBuilder().where().eq(Energy.DATE_FIELD_NAME, timeStamp).query();
         	if(dataFromTable!=null){
         		System.err.println("TimeStamp already exists");
-        		return;
+        		return null;
         	}
         	Energy eng=new Energy(timeStamp,batt1V,batt2V,batt3V,batt1C,batt2C,batt3C);  
             energyDao.create(eng);
+            return eng;
         }
-        catch ( Exception e ) {
-               System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
-         }
+        catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
+        }
     }
    
 

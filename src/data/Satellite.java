@@ -10,14 +10,14 @@ import java.util.ArrayList;
 public class Satellite {
 	
 	public enum SatelliteState {
-		Unknown, OPerational, SafeMode
+		Unknown, Operational, SafeMode
 	}
 	 
     public static final String DATE_FIELD_NAME = "creationTimestamp";
     @DatabaseField(id = true) 
     private Timestamp creationTimestamp;
     @DatabaseField
-    private SatelliteState sateliteState;
+    private SatelliteState satelliteState;
     @DatabaseField
     private Status TempratureStatus;
     @DatabaseField
@@ -46,11 +46,13 @@ public class Satellite {
     
     public Satellite(){}
     
-    public Satellite(Status temp, Timestamp tempratureTS, Status energy,  Timestamp energyTS, Status Sband,  Timestamp SbandTS, Status Payload,  Timestamp PayloadTS, Status SolarPanels,  Timestamp SolarPanelsTS, Status Thermal,Timestamp ThermalTS) {
+    public Satellite(Status temp, Timestamp tempratureTS, Status energy,  Timestamp energyTS, Status Sband,  
+    					Timestamp SbandTS, Status Payload,  Timestamp PayloadTS, Status SolarPanels,  
+    					Timestamp SolarPanelsTS, Status Thermal,Timestamp ThermalTS) {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.creationTimestamp=t;
-        this.sateliteState=SatelliteState.OPerational;
+        this.satelliteState=SatelliteState.Operational;
         this.TempratureStatus=temp;
         this.EnergyStatus=energy;
         this.SbandStatus=Sband;
@@ -62,11 +64,13 @@ public class Satellite {
         dm.setLatestSatData(this);
 	}
     
-    public Satellite(SatelliteState state, Status temp, Timestamp tempratureTS, Status energy,  Timestamp energyTS, Status Sband,  Timestamp SbandTS, Status Payload,  Timestamp PayloadTS, Status SolarPanels,  Timestamp SolarPanelsTS, Status Thermal,Timestamp ThermalTS) {
+    public Satellite(SatelliteState state, Status temp, Timestamp tempratureTS, Status energy,  
+    		Timestamp energyTS, Status Sband,  Timestamp SbandTS, Status Payload,  
+    		Timestamp PayloadTS, Status SolarPanels,  Timestamp SolarPanelsTS, Status Thermal,Timestamp ThermalTS) {
         java.util.Date date= new java.util.Date();
         Timestamp t=new Timestamp(date.getTime());
         this.creationTimestamp=t;
-        this.sateliteState=state;
+        this.satelliteState=state;
         this.TempratureStatus=temp;
         this.EnergyStatus=energy;
         this.SbandStatus=Sband;
