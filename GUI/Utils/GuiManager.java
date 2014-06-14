@@ -92,4 +92,14 @@ public class GuiManager {
 			mainWindow.addToLog("("+ date + ")" + data);
 	}
 
+	public void sendSatelliteModeCommand(String dateString, Command c) {
+		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss");
+		
+		String date = writeFormat.format(dateString);
+		
+		Mission mission = new Mission(new Timestamp(writeFormat.getCalendar().getTimeInMillis()), c, 1);
+		
+		
+	}
+
 }
