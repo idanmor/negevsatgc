@@ -35,4 +35,5 @@ public interface Constants {
 	
 	
 	public static final String MISSION_SENT = "Mission sent successfully";
+	public static final String MISSION_SEND_FAILED = "Mission creation failed, check if all fields present";
 }
