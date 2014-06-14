@@ -100,9 +100,9 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 	}
 	protected HBox createTopHBox(){
 		HBox box = SatalliteUtils.getHBox(10);
-		Label beforeDate = new Label("Before: ");
+		Label beforeDate = new Label("End date: ");
 		DatePicker before = new DatePicker(LocalDate.now());   
-		Label afterDate = new Label("After :");
+		Label afterDate = new Label("Start date :");
 		DatePicker after = new DatePicker(LocalDate.now());  
 		after.setUserData(Calendar.getInstance().getTimeInMillis());
 		Button filterButton = new Button("Filter");
@@ -113,7 +113,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 				filter(before.getEditor().getText(), after.getEditor().getText());
 			}
 		});
-		box.getChildren().addAll(beforeDate,before,afterDate,after,filterButton);
+		box.getChildren().addAll(afterDate,after,filterButton,beforeDate,before);
 		return box;
 	}
 	
@@ -145,6 +145,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		Timestamp afterCal = null;
 		before = before.replace("/", "-");
 		after = after.replace("/", "-");
+		long dayinMS = 86400000;
 		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy");
 		if(before != null && !before.isEmpty()){
 			
@@ -157,7 +158,8 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 			}
 			
 		}else{
-			beforeCal = new Timestamp(Calendar.getInstance().getTimeInMillis());
+			 
+			beforeCal = new Timestamp(Calendar.getInstance().getTimeInMillis() + dayinMS);
 		}
 		if(after != null && !after.isEmpty()){
 			Date afterDate;
