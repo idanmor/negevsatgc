@@ -59,7 +59,7 @@ public class MainWindow{
 	private ComboBox<DataAcquisitionMode> dataAquisitionModeBox;
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
-	private Label satellitePassStatus;
+	//private Label satellitePassStatus;
 	private Text satelliteStatus;
 	private FXMLLoader fxmlLoader;
 	public MainWindow(){
@@ -90,10 +90,10 @@ public class MainWindow{
 
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		satellitePassStatus = new Label(getSatellitePassStatus());
-		satellitePassStatus.setStyle("-fx-font-size:20;");
+		//satellitePassStatus = new Label(getSatellitePassStatus());
+		//satellitePassStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
-		mainPane.setBottom(satellitePassStatus);
+		//mainPane.setBottom(satellitePassStatus);
 		Scene scene = new Scene(root, width, height);         
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add
@@ -403,7 +403,7 @@ public class MainWindow{
 		return generatedStatus[(int)(Math.random()*generatedStatus.length)];
 	}
 	public void setSatelliteStatusText(String status) {
-		satellitePassStatus.setText(status);
+		//satellitePassStatus.setText(status);
 	}
 
 	public void addToLog(String... data){
