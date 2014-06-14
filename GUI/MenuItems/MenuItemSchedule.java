@@ -12,7 +12,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Max
  */
-public class MenuItemSchedule extends MenuItemStrategy{
+public class MenuItemSchedule extends AbstractMenuItem{
 
     public MenuItemSchedule() {
         super("Schedule");

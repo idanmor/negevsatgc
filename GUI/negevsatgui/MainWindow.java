@@ -48,11 +48,13 @@ import Utils.*;
 public class MainWindow{
 	private BorderPane mainPane;
 	private static MainWindow instance;
+	private VBox mainScreen;
 	private SattelitePictureController pictureController;
 	private ComboBox<SatteliteMods> comboSattelites;
 	private ComboBox<DataAcquisitionMode> dataAquisitionModeBox;
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
+	private Label sattelitePassStatus;
 	private Label satteliteStatus;
 	private FXMLLoader fxmlLoader;
 	public MainWindow(){
@@ -83,17 +85,17 @@ public class MainWindow{
 
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		satteliteStatus = new Label(getSatteliteStatus());
-		satteliteStatus.setStyle("-fx-font-size:20;");
+		sattelitePassStatus = new Label(getSatteliteStatus());
+		sattelitePassStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
-		mainPane.setBottom(satteliteStatus);
+		mainPane.setBottom(sattelitePassStatus);
 		Scene scene = new Scene(root, width, height);         
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add
 		(NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
 		//mainPane.getStylesheets().add("mainClass.css");
 		mainPane.getStyleClass().add("main");
-		
+
 		mainPane.prefHeightProperty().bind(scene.heightProperty());
 		mainPane.prefWidthProperty().bind(scene.widthProperty());
 		showMainScreen(mainPane);
@@ -108,59 +110,61 @@ public class MainWindow{
 	TextArea demoListView;
 
 	public void showMainScreen(BorderPane mainPane){
-		VBox mainScreen = new VBox();
-		HBox firtsLine = new HBox();
-		firtsLine.setSpacing(10);
-		HBox secondLine = new HBox();
-		VBox logBox = new VBox();
-		HBox buttonBox = SattaliteUtils.getHBox(10);
-		firtsLine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		fxmlLoader = new FXMLLoader();
-		fxmlLoader.setLocation(getClass().getResource("FXMLDocument.fxml"));
-		try {
-			fxmlLoader.load(getClass().getResource("FXMLDocument.fxml").openStream());
-		} catch (IOException e) {
-		
-			e.printStackTrace();
-		}
-		pictureController = fxmlLoader.<SattelitePictureController>getController();
-		Pane left = new Pane();
-		Pane right = new Pane();
-		MissionPanel mp = new MissionPanel(getMainPane(),left);
-		left.getChildren().add(mp);
-		right.getChildren().add(new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
-	//	left.setPrefSize(300, 400);
-		//right.setPrefSize(300, arg1);
-		//firtsLine.getChildren().addAll(new MissionPanel(getMainPane(),left),new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
-		firtsLine.getChildren().addAll(left,right);
-		
-		demoListView = new TextArea();
-		demoListView.setEditable(false);
-		TextField toLogger = new TextField();
-		toLogger.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		if(mainScreen == null){
+			mainScreen = new VBox();
+			HBox firtsLine = new HBox();
+			firtsLine.setSpacing(10);
+			HBox secondLine = new HBox();
+			VBox logBox = new VBox();
+			HBox buttonBox = SattaliteUtils.getHBox(10);
+			firtsLine.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+			fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(getClass().getResource("FXMLDocument.fxml"));
+			try {
+				fxmlLoader.load(getClass().getResource("FXMLDocument.fxml").openStream());
+			} catch (IOException e) {
 
-			@Override
-			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ENTER) {
-					demoListView.appendText(addDateToString(toLogger.getText()) + "\n");
-					toLogger.setText("");
-				}
+				e.printStackTrace();
 			}
-		});
-		Label logTitle = new Label("Log Screen");
-		//demoListView.setText("(1/1/2014)Sattelite status: = Good \n(1/1/2014)Mulfunction in Power supply \n(1/1/2014)Battery status: 60% \n");
-		demoListView.setPrefWidth(400);
-		logBox.getChildren().addAll(logTitle,demoListView,toLogger);
-		buttonBox.getChildren().addAll(generateButtonHolders());
-		secondLine.getChildren().addAll(logBox,buttonBox);
-		mainScreen.getChildren().addAll(firtsLine,secondLine);
-		//sattelite.png
+			pictureController = fxmlLoader.<SattelitePictureController>getController();
+			Pane left = new Pane();
+			Pane right = new Pane();
+			MissionPanel mp = new MissionPanel(getMainPane(),left);
+			left.getChildren().add(mp);
+			right.getChildren().add(new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
+			firtsLine.getChildren().addAll(left,right);
+
+			demoListView = new TextArea();
+			demoListView.setEditable(false);
+			TextField toLogger = new TextField();
+			toLogger.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+				@Override
+				public void handle(KeyEvent t) {
+					if (t.getCode() == KeyCode.ENTER) {
+						demoListView.appendText(addDateToString(toLogger.getText()) + "\n");
+						toLogger.setText("");
+					}
+				}
+			});
+			Label logTitle = new Label("Log Screen");
+			//demoListView.setText("(1/1/2014)Sattelite status: = Good \n(1/1/2014)Mulfunction in Power supply \n(1/1/2014)Battery status: 60% \n");
+			demoListView.setPrefWidth(400);
+			logBox.getChildren().addAll(logTitle,demoListView,toLogger);
+			buttonBox.getChildren().addAll(generateButtonHolders());
+			secondLine.getChildren().addAll(logBox,buttonBox);
+			mainScreen.getChildren().addAll(firtsLine,secondLine);
+
+
+			firtsLine.autosize();
+		}
 		mainPane.setCenter(mainScreen);
-		firtsLine.autosize();
 	}
 	private List<HBox> generateButtonHolders(){
 		HBox one = new HBox();
 		one.setSpacing(10);
+		BorderPane pane = new BorderPane();
+		Label status = new Label();
 		List<HBox> buttonList = new ArrayList<HBox>();
 		List<Node[]> listOfImmediateActions = new ArrayList<>();
 		listOfImmediateActions.add(getImmidiateModeChangeBox());
@@ -177,10 +181,10 @@ public class MainWindow{
 			second.getChildren().add(listOfImmediateActions.get(i)[1]);
 			third.getChildren().add(listOfImmediateActions.get(i)[2]);
 		}
-		
+
 		one.getChildren().addAll(first,second,third);
 		buttonList.add(one);
-	
+
 
 		return buttonList;
 	}
@@ -357,11 +361,12 @@ public class MainWindow{
 		}
 	}
 	private String getSatteliteStatus() {
-		String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
+		//String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
+		String[] generatedStatus = {"Sattelite in pass"};
 		return generatedStatus[(int)(Math.random()*generatedStatus.length)];
 	}
 	public void setSatteliteStatusText(String status) {
-		satteliteStatus.setText(status);
+		sattelitePassStatus.setText(status);
 	}
 
 	public void addToLog(String... data){
@@ -381,6 +386,7 @@ public class MainWindow{
 
 		return this.pictureController;
 	}
+
 
 
 

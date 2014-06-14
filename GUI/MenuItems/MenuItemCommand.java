@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Max
  */
-public class MenuItemCommand extends MenuItemStrategy {
+public class MenuItemCommand extends AbstractMenuItem {
   
 
     public MenuItemCommand() {

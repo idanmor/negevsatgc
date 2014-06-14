@@ -6,7 +6,7 @@
 
 package Factories;
 
-import MenuItems.MenuItemStrategy;
+import MenuItems.AbstractMenuItem;
 import java.util.Collection;
 import javafx.scene.control.Menu;
 
@@ -17,7 +17,7 @@ import javafx.scene.control.Menu;
 public interface MenuFactory{
     
     public Menu createMenu(String name);
-    public Menu createExpandMenu(String name, Collection <MenuItemStrategy> menuItems);
+    public Menu createExpandMenu(String name, Collection <AbstractMenuItem> menuItems);
     public Menu createViewMenu();
     public Menu createFileMenu();
 	public Menu createToolsMenu();

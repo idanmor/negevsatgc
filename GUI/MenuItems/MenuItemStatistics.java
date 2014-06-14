@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Max
  */
-public class MenuItemStatistics extends MenuItemStrategy{
+public class MenuItemStatistics extends AbstractMenuItem{
 
     public MenuItemStatistics() {
         super("Statistics");

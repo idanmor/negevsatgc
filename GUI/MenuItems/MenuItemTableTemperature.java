@@ -3,7 +3,7 @@ package MenuItems;
 import Panels.TemperatureComponentStatistics;
 import javafx.scene.layout.BorderPane;
 
-public class MenuItemTableTemperature extends MenuItemStrategy {
+public class MenuItemTableTemperature extends AbstractMenuItem {
 
 	public MenuItemTableTemperature() {
 		super("Components Temperature");

@@ -2,7 +2,7 @@ package MenuItems;
 
 import javafx.scene.layout.BorderPane;
 
-public class MenuItemSatteliteStatus extends MenuItemStrategy {
+public class MenuItemSatteliteStatus extends AbstractMenuItem {
 
 	public MenuItemSatteliteStatus() {
 		super("Sattelite Status");

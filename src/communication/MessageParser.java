@@ -122,7 +122,7 @@ public class MessageParser implements Runnable {
 		System.out.println("DEBUG: Static packet parsing");
 		Status defaultStatus = Status.UNKNOWN;
 		NodeList children = packet.getChildNodes();
-		Satellite.SatelliteState satState = Satellite.SatelliteState.Unknown;
+		Satellite.SatelliteState satState = Satellite.SatelliteState.UNKNOWN;
 		Status energyStatus = defaultStatus;
 		Timestamp energyStatusTS = null;
 		Status temperatureStatus = defaultStatus;
@@ -334,16 +334,16 @@ public class MessageParser implements Runnable {
 		Satellite.SatelliteState satst;
 		switch (satstate) {
 		case tagStateOperational:
-			satst = Satellite.SatelliteState.Operational;
+			satst = Satellite.SatelliteState.OPERATIONAL;
 			break;
 		case tagStateSafe:
-			satst = Satellite.SatelliteState.SafeMode;
+			satst = Satellite.SatelliteState.SAFE_MODE;
 			break;
 		case tagStateInit:
 			satst = Satellite.SatelliteState.Operational;
 			break;
 		default:
-			satst = Satellite.SatelliteState.Unknown;
+			satst = Satellite.SatelliteState.UNKNOWN;
 		}
 		return satst;
 	}

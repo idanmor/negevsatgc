@@ -8,10 +8,11 @@ package Factories;
 
 import MenuItems.MenuItemCommand;
 import MenuItems.MenuItemExit;
+import MenuItems.MenuItemHome;
 import MenuItems.MenuItemSatteliteStatus;
 import MenuItems.MenuItemSchedule;
 import MenuItems.MenuItemStatistics;
-import MenuItems.MenuItemStrategy;
+import MenuItems.AbstractMenuItem;
 import MenuItems.MenuItemTableTemperature;
 import MenuItems.MenuItemTableVoltage;
 
@@ -36,7 +37,7 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
       }
 
     @Override
-    public Menu createExpandMenu(String name, Collection<MenuItemStrategy> menuItems) {
+    public Menu createExpandMenu(String name, Collection<AbstractMenuItem> menuItems) {
         Menu menuEffect = new Menu(name);
         for (MenuItem childMenu : menuItems) {
             menuEffect.getItems().add(childMenu);
@@ -48,12 +49,12 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
     public Menu createViewMenu() {
          // --- Menu View
         Menu menuView = new Menu("View");
-        List<MenuItemStrategy> listOfMenuItems = new ArrayList<>();
+        List<AbstractMenuItem> listOfMenuItems = new ArrayList<>();
         listOfMenuItems.add(new MenuItemCommand());
         listOfMenuItems.add(new MenuItemStatistics());
         listOfMenuItems.add(new MenuItemSatteliteStatus());
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
-        List<MenuItemStrategy> listOfTablesItems = new ArrayList<>();
+        List<AbstractMenuItem> listOfTablesItems = new ArrayList<>();
         listOfTablesItems.add(new MenuItemTableTemperature());
         listOfTablesItems.add(new MenuItemTableVoltage());
         Menu tableScreens = this.createExpandMenu("View Tables", listOfTablesItems);
@@ -64,7 +65,8 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
     @Override
     public Menu createFileMenu() {
      Menu menuFile = this.createMenu("File");
-     menuFile.getItems().add(new MenuItemExit());
+     menuFile.getItems().addAll(new MenuItemHome(), new MenuItemExit());
+     
      return menuFile;
     }
 

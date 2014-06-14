@@ -33,7 +33,7 @@ public class DataManager {
 			try {
 				comm.connect(comPort);
 			} catch (NoSuchPortException | PortInUseException
-					| UnsupportedCommOperationException | IOException
+					| UnsupportedCommOperationException | IOException | UnsatisfiedLinkError
 					| TooManyListenersException e) {
 				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
 				System.out.println("Error message: " + e.getMessage());
