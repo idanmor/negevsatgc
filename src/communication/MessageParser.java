@@ -340,7 +340,7 @@ public class MessageParser implements Runnable {
 			satst = Satellite.SatelliteState.SAFE_MODE;
 			break;
 		case tagStateInit:
-			satst = Satellite.SatelliteState.Operational;
+			satst = Satellite.SatelliteState.OPERATIONAL;
 			break;
 		default:
 			satst = Satellite.SatelliteState.UNKNOWN;
