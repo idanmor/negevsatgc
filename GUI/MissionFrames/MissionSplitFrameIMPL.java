@@ -13,6 +13,7 @@ import MissionItems.MissionItemWrapper;
 import MissionItems.MissionTableWrapper;
 import MissionItems.MissionTextWrapper;
 import MissionItems.TimeTextFieldWrapper;
+import Utils.Constants;
 import Utils.GuiManager;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.util.List;
 import data.Command;
 import negevsatgui.MainWindow.Component;
 import negevsatgui.MainWindow.State;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -41,6 +43,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import webmap.Coardinate;
 import webmap.WebMap;
 
@@ -55,7 +61,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	private VBox rightPane;
 	private Button confirmButton;
 	private Button cancelButton;
-
+    private Text missionSentStatus;
 	private List<MissionTreeItem> mission_components_list;
 	ObservableList<TreeItem> dateAndLocationlist;
 	private final int MISSION_DESC = 0;
@@ -70,19 +76,12 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		mainPane = new BorderPane();
 		init();
 		pane.setCenter(mainPane);
+		
 	}
 
 	private void createMission(){
-		StringBuilder sb = new StringBuilder();
-		for(MissionTreeItem i : this.mission_components_list ){
-			if(i != null){
-				sb.append(i.toString()).append(i.getMissionStringValue());
-			}
-		}
-		
-		MissionTreeItem missionDesc = mission_components_list.get(MISSION_DESC);
 		createComponentMission();
-		System.out.println(this.mission_components_list);
+		
 	}
 	@SuppressWarnings("unchecked")
 	private void createComponentMission(){
@@ -101,17 +100,27 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			State endState = originalState == State.ON ? State.OFF : State.ON;
 			GuiManager.getInstance().sendSatelliteModeCommand(endDateString, selectedComponent.getCommand(endState));
 		}
+		setSuccessStatus();
+		rightPane.getChildren().clear();
+	
 		
 		
 	}
+	private void setSuccessStatus(){
+		missionSentStatus.setText(Constants.MISSION_SENT);
+		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		missionSentStatus.setFill(Color.GREEN);
+	}
 	private void init(){
-		populateLeftList();
-		mainSplitPane.setOrientation(Orientation.HORIZONTAL);
-		rightPane = new VBox();
-		mainSplitPane.getItems().addAll(leftTree,rightPane);
-
-		mainPane.setCenter(mainSplitPane);
-		mainPane.setBottom(getConfirmCancelButtons());
+		if(leftTree == null || rightPane == null){
+			populateLeftList();
+			mainSplitPane.setOrientation(Orientation.HORIZONTAL);
+			rightPane = new VBox();
+			mainSplitPane.getItems().addAll(leftTree,rightPane);
+	
+			mainPane.setCenter(mainSplitPane);
+			mainPane.setBottom(getConfirmCancelButtons());
+			}
 		mission_components_list = new ArrayList<>(MISSION_MAX_NUM_ITEMS);
 		for(int i = 0 ; i < MISSION_MAX_NUM_ITEMS ; i++){
 			mission_components_list.add(null);
@@ -119,13 +128,16 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		}
 	}
 
-	private HBox getConfirmCancelButtons(){
+	private VBox getConfirmCancelButtons(){
+		VBox bottomBox = new VBox();
 		HBox box = new HBox();
 		box.setPadding(new Insets(0, 0, 0, 200));
 		box.setSpacing(200);
 		box.getChildren().addAll(getConfirmButton(),getClearButton());
 		box.setMaxHeight(0);
-		return box;
+		missionSentStatus = new Text();
+		bottomBox.getChildren().addAll(box, missionSentStatus);
+		return bottomBox;
 	}
 
 	protected Button getConfirmButton(){
@@ -178,6 +190,9 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 					if(selectedItem == null){
 						mouseEvent.consume();
 						return;
+					}
+					if(missionSentStatus != null){
+						missionSentStatus.setText("");
 					}
 					if(mouseEvent.getClickCount() == 2)
 					{
