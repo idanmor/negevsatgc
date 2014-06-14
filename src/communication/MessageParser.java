@@ -64,8 +64,8 @@ public class MessageParser implements Runnable {
 			try {
 				System.out.println("DEBUG: MessageAcceptor waiting for new message");
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
-				System.out.println("DEBUG: Message Accepted");
-				System.out.println(m.toString());
+				System.out.println("DEBUG: Message Accepted By Parser");
+				//System.out.println(m.toString());
 				Document msg;			
 				try {
 					msg = m.toDocument();
