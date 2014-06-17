@@ -44,4 +44,9 @@ public class MissionComboBoxWrapper<T> extends ComboBox<T>implements MissionItem
         }
         return prefix.getText().trim() + " " + getMissionValue();
     }
+	@Override
+	public void clearSelection() {
+		this.getSelectionModel().clearSelection();
+		
+	}
 }

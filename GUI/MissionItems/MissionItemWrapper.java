@@ -24,4 +24,6 @@ public interface MissionItemWrapper {
     public Parent getWrappedItem();
     
     public String getValueStringWithPreIfNeeded(Label prefix);
+
+	public void clearSelection();
 }

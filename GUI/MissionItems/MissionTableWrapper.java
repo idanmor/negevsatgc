@@ -53,5 +53,11 @@ public class MissionTableWrapper extends TableView implements MissionItemWrapper
         }
         return text.toString();
     }
+
+	@Override
+	public void clearSelection() {
+	this.getItems().clear();
+		
+	}
     
 }
