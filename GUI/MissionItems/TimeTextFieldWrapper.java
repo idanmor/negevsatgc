@@ -30,4 +30,10 @@ public class TimeTextFieldWrapper extends TimeTextField implements MissionItemWr
     public TimeTextFieldWrapper clone(){
     	return new TimeTextFieldWrapper(this.getText());
     }
+
+	@Override
+	public void clearSelection() {
+		this.clear();
+		
+	}
 }

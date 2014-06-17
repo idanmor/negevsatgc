@@ -37,5 +37,11 @@ public class MissionTextWrapper extends TextField implements MissionItemWrapper{
         }
         return prefix.toString().trim() + " " + getMissionValue();
     }
+
+	@Override
+	public void clearSelection() {
+		this.clear();
+		
+	}
     
 }

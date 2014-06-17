@@ -39,5 +39,9 @@ public class MissionDatePickerWrapper extends DatePicker implements MissionItemW
         }
         return prefix.toString().trim() + " " + getMissionValue();
     }
+	@Override
+	public void clearSelection() {
+		this.getEditor().clear();
+	}
     
 }
