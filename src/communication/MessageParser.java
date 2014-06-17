@@ -12,45 +12,45 @@ import data.Satellite;
 import data.Status;
 
 public class MessageParser implements Runnable {
-	private static final String tagType = "type";
-	private static final String tagState = "state";
-	private static final String tagUpPacket = "upstreamPacket";
-	private static final String tagDownPacket = "downstreamPacket";
-	private static final String tagEnergySample = "EnergySample";
-	private static final String tagTempSample = "TemperatureSample";
-	private static final String tagModule = "Module";
-	private static final String tagInfo = "Info";
-	private static final String tagName = "name";
-	private static final String tagStatus = "status";
+	public static final String tagType = "type";
+	public static final String tagState = "state";
+	public static final String tagUpPacket = "upstreamPacket";
+	public static final String tagDownPacket = "downstreamPacket";
+	public static final String tagEnergySample = "EnergySample";
+	public static final String tagTempSample = "TemperatureSample";
+	public static final String tagModule = "Module";
+	public static final String tagInfo = "Info";
+	public static final String tagName = "name";
+	public static final String tagStatus = "status";
 	
-	private static final String tagTime = "time";
-	private static final String tagVoltage = "voltage";
-	private static final String tagCurrent = "current";
-	private static final String tagTemp = "temp";
+	public static final String tagTime = "time";
+	public static final String tagVoltage = "voltage";
+	public static final String tagCurrent = "current";
+	public static final String tagTemp = "temp";
 	
-	private static final String tagStatusOn = "ON";
-	private static final String tagStatusMalfunction = "MALFUNCTION";
-	private static final String tagStatusStandby = "STANDBY";
-	private static final String tagStatusNonOperational = "NON_OPERATIONAL";
+	public static final String tagStatusOn = "ON";
+	public static final String tagStatusMalfunction = "MALFUNCTION";
+	public static final String tagStatusStandby = "STANDBY";
+	public static final String tagStatusNonOperational = "NON_OPERATIONAL";
 	
-	private static final String tagStateOperational = "OPERATIONAL_STATE";
-	private static final String tagStateSafe = "SAFE_STATE";
-	private static final String tagStateInit = "INIT_STATE";
+	public static final String tagStateOperational = "OPERATIONAL_STATE";
+	public static final String tagStateSafe = "SAFE_STATE";
+	public static final String tagStateInit = "INIT_STATE";
 	
-	private static final String tagEnergyPacketItem1 = "Battery1";
-	private static final String tagEnergyPacketItem2 = "Battery2";
-	private static final String tagEnergyPacketItem3 = "Battery3";
+	public static final String tagEnergyPacketItem1 = "Battery1";
+	public static final String tagEnergyPacketItem2 = "Battery2";
+	public static final String tagEnergyPacketItem3 = "Battery3";
 	
-	private static final String tagTempPacketItem1 = "Sensor1";
-	private static final String tagTempPacketItem2 = "Sensor2";
-	private static final String tagTempPacketItem3 = "Sensor3";
+	public static final String tagTempPacketItem1 = "Sensor1";
+	public static final String tagTempPacketItem2 = "Sensor2";
+	public static final String tagTempPacketItem3 = "Sensor3";
 	
-	private static final String tagModuleTemperature = "Temperature";
-	private static final String tagModuleEnergy = "Energy";
-	private static final String tagModuleSband = "Sband";
-	private static final String tagModulePayload = "Payload";
-	private static final String tagModuleSolarPanels = "SolarPanels";
-	private static final String tagModuleThermalCtrl = "ThermalControl";
+	public static final String tagModuleTemperature = "Temperature";
+	public static final String tagModuleEnergy = "Energy";
+	public static final String tagModuleSband = "Sband";
+	public static final String tagModulePayload = "Payload";
+	public static final String tagModuleSolarPanels = "SolarPanels";
+	public static final String tagModuleThermalCtrl = "ThermalControl";
 	
 	private boolean isRunning;
 	
@@ -62,7 +62,6 @@ public class MessageParser implements Runnable {
     {
 		while (isRunning) {
 			try {
-				System.out.println("DEBUG: MessageAcceptor waiting for new message");
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
 				System.out.println("DEBUG: Message Accepted By Parser");
 				//System.out.println(m.toString());
