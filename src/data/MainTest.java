@@ -24,9 +24,13 @@ public class MainTest {
     	final long dayinMS = 86400000;
     	
        // addRandomTemp(db, hourInMs, oldestTS, TS);
-        addRandomEnergy(db, hourInMs, oldestTS, TS);
-        addRandomTemp(db, hourInMs, oldestTS, TS);
-	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
+     //   addRandomEnergy(db, hourInMs, oldestTS, TS);
+      //  addRandomTemp(db, hourInMs, oldestTS, TS);
+    	addNotRandomEnergy(db, hourInMs, oldestTS, TS);
+    	 oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
+	     TS=new Timestamp(System.currentTimeMillis());
+    	//addNotRandomTemp(db, hourInMs, oldestTS, TS);
+    	db.insertMission(TS, Command.FORMAT_STATIC, 1);
 	    List<Mission> mission=db.getMission(TS);
 	    for (Mission m: mission)
     	System.out.println("select from mission "+m.getCreationTimestamp());
@@ -73,6 +77,40 @@ public class MainTest {
 	    	
 	    	db.insertEnergy(en + randomModifier, en - randomModifier, en - randomModifier, en, en, en - randomModifier, oldestTS);
 	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
+	    }
+	}
+	
+	private static void addNotRandomEnergy(dbConnection db, final long hourInMs,
+			Timestamp oldestTS, Timestamp TS){
+		int startEnergy = 100;
+        int i = 5;
+        int k = 0;
+	    while(oldestTS.before(TS)){
+	    	int modifier = k % i;
+	    	k++;
+	    	int en = startEnergy + modifier;
+	    	
+	    	db.insertEnergy(en + 7, en - 7, en - 7, en, en, en - 7, oldestTS);
+	    	oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
+	    }
+	}
+	
+	private static void addNotRandomTemp(dbConnection db, final long hourInMs,
+			Timestamp oldestTS, Timestamp TS){
+		int startTemp = 50;
+        int i = 5;
+        int k = 1;
+        int a = 1;
+	    while(oldestTS.before(TS)){
+	    	int modifier = k % i;
+	    	if(k == 0){
+	    		a = - 2;
+	    	}
+	    	k++;
+	    	int en = startTemp + modifier * a;
+	    	
+	    	db.insertTemprature(en + 5, en - 10 ,en + 15, oldestTS);
+		    oldestTS.setTime(oldestTS.getTime() + hourInMs * 2);
 	    }
 	}
 
