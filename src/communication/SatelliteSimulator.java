@@ -119,22 +119,22 @@ public class SatelliteSimulator {
 			changeSatelliteState();
 			break;
 		case "2":
-			TempratureStatus = changeModuleStatus(TempratureStatus);
+			TempratureStatus = changeModuleStatus("Temperature", TempratureStatus);
 			break;
 		case "3":
-			EnergyStatus = changeModuleStatus(EnergyStatus);
+			EnergyStatus = changeModuleStatus("Energy", EnergyStatus);
 			break;
 		case "4":
-			SbandStatus = changeModuleStatus(SbandStatus);
+			SbandStatus = changeModuleStatus("Sband", SbandStatus);
 			break;
 		case "5":
-			PayloadStatus = changeModuleStatus(PayloadStatus);
+			PayloadStatus = changeModuleStatus("Payload", PayloadStatus);
 			break;
 		case "6":
-			SolarPanelsStatus = changeModuleStatus(SolarPanelsStatus);
+			SolarPanelsStatus = changeModuleStatus("Solar Panels", SolarPanelsStatus);
 			break;
 		case "7":
-			ThermalStatus = changeModuleStatus(ThermalStatus);
+			ThermalStatus = changeModuleStatus("Thermal Control", ThermalStatus);
 			break;
 		default:
 			System.out.println("Wrong input");
@@ -142,8 +142,8 @@ public class SatelliteSimulator {
 		}
 	}
 
-	private static Status changeModuleStatus(Status s) {
-		System.out.println("Choose new component status:\n"
+	private static Status changeModuleStatus(String component, Status s) {
+		System.out.println("Choose new " + component + " status:\n"
 				+ "1. ON\n"
 				+ "2. MALFUNCTION\n"
 				+ "3. STANDBY\n"
