@@ -10,7 +10,7 @@ import data.Status;
 import data.Satellite.SatelliteState;
 
 public class SatelliteSimulator {
-	static SatelliteState satelliteState = SatelliteState.OPERATIONAL;
+	static String satelliteState = MessageParser.tagStateOperational;
 	static Status TempratureStatus = Status.ON;
     static Status EnergyStatus = Status.ON;
     static Status SbandStatus = Status.STANDBY;
@@ -68,7 +68,7 @@ public class SatelliteSimulator {
 		String msg = CommunicationManager.msgStartDelimiter + "<?xml version=\"1.0\"?>"
 				+ "<packet><downstreamPacket>\n"
 				+ "<type>Static</type>\n"
-				+ "<state>" + satelliteState.toString() + "</state>\n"
+				+ "<state>" + satelliteState + "</state>\n"
 				+ "<Module time=\"" + tss + "\">\n"
 				+ "<Info name='" + MessageParser.tagModuleEnergy + "' status='" + EnergyStatus.toString() + "'/>\n"
 				+ "</Module>\n"
@@ -171,10 +171,10 @@ public class SatelliteSimulator {
 		String status = in.next();
 		switch(status){
 		case "1":
-			satelliteState =  SatelliteState.OPERATIONAL;
+			satelliteState = MessageParser.tagStateOperational;
 			break;
 		case "2":
-			satelliteState =  SatelliteState.SAFE_MODE;
+			satelliteState = MessageParser.tagStateSafe;
 			break;
 		default:
 			System.out.println("Wrong input");
