@@ -20,7 +20,8 @@ public class MainTest {
 		final long hourInMs = 3600000;
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 		final long dayinMS = 86400000;
-	    Timestamp TS=new Timestamp(System.currentTimeMillis()-dayinMS*4);
+		int g=6;
+	    Timestamp TS=new Timestamp(System.currentTimeMillis()-dayinMS*g);
 	 	
     	
     	
@@ -35,17 +36,18 @@ public class MainTest {
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
     	int i=360000;
     	
-    	db.insertTemprature(40, 2, 3, TS);
-	    db.insertTemprature(40, 2, 3, new Timestamp(System.currentTimeMillis()+i));
-	    db.insertTemprature(40, 2, 3, new Timestamp(System.currentTimeMillis()+2*i));
-	    db.insertTemprature(40, 2, 3, new Timestamp(System.currentTimeMillis()+3*i));
-	    db.insertTemprature(43, 2, 3, new Timestamp(System.currentTimeMillis()+4*i));
-	    db.insertTemprature(45, 2, 3, new Timestamp(System.currentTimeMillis()+5*i));
-	    db.insertTemprature(47, 2, 3, new Timestamp(System.currentTimeMillis()+6*i));
-	    db.insertTemprature(50, 2, 3, new Timestamp(System.currentTimeMillis()+7*i));
-	    db.insertTemprature(47, 2, 3, new Timestamp(System.currentTimeMillis()+8*i));
-	    db.insertTemprature(45, 2, 3, new Timestamp(System.currentTimeMillis()+9*i));
-	    db.insertTemprature(43, 2, 3, new Timestamp(System.currentTimeMillis()+10*i));
+    	//db.insertTemprature(38, 2, 3, TS);
+	    db.insertTemprature(38, 30, 3, new Timestamp(System.currentTimeMillis()-dayinMS*g));
+	    db.insertTemprature(40, 32, 3, new Timestamp(System.currentTimeMillis()+2*i-dayinMS*g));
+	    db.insertTemprature(42, 34, 3, new Timestamp(System.currentTimeMillis()+3*i-dayinMS*g));
+	    db.insertTemprature(43, 36, 3, new Timestamp(System.currentTimeMillis()+4*i-dayinMS*g));
+	    db.insertTemprature(45, 38, 3, new Timestamp(System.currentTimeMillis()+5*i-dayinMS*g));
+	    db.insertTemprature(47, 40, 3, new Timestamp(System.currentTimeMillis()+6*i-dayinMS*g));
+	    db.insertTemprature(50, 42, 3, new Timestamp(System.currentTimeMillis()+7*i-dayinMS*g));
+	    db.insertTemprature(47, 40, 3, new Timestamp(System.currentTimeMillis()+8*i-dayinMS*g));
+	    db.insertTemprature(45, 38, 3, new Timestamp(System.currentTimeMillis()+9*i-dayinMS*g));
+	    db.insertTemprature(43, 36, 3, new Timestamp(System.currentTimeMillis()+10*i-dayinMS*g));
+	    db.insertTemprature(40, 34, 3, new Timestamp(System.currentTimeMillis()+11*i-dayinMS*g));
 	    
 //	    db.insertSatellite(Status.ON, TS, Status.ON,TS, Status.ON, TS, Status.ON, TS, Status.ON, TS, Status.ON, TS);
 //	    db.insertSatellite(Status.STANDBY, TS, Status.STANDBY,TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS);
