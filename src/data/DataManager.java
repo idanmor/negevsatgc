@@ -69,6 +69,11 @@ public class DataManager {
 	public List<Mission> getMission(Timestamp creationTimestamp){
 		return db.getMission(creationTimestamp);
 	}
+	
+	public List<Mission> getMissions(List<Timestamp> creationTimestamps){
+		return db.getMissions(creationTimestamps);
+	}
+
 
 	public Satellite getLatestSatData(){
 		return(this.latestSatData);

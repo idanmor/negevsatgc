@@ -67,6 +67,22 @@ public class dbConnection {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
     }
+    
+    public List<Mission> getMissions(List<Timestamp> creationTimestamps) {
+    	List<Mission> mission1=null;
+    	List<Mission> mission2=null;
+    	try{
+    		for (int i=0;i<creationTimestamps.size();i++){
+    			mission2=missionDao.queryBuilder().where().eq(Mission.DATE_FIELD_NAME, creationTimestamps.get(i)).query();
+    			mission1.addAll(mission2);
+    		}
+    	}
+    	catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
+        }
+    	return mission1;
+	}
  
     public List<Mission> getMission(Timestamp creationTimestamp){
     	List<Mission> mission=null;
@@ -243,4 +259,6 @@ public class dbConnection {
         }
     	
     }
+
+	
 }
