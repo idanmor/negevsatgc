@@ -68,20 +68,16 @@ public class dbConnection {
         }
     }
     
-    public List<Mission> getMissions(List<Timestamp> creationTimestamps) {
-    	List<Mission> mission1=null;
-    	List<Mission> mission2=null;
+    public List<Mission> getMissions(Timestamp startDate, Timestamp endDate) {
+    	List<Mission> mission=null;
     	try{
-    		for (int i=0;i<creationTimestamps.size();i++){
-    			mission2=missionDao.queryBuilder().where().eq(Mission.DATE_FIELD_NAME, creationTimestamps.get(i)).query();
-    			mission1.addAll(mission2);
-    		}
+    		mission = missionDao.queryBuilder().where().between(Mission.DATE_FIELD_NAME, startDate, endDate).query();
     	}
     	catch ( SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
             return null;
         }
-    	return mission1;
+    	return mission;
 	}
  
     public List<Mission> getMission(Timestamp creationTimestamp){

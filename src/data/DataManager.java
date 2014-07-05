@@ -70,8 +70,8 @@ public class DataManager {
 		return db.getMission(creationTimestamp);
 	}
 	
-	public List<Mission> getMissions(List<Timestamp> creationTimestamps){
-		return db.getMissions(creationTimestamps);
+	public List<Mission> getMissions(Timestamp startDate, Timestamp endDate){
+		return db.getMissions(startDate, endDate);
 	}
 
 
