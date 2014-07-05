@@ -55,6 +55,18 @@ public class dbConnection {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
     }
+    
+    public void clearTables(){
+    	try{
+    	TableUtils.clearTable(connectionSource, Energy.class);
+    	TableUtils.clearTable(connectionSource, Temprature.class);
+    	TableUtils.clearTable(connectionSource, Satellite.class);
+    	TableUtils.clearTable(connectionSource, Mission.class);
+    	}
+    	catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+    }
  
     public List<Mission> getMission(Timestamp creationTimestamp){
     	List<Mission> mission=null;
