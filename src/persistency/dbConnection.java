@@ -209,7 +209,6 @@ public class dbConnection {
             }
             catch ( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
             } 
             
     }
@@ -220,8 +219,16 @@ public class dbConnection {
     	}
     	catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
          }
     }
 
+    public void updateMission(Mission m){
+    	try{
+    		missionDao.update(m);
+    	}
+    	catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+    	
+    }
 }

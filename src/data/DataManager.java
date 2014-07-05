@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
 
+import com.j256.ormlite.field.DatabaseField;
+
 import Utils.GuiManager;
 import communication.CommunicationManager;
 import data.Satellite.SatelliteState;
@@ -122,6 +124,17 @@ public class DataManager {
 	    
 	 public void deleteCompletedMission(Timestamp creationTimestamp){
 		 db.deleteCompletedMission(creationTimestamp);
+	 }
+	 
+	 public void setMission(Mission m, Timestamp missionExecutionTS, Command command, int priority){
+		 if (missionExecutionTS!=null)
+			 m.setMissionExecutionTS(missionExecutionTS);
+		 if (command!=null)
+			 m.setCommand(command);
+		 if (priority!=0)
+			 m.setPriority(priority);
+		 
+		 db.updateMission(m);
 	 }
 	 
 	 public SatelliteState getLastSateliteState(){

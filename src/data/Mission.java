@@ -43,8 +43,19 @@ public class Mission {
     	return missionExecutionTS;
     }
 
-      
     public Timestamp getCreationTimestamp(){
     	return this.creationTimestamp;
+    }
+    
+    public void setMissionExecutionTS(Timestamp _missionExecutionTS){
+    	this.missionExecutionTS=_missionExecutionTS;
+    }
+    
+    public void setCommand(Command _command){
+    	this.command=_command;
+    }
+    
+    public void setPriority(int _priority){
+    	this.priority=_priority;
     }
 }
