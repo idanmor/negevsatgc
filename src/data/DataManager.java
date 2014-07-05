@@ -142,6 +142,12 @@ public class DataManager {
 		 db.updateMission(m);
 	 }
 	 
+	 public void setMissionSentTS(Mission m, Timestamp sentTime){
+		 m.setSentTime(sentTime);
+		 db.updateMission(m);
+		 
+	 }
+	 
 	 public SatelliteState getLastSateliteState(){
 		 if(latestSatData == null){
 			 return SatelliteState.UNKNOWN;

@@ -16,6 +16,8 @@ public class Mission {
     private Command command;
     @DatabaseField
     private int priority;
+    @DatabaseField
+    private Timestamp sentTime;
     
     public Mission(){}
     
@@ -26,6 +28,7 @@ public class Mission {
         this.missionExecutionTS=_missionExecutionTS;
         this.command=_command;
         this.priority=_priority;
+        this.sentTime=null;
 	}
     
     public Timestamp getMissionExecutionTS(){
@@ -40,7 +43,11 @@ public class Mission {
     }
           
     public Timestamp getExecutionTime () {
-    	return missionExecutionTS;
+    	return this.missionExecutionTS;
+    }
+    
+    public Timestamp getSentTime () {
+    	return this.sentTime;
     }
 
     public Timestamp getCreationTimestamp(){
@@ -57,5 +64,9 @@ public class Mission {
     
     public void setPriority(int _priority){
     	this.priority=_priority;
+    }
+    
+    public void setSentTime(Timestamp _sentTime){
+    	this.sentTime=_sentTime;
     }
 }

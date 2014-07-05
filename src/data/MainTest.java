@@ -30,7 +30,7 @@ public class MainTest {
     	 oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	     TS=new Timestamp(System.currentTimeMillis());
     	//addNotRandomTemp(db, hourInMs, oldestTS, TS);
-	     db.clearTables();
+	    // db.dropTables();---------> be careful!!
  
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
 //	    dbConnection.insertTemprature(1, 2, 3, TS);
