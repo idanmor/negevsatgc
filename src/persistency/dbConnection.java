@@ -55,6 +55,41 @@ public class dbConnection {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
     }
+    
+    public void clearTables(){
+    	try{
+    	TableUtils.clearTable(connectionSource, Energy.class);
+    	TableUtils.clearTable(connectionSource, Temprature.class);
+    	TableUtils.clearTable(connectionSource, Satellite.class);
+    	TableUtils.clearTable(connectionSource, Mission.class);
+    	}
+    	catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+    }
+    
+    public void dropTables(){
+    	try{
+    	TableUtils.dropTable(connectionSource, Energy.class, true);
+    	TableUtils.dropTable(connectionSource, Temprature.class, true);
+    	TableUtils.dropTable(connectionSource, Satellite.class, true);
+    	TableUtils.dropTable(connectionSource, Mission.class, true);
+    	}
+    	catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+    }
+    public List<Mission> getMissions(Timestamp startDate, Timestamp endDate) {
+    	List<Mission> mission=null;
+    	try{
+    		mission = missionDao.queryBuilder().where().between(Mission.DATE_FIELD_NAME, startDate, endDate).query();
+    	}
+    	catch ( SQLException e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            return null;
+        }
+    	return mission;
+	}
  
     public List<Mission> getMission(Timestamp creationTimestamp){
     	List<Mission> mission=null;
@@ -209,7 +244,6 @@ public class dbConnection {
             }
             catch ( Exception e ) {
                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-               System.exit(0);
             } 
             
     }
@@ -220,8 +254,18 @@ public class dbConnection {
     	}
     	catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
          }
     }
 
+    public void updateMission(Mission m){
+    	try{
+    		missionDao.update(m);
+    	}
+    	catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+    	
+    }
+
+	
 }

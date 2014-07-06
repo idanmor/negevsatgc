@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 import persistency.dbConnection;
+import sun.security.pkcs11.Secmod.DbMode;
 
 public class MainTest {
 
@@ -20,28 +21,24 @@ public class MainTest {
 		final long hourInMs = 3600000;
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	    Timestamp TS=new Timestamp(System.currentTimeMillis());
-	 	
     	final long dayinMS = 86400000;
     	
        // addRandomTemp(db, hourInMs, oldestTS, TS);
      //   addRandomEnergy(db, hourInMs, oldestTS, TS);
       //  addRandomTemp(db, hourInMs, oldestTS, TS);
-    	addNotRandomEnergy(db, hourInMs, oldestTS, TS);
+    //	addNotRandomEnergy(db, hourInMs, oldestTS, TS);
     	 oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	     TS=new Timestamp(System.currentTimeMillis());
     	//addNotRandomTemp(db, hourInMs, oldestTS, TS);
-    	db.insertMission(TS, Command.FORMAT_STATIC, 1);
-	    List<Mission> mission=db.getMission(TS);
-	    for (Mission m: mission)
-    	System.out.println("select from mission "+m.getCreationTimestamp());
-//	    db.insertMission(TS, Command.FORMAT_STATIC, 1);
+	    // db.dropTables();---------> be careful!!
+ 
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
 //	    dbConnection.insertTemprature(1, 2, 3, TS);
-	    db.insertSatellite(Status.ON, TS, Status.ON,TS, Status.ON, TS, Status.ON, TS, Status.ON, TS, Status.ON, TS);
-	    db.insertSatellite(Status.STANDBY, TS, Status.STANDBY,TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS);
-	    db.insertSatellite(Status.MALFUNCTION, TS, Status.MALFUNCTION,TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS);
-	    Satellite sat=db.getLatestSatelliteData();
-	    System.out.println("*******"+sat.getObjectCreationTimestamp()+"*******"+ sat.getEnergyStatus()+"*******");
+//	    db.insertSatellite(Status.ON, TS, Status.ON,TS, Status.ON, TS, Status.ON, TS, Status.ON, TS, Status.ON, TS);
+//	    db.insertSatellite(Status.STANDBY, TS, Status.STANDBY,TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS, Status.STANDBY, TS);
+//	    db.insertSatellite(Status.MALFUNCTION, TS, Status.MALFUNCTION,TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS, Status.MALFUNCTION, TS);
+//	    Satellite sat=db.getLatestSatelliteData();
+//	    System.out.println("*******"+sat.getObjectCreationTimestamp()+"*******"+ sat.getEnergyStatus()+"*******");
 //	    Timestamp t=new Timestamp(date.getTime());
 //	    List<? extends Component> tlst=dm.getTemprature(oldestTS,t);
 //	    for (Component item: tlst)
@@ -49,11 +46,22 @@ public class MainTest {
 //	    List<? extends Component> elst=dm.getEnergy(oldestTS,t);
 //	    for (Component item: elst)
 //	    	System.out.println("select from energy "+item.getSampleTimestamp());
-	    List<Satellite> stlst=db.getSatelliteData(oldestTS,TS);
 //	    for (Satellite item: stlst)
 //	    	System.out.println("select from satellite "+item.getSampleTimestamp());
 	}
 
+	private static void insertMission(dbConnection db,Timestamp TS, DataManager dm){
+    	db.insertMission(TS, Command.FORMAT_STATIC, 1);
+	    List<Mission> mission=db.getMission(TS);
+	    for (Mission m: mission){
+	    	System.out.println("select from mission "+m.getCreationTimestamp());
+	    	dm.setMission(m, null, null, 3);
+	    }
+	}
+	
+	private static List<Satellite> getSatelliteData(dbConnection db, Timestamp oldestTS, Timestamp TS){
+		return db.getSatelliteData(oldestTS,TS);
+	}
 	private static void addRandomTemp(dbConnection db, final long hourInMs,
 			Timestamp oldestTS, Timestamp TS) {
 		int startTemp = 50;
