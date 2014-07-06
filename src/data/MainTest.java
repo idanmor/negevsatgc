@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 import persistency.dbConnection;
+import sun.security.pkcs11.Secmod.DbMode;
 
 public class MainTest {
 
@@ -20,7 +21,6 @@ public class MainTest {
 		final long hourInMs = 3600000;
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	    Timestamp TS=new Timestamp(System.currentTimeMillis());
-	 	
     	final long dayinMS = 86400000;
     	
        // addRandomTemp(db, hourInMs, oldestTS, TS);

@@ -6,6 +6,7 @@
 
 package MenuItems;
 
+import Panels.UnsentMissionsPanel;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -20,7 +21,7 @@ public class MenuItemSchedule extends AbstractMenuItem{
 
     @Override
     public void applyActionOnGrid(BorderPane mainPane) {
-        
+        new UnsentMissionsPanel(mainPane);
     }
     
 }

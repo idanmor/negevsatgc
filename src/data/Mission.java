@@ -69,4 +69,7 @@ public class Mission {
     public void setSentTime(Timestamp _sentTime){
     	this.sentTime=_sentTime;
     }
+    public String getDescription(){
+    	return this.command.getDescription();
+    }
 }

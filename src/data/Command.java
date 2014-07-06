@@ -1,6 +1,6 @@
 package data;
 
-public enum Command {
+public enum Command implements CommandWithDescription {
 
 	MOVE_TO_SAFE(1),
 	MOVE_TO_STANDBY(2),
@@ -9,21 +9,31 @@ public enum Command {
 	FORMAT_TEMP(5),
 	FORMAT_STATIC(6),
 	FORMAT_MIXED(7),
-	SBAND_ON(8),
-	SBAND_STANDBY(9),
-	PAYLOAD_ON(10),
-	PAYLOAD_STANDBY(11),
-	THERMAL_CRTL_ON(12),
-	THERMAL_CRTL_STANDBY(13);
+	SBAND_ON(8,"Set Sband on"),
+	SBAND_STANDBY(9,"Set Sband to Standby"),
+	PAYLOAD_ON(10,"Set Payload on"),
+	PAYLOAD_STANDBY(11,"Set Payload to Standbye"),
+	THERMAL_CRTL_ON(12,"Set Thermal control on"),
+	THERMAL_CRTL_STANDBY(13,"Set Thermal control off");
 	
 	private final int value;
-	
-	private Command(final int newValue) {
+	private final String description;
+	private Command(final int newValue){
+		this.value = newValue;
+		description = null;
+	}
+	private Command(final int newValue, String description) {
 	        value = newValue;
+	        this.description = description;
 	}
 
 	public int getValue() { 
 		return value; 
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
 	}
 	    
 }
