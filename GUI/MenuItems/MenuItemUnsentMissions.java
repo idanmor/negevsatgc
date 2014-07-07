@@ -13,10 +13,10 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Max
  */
-public class MenuItemSchedule extends AbstractMenuItem{
+public class MenuItemUnsentMissions extends AbstractMenuItem{
 
-    public MenuItemSchedule() {
-        super("Schedule");
+    public MenuItemUnsentMissions() {
+        super("Unsent Missions");
     }
 
     @Override
