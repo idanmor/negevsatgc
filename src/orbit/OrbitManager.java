@@ -1,5 +1,7 @@
 package orbit;
 
+import java.util.Date;
+
 public class OrbitManager {
 	public static final String tle = 
 			"ISS (ZARYA)\n"
@@ -11,7 +13,14 @@ public class OrbitManager {
 	private Pass nextPass;
 	private OrbitPropagator propagator;
 	
+	public static final int REAL_TIME_MODE = 0;
+	public static final int ALWAYS_PASS_MODE = 1;
+	public static final int MANUAL_PASS_MODE = 2;
+	
+	private int mode;
+	
 	private OrbitManager() {
+		this.mode = MANUAL_PASS_MODE;
 		this.propagator = new SimOrbitPropagator();
 		this.nextPass = this.propagator.getNextPass();
 	}
@@ -47,5 +56,23 @@ public class OrbitManager {
 	 */
 	public long timeToPassEnd() {
 		return this.getNextPass().getTimeToPassEnd();
+	}
+	
+	public int getMode() {
+		return mode;
+	}
+	
+	public void setPassPhase () {
+		if (mode == OrbitManager.MANUAL_PASS_MODE) {
+			Date now = new Date();
+			this.nextPass = new Pass(now, new Date(now.getTime() + 600000));
+		}
+	}
+	
+	public void setNonPassPhase () {
+		if (mode == OrbitManager.MANUAL_PASS_MODE) {
+			Date now = new Date();
+			this.nextPass = new Pass(new Date(now.getTime() + 300000), new Date(now.getTime() + 900000));
+		}
 	}
 }
