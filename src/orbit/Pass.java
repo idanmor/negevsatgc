@@ -44,7 +44,7 @@ public class Pass {
 	 * Get the time remaining to the Pass
 	 * @return milliseconds to this pass from now, 0 if the Pass already started
 	 */
-	public long getTimeToPass () {
+	public long getTimeToPassStart () {
 		Date now = new Date();
 		long toPass = this.getStartTime() - now.getTime();
 		if (toPass <= 0) {
@@ -52,6 +52,20 @@ public class Pass {
 		}
 		else {
 			return toPass;
+		}
+	}
+	
+	/**
+	 * Get the time remaining to the Pass end
+	 * @return milliseconds to this pass from now, 0 if not in this pass phase
+	 */
+	public long getTimeToPassEnd () {
+		Date now = new Date();
+		if (this.isInPassPhase()) {
+			return this.getEndTime() - now.getTime();
+		}
+		else {
+			return 0;
 		}
 	}
 }
