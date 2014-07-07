@@ -8,12 +8,44 @@ public class OrbitManager {
 
 	private static OrbitManager instance = null;
 	
+	private Pass nextPass;
+	private OrbitPropagator propagator;
+	
 	private OrbitManager() {
+		this.propagator = new SimOrbitPropagator();
+		this.nextPass = this.propagator.getNextPass();
 	}
 	
 	public static OrbitManager getInstance() {
 		if (instance == null)
 			instance = new OrbitManager();
 		return instance;
+	}
+	
+	private Pass getNextPass() {
+		if (nextPass.isOutOfDate()) {
+			nextPass = propagator.getNextPass();
+		}
+		return nextPass;
+	}
+	
+	public boolean isPassPhase() {
+		return this.getNextPass().isInPassPhase();
+	}
+	
+	/**
+	 * Get the time remaining to the Pass
+	 * @return milliseconds to this pass from now, 0 if the Pass already started
+	 */
+	public long timeToPassStart() {
+		return this.getNextPass().getTimeToPassStart();
+	}
+	
+	/**
+	 * Get the time remaining to the Pass end
+	 * @return milliseconds to this pass from now, 0 if not in this pass phase
+	 */
+	public long timeToPassEnd() {
+		return this.getNextPass().getTimeToPassEnd();
 	}
 }
