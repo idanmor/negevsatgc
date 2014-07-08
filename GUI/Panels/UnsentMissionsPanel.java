@@ -35,6 +35,9 @@ public class UnsentMissionsPanel extends AbstractMissionTablePanel {
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 		Timestamp TS=new Timestamp(System.currentTimeMillis());
 		List<Mission> unfilteredMissions = DataManager.getInstance().getMissions(oldestTS,TS);
+		if(unfilteredMissions == null){
+			return new ArrayList<>();
+		}
 		List<Mission> filtered = new ArrayList<Mission>();
 		for(Mission mission : unfilteredMissions){
 			if(mission.getSentTime() == null){//not sent

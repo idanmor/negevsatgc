@@ -7,7 +7,7 @@
 package MenuItems;
 
 import Factories.InternalScreenFactory;
-import Factories.StatisticsScreeFactory;
+import Factories.StatisticsScreenFactory;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -22,7 +22,7 @@ public class MenuItemStatistics extends AbstractMenuItem{
 
     @Override
     public void applyActionOnGrid(BorderPane mainPane) {
-        InternalScreenFactory factory = new StatisticsScreeFactory();
+        InternalScreenFactory factory = new StatisticsScreenFactory();
         factory.createScreenPane(mainPane);
     }
     

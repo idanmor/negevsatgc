@@ -17,10 +17,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import orbit.OrbitManager;
 import javafx.scene.paint.Color;
 import data.Command;
 import data.Satellite;
 import data.Satellite.SatelliteState;
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -90,15 +92,11 @@ public class MainWindow{
 
 		Label smartSentance = new Label("Anyone who has never made a mistake has never tried anything new.\n - Albert Einstein");
 		smartSentance.setStyle("-fx-font-size:20;");
-		//satellitePassStatus = new Label(getSatellitePassStatus());
-		//satellitePassStatus.setStyle("-fx-font-size:20;");
 		mainPane.setCenter(smartSentance);
-		//mainPane.setBottom(satellitePassStatus);
 		Scene scene = new Scene(root, width, height);         
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add
 		(NegevSatGui.class.getResource(Constants.CSS_MAIN).toExternalForm());
-		//mainPane.getStylesheets().add("mainClass.css");
 		mainPane.getStyleClass().add("main");
 
 		mainPane.prefHeightProperty().bind(scene.heightProperty());
@@ -164,7 +162,7 @@ public class MainWindow{
 		}
 		mainPane.setCenter(mainScreen);
 	}
-	
+
 	public Text getSatelliteStatus(){
 		if(satelliteStatus == null){
 			SatelliteState state = GuiManager.getInstance().getLastSatelliteState();
@@ -174,32 +172,61 @@ public class MainWindow{
 		}
 		return satelliteStatus;
 	}
-	
+
 	private Color getFillForStatusText(SatelliteState state){
 		switch (state) {
 		case OPERATIONAL:
-			
+
 			return Color.GREEN;
 		case SAFE_MODE:
-			
+
 			return Color.RED;
 		default:
 			return Color.BLACK;
 		}
 	}
+	private VBox getSatteliteStateAndPhaseTexts(){
+		VBox textHolder = new VBox();
+		HBox stateBox = new HBox();
+		Text stLabelText = new Text("Satellite Status: ");
+		stLabelText.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		stateBox.getChildren().addAll(stLabelText,getSatelliteStatus());
+		stateBox.setSpacing(10);
+		HBox phaseBox = new HBox();
+		Text phLabelText = new Text("Phase in: ");
+		phLabelText.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		phaseBox.getChildren().addAll(phLabelText,getTimeUntilPhase());
+		phaseBox.setSpacing(10);
+		textHolder.getChildren().addAll(stateBox,phaseBox);
+		return textHolder;
+
+	}
+	private Node getTimeUntilPhase() {
+		Text phase = new Text("Unavailable");
+		
+		new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				long millis = OrbitManager.getInstance().timeToPassStart();
+				long second = (millis / 1000) % 60;
+				long minute = (millis / (1000 * 60)) % 60;
+				long hour = (millis / (1000 * 60 * 60)) % 24;
+
+				String time = String.format("%02d:%02d:%02d", hour, minute, second);
+				phase.setText(time);
+
+			}
+		}.start();
+		phase.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		return phase;
+	}
 	private BorderPane generateButtonHolders(){
 		HBox one = new HBox();
 		one.setSpacing(10);
 		BorderPane borderPane = new BorderPane();
-		HBox textHolder = new HBox();
-		Text stLabelText = new Text("Satellite Status: ");
-		stLabelText.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		VBox textHolder = getSatteliteStateAndPhaseTexts();
 		borderPane.setTop(textHolder);
 		BorderPane.setMargin(textHolder, new Insets(0, 0, 10, 0));
-		
-		textHolder.getChildren().addAll(stLabelText,getSatelliteStatus());
-		textHolder.setSpacing(10);
-	
 		List<HBox> buttonList = new ArrayList<HBox>();
 		List<Node[]> listOfImmediateActions = new ArrayList<>();
 		listOfImmediateActions.add(getImmidiateModeChangeBox());
@@ -219,8 +246,9 @@ public class MainWindow{
 
 		one.getChildren().addAll(first,second,third);
 		buttonList.add(one);
-		HBox containerBox = new HBox();
+		VBox containerBox = new VBox();
 		containerBox.getChildren().addAll(buttonList);
+		containerBox.getChildren().add(getDemoPhaseBox());
 		borderPane.setCenter(containerBox);
 
 		return borderPane;
@@ -428,7 +456,40 @@ public class MainWindow{
 		SatelliteState state = st.getSatelliteState();
 		satelliteStatus.setText(state.toString());
 		satelliteStatus.setFill(getFillForStatusText(state));
-		
+
+	}
+
+	private HBox getDemoPhaseBox(){
+		HBox box = new HBox();
+		box.setPadding(new Insets(10, 10, 10, 10));
+		Button phase = new Button("Set Phase on");
+		phase.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				OrbitManager ob = OrbitManager.getInstance();
+				if(ob.isPassPhase()){
+					return;
+				}
+				ob.setPassPhase();
+			}
+		});
+		Button noPhase = new Button("Set pahse off");
+		noPhase.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				OrbitManager ob = OrbitManager.getInstance();
+				if(!ob.isPassPhase()){
+					return;
+				}
+				ob.setNonPassPhase();
+
+			}
+		});
+		box.getChildren().addAll(phase, noPhase);
+		box.setSpacing(20);
+		return box;
 	}
 
 

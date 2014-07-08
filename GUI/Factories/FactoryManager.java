@@ -17,10 +17,7 @@ public class FactoryManager {
   
       
     public FactoryManager(){
-        menuFactory =  new DefaultMenuFactoryImpl();
-      //  commandScreenFactory  = new CommandScreen();
-        
-       
+        menuFactory =  new DefaultMenuFactoryImpl();      
     }
     public FactoryManager(InternalScreenFactory commandScreenFactory, InternalScreenFactory statisticsScreenFactory){
       this.commandScreenFactory = commandScreenFactory;
