@@ -15,6 +15,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import data.DataManager;
 import data.Mission;
 
 public abstract class AbstractMissionTablePanel {
@@ -38,8 +39,12 @@ public abstract class AbstractMissionTablePanel {
 			@Override
 			public void handle(ActionEvent arg0) {
 				List<TableNode> items = table.getSelectionModel().getSelectedItems();
+				for(TableNode item : items){
+					DataManager.getInstance().deleteCompletedMission(item.getMission().getCreationTimestamp());
+				}
 				table.getItems().removeAll(items);
 				table.getSelectionModel().clearSelection();
+				
 
 			}
 		});
@@ -67,6 +72,9 @@ public abstract class AbstractMissionTablePanel {
 
 
 	private void populateTable(List<Mission> missions) {
+		if(missions == null){
+			return;
+		}
 		ObservableList<TableNode> nodes = FXCollections.observableArrayList();
 		for(Mission mission : missions){
 			nodes.add(new TableNode(mission));
@@ -116,11 +124,13 @@ public abstract class AbstractMissionTablePanel {
 		private String creationTime;
 		private String executionTS;
 		private String description;
+		private String sentTime;
 		
 		public TableNode(Mission mission){
 			this.creationTime = mission.getCreationTimestamp().toString();
 			this.executionTS = mission.getExecutionTime().toString();
 			this.description = mission.getDescription();
+			this.sentTime = mission.getSentTime() == null ? "Not Sent" : mission.getSentTime().toString();
 			this.mission = mission;
 		}
 		/**
@@ -156,14 +166,14 @@ public abstract class AbstractMissionTablePanel {
 		 * @return true if the mission was sent
 		 */
 		public boolean getSent(){
-			return getSentTime() != null;
+			return getSentTime().isEmpty();
 		}
 		/**
 		 * Gets the time this mission was sent
 		 * @return TimeStamp of sent time
 		 */
-		public Timestamp getSentTime(){
-			return mission.getSentTime();
+		public String getSentTime(){
+			return sentTime;
 		}
 		
 		

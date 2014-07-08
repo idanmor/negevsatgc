@@ -46,9 +46,9 @@ public class dbConnection {
     
     public void creatTables(){
     	try{
-    	TableUtils.createTableIfNotExists(connectionSource, Energy.class);
-    	TableUtils.createTableIfNotExists(connectionSource, Temprature.class);
-    	TableUtils.createTableIfNotExists(connectionSource, Satellite.class);
+    	//TableUtils.createTableIfNotExists(connectionSource, Energy.class);
+    	//TableUtils.createTableIfNotExists(connectionSource, Temprature.class);
+    	//TableUtils.createTableIfNotExists(connectionSource, Satellite.class);
     	TableUtils.createTableIfNotExists(connectionSource, Mission.class);
     	}
     	catch ( SQLException e ) {
@@ -70,9 +70,9 @@ public class dbConnection {
     
     public void dropTables(){
     	try{
-    	TableUtils.dropTable(connectionSource, Energy.class, true);
-    	TableUtils.dropTable(connectionSource, Temprature.class, true);
-    	TableUtils.dropTable(connectionSource, Satellite.class, true);
+    	//TableUtils.dropTable(connectionSource, Energy.class, true);
+    	//TableUtils.dropTable(connectionSource, Temprature.class, true);
+    //	TableUtils.dropTable(connectionSource, Satellite.class, true);
     	TableUtils.dropTable(connectionSource, Mission.class, true);
     	}
     	catch ( SQLException e ) {

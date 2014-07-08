@@ -23,10 +23,12 @@ public class AllMissionPanel extends AbstractMissionTablePanel {
 		TableColumn component = new TableColumn("Start Time");
 		TableColumn type = new TableColumn("Description");
 		TableColumn sent = new TableColumn<>("Sent");
-		date.prefWidthProperty().bind(table.widthProperty().multiply(0.5));
+		
+		date.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 		component.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
 		type.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
-
+		sent.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+		
 		date.setCellValueFactory(
 				new PropertyValueFactory<Mission,String>("creationTime")
 				);
@@ -37,7 +39,7 @@ public class AllMissionPanel extends AbstractMissionTablePanel {
 				new PropertyValueFactory<Mission,String>("Description")
 				);
 		sent.setCellValueFactory(
-				new PropertyValueFactory<Mission,String>("Sent Status")
+				new PropertyValueFactory<Mission,String>("sentTime")
 				);
 		table.getColumns().addAll(date, component, type,sent);
 
@@ -48,15 +50,8 @@ public class AllMissionPanel extends AbstractMissionTablePanel {
 	public List<Mission> getMissionsForLastMonth(){
 		final long monthInMS = 26280000;//need to mult by 100
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
-		Timestamp TS=new Timestamp(System.currentTimeMillis());
-		List<Mission> unfilteredMissions = DataManager.getInstance().getMissions(oldestTS,TS);
-		List<Mission> filtered = new ArrayList<Mission>();
-		for(Mission mission : unfilteredMissions){
-			if(mission.getSentTime() != null){// sent
-				filtered.add(mission);
-			}
-		}
-		return filtered;
+		Timestamp TS=new Timestamp(System.currentTimeMillis());		
+		return DataManager.getInstance().getMissions(oldestTS,TS);
 	}
 
 }

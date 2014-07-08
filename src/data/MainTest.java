@@ -22,7 +22,7 @@ public class MainTest {
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	    Timestamp TS=new Timestamp(System.currentTimeMillis());
     	final long dayinMS = 86400000;
-    	
+ 
        // addRandomTemp(db, hourInMs, oldestTS, TS);
      //   addRandomEnergy(db, hourInMs, oldestTS, TS);
       //  addRandomTemp(db, hourInMs, oldestTS, TS);
@@ -30,7 +30,7 @@ public class MainTest {
     	 oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	     TS=new Timestamp(System.currentTimeMillis());
     	//addNotRandomTemp(db, hourInMs, oldestTS, TS);
-	    // db.dropTables();---------> be careful!!
+	     db.dropTables();//---------> be careful!!
  
 //	    dbConnection.insertEnergy(2, 2, 3, 4, 5, 6,TS);
 //	    dbConnection.insertTemprature(1, 2, 3, TS);

@@ -49,6 +49,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import jfxtras.scene.control.agenda.Agenda;
 import webmap.Coardinate;
 import webmap.WebMap;
 
@@ -65,6 +66,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	private Button cancelButton;
     private Text missionSentStatus;
 	private List<MissionTreeItem> mission_components_list;
+	@SuppressWarnings("rawtypes")
 	ObservableList<TreeItem> dateAndLocationlist;
 	private final int MISSION_DESC = 0;
 	private final int MISSION_DATE = 1;
@@ -80,11 +82,18 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		pane.setCenter(mainPane);
 		
 	}
-
+	/**
+	 * Create a mission according to the selected mission object - Mission Desc
+	 * For adding more missions add a swich case that checks the mission_components_list.get(MISSION_DESC) value
+	 * @throws Exception
+	 */
 	private void createMission() throws Exception{
 		createComponentMission();
 		
 	}
+	/**
+	 * Creates and sends a component mission to the database
+	 */
 	@SuppressWarnings("unchecked")
 	private void createComponentMission(){
 		MissionTreeItem date = mission_components_list.get(MISSION_DATE);
@@ -110,12 +119,15 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		
 		
 	}
+	//If the mission was specified correctly(all the fields was correct) sets mission success text
 	private void setSuccessStatus(String data){
 		missionSentStatus.setText(Constants.MISSION_SENT);
 		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		missionSentStatus.setFill(Color.GREEN);
 		GuiManager.getInstance().addToLog(data);
 	}
+	//If the mission was not specified correctly(one of the fields was incorrect) sets mission fail text
+	
 	private void setFailStatus(String data){
 		missionSentStatus.setText(Constants.MISSION_SEND_FAILED);
 		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -124,6 +136,8 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			GuiManager.getInstance().addToLog(data);
 		}
 	}
+	//initializes the panes
+	
 	private void init(){
 		if(leftTree == null || rightPane == null){
 			populateLeftList();
@@ -143,7 +157,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			rightPane.getChildren().add(new HBox());
 		}
 	}
-
+	//Return a container with a confirm and cancel buttons
 	private VBox getConfirmCancelButtons(){
 		VBox bottomBox = new VBox();
 		HBox box = new HBox();
@@ -155,7 +169,11 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		bottomBox.getChildren().addAll(box, missionSentStatus);
 		return bottomBox;
 	}
-
+	
+	/**
+	 * Returns the confirm button
+	 * @return
+	 */
 	protected Button getConfirmButton(){
 		if(confirmButton == null){
 			confirmButton = new Button("Confirm Mission");
@@ -176,11 +194,18 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		return confirmButton;
 
 	}
-
+	/**
+	 * As of now it need to be implemented, this implementation is wrong
+	 * @return
+	 */
 	private int getMaxLabelWidth(){
+		//TODO
 		return "Mission description:".length();      
 	}
-
+	/**
+	 * Returns the clear/cancel button
+	 * @return
+	 */
 	public Button getClearButton(){
 		if(cancelButton == null){
 			cancelButton = new Button("Cancel");
@@ -194,6 +219,9 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		}
 		return cancelButton;
 	}
+	/**
+	 * Builds and populates the left list with Mission Items
+	 */
 	@SuppressWarnings({"unchecked","rawtypes"})
 	@Override
 	public void populateLeftList() {
@@ -298,7 +326,12 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper<Component>(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
 		list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
 		return list;
+		
 	}
+	/**
+	 * Returns Commands that could be done on a component
+	 * @return
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ObservableList<TreeItem> getSatteliteComponentCommands(){
 		ObservableList<TreeItem> list = FXCollections.observableArrayList();
@@ -306,11 +339,18 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper(mode), "Change Component Status", new Label("Mode:"),COMPONENT_ON_OFF_LOCATION)));      
 		return list;
 	} 
+	/**
+	 * Returns a list of components in the satelite
+	 * @return
+	 */
 	private ObservableList<Component> getListOfSatteliteComponents(){
 		return FXCollections.observableArrayList(Component.values());
-		//return FXCollections.observableArrayList("Computer","Temperature sensor", "Battery","Camera","Solar Panel");
-
 	}
+	
+	/**
+	 * This is not implemented fully, once we get the STK licence this function should be deleted  
+	 * @return
+	 */
 	private MissionTreeItem getWebMapMissionItem(){
 		MissionTreeItem item = new MissionTreeItem(generateLocationTable(), "SelectLocation", null, MISSION_LOCATION_TABLE){
 			public void doAdditionalActionsOnSelection(){
@@ -325,6 +365,10 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	public String buildMissionSummary() {
 		return "unsupported";
 	}
+	/**
+	 * This is not implemented fully, once we get the STK licence this function should be deleted  
+	 * @return
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private MissionTableWrapper generateLocationTable(){
 		MissionTableWrapper table = new MissionTableWrapper();
@@ -356,7 +400,10 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		//        }
 		return table;
 	}
-
+	/**
+	 * This is not implemented fully, once we get the STK licence this function should be deleted  
+	 * @return
+	 */
 	private void addToTable(List <Coardinate> markers, TableView table){
 		for(int i = 0; i < markers.size() ; i++){
 			Coardinate single = markers.get(i);
@@ -364,8 +411,14 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		}
 
 	}
-	
-	private class MissionTreeItem /*extends TreeItem<MissionTreeItem>*/{
+	/**
+	 * This class represents an Item in the left (mission components) tree,
+	 * each MissionTreeItem is consisted of the item(such as combobox), the name to be displayed and a label if needed
+	 * most importantly it has a missionArrayLocation by which the program will know where to place it on the screen
+	 * @author Max
+	 *
+	 */
+	private class MissionTreeItem{
 		private MissionItemWrapper item = null;
 		private String name = null;
 		private Label explainLabel = null;
