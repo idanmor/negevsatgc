@@ -16,7 +16,7 @@ public class Pass {
 	}
 	
 	public long getEndTime () {
-		return startTime.getTime();
+		return endTime.getTime();
 	}
 	
 	public boolean isInPassPhase () {
