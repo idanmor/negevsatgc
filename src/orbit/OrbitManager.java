@@ -22,7 +22,7 @@ public class OrbitManager {
 	private OrbitManager() {
 		this.mode = MANUAL_PASS_MODE;
 		this.propagator = new SimOrbitPropagator();
-		this.nextPass = this.propagator.getNextPass();
+		this.nextPass = null;
 	}
 	
 	public static OrbitManager getInstance() {
@@ -32,7 +32,7 @@ public class OrbitManager {
 	}
 	
 	private Pass getNextPass() {
-		if (nextPass.isOutOfDate()) {
+		if (nextPass == null || nextPass.isOutOfDate()) {
 			nextPass = propagator.getNextPass();
 		}
 		return nextPass;
