@@ -22,7 +22,6 @@ public class OrbitManager {
 	private OrbitManager() {
 		this.mode = MANUAL_PASS_MODE;
 		this.propagator = new SimOrbitPropagator();
-		this.nextPass = this.propagator.getNextPass();
 	}
 	
 	public static OrbitManager getInstance() {
