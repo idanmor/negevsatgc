@@ -91,10 +91,14 @@ public class dbConnection {
     	return mission;
 	}
  
-    public List<Mission> getMission(Timestamp creationTimestamp){
-    	List<Mission> mission=null;
+    public Mission getMission(Timestamp creationTimestamp){
+    	List<Mission> missionlst=null;
+    	Mission mission=null;
     	try{
-    		mission=missionDao.queryBuilder().where().eq(Mission.DATE_FIELD_NAME, creationTimestamp).query();
+    		missionlst=missionDao.queryBuilder().where().eq(Mission.DATE_FIELD_NAME, creationTimestamp).query();
+    		if (!missionlst.isEmpty()){
+    			mission=missionlst.get(0);
+    		}
     		}
     	catch ( SQLException e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
