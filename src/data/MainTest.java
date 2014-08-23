@@ -52,11 +52,10 @@ public class MainTest {
 
 	private static void insertMission(dbConnection db,Timestamp TS, DataManager dm){
     	db.insertMission(TS, Command.FORMAT_STATIC, 1);
-	    List<Mission> mission=db.getMission(TS);
-	    for (Mission m: mission){
-	    	System.out.println("select from mission "+m.getCreationTimestamp());
-	    	dm.setMission(m, null, null, 3);
-	    }
+	    Mission mission=db.getMission(TS);
+	    System.out.println("select from mission "+mission.getCreationTimestamp());
+	    dm.setMission(mission, null, null, 3);
+	    
 	}
 	
 	private static List<Satellite> getSatelliteData(dbConnection db, Timestamp oldestTS, Timestamp TS){
