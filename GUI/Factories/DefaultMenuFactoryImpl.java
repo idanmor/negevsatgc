@@ -11,7 +11,6 @@ import MenuItems.MenuItemExit;
 import MenuItems.MenuItemHome;
 import MenuItems.MenuItemSatteliteStatus;
 import MenuItems.MenuItemUnsentMissions;
-import MenuItems.MenuItemStatistics;
 import MenuItems.AbstractMenuItem;
 import MenuItems.MenuItemTableTemperature;
 import MenuItems.MenuItemTableEnergy;
