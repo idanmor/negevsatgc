@@ -27,7 +27,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Separator;
 
 /**
- *
+ *This class represents the factory for Main Menu
  * @author Max
  */
 public class DefaultMenuFactoryImpl implements MenuFactory{
@@ -42,8 +42,8 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         Menu menuEffect = new Menu(name);
         for (MenuItem childMenu : menuItems) {
             menuEffect.getItems().add(childMenu);
-            }
-    return menuEffect;
+         }
+        return menuEffect;
     }
 
     @Override

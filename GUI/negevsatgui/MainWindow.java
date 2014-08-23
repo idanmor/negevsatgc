@@ -193,7 +193,8 @@ public class MainWindow{
 		stateBox.getChildren().addAll(stLabelText,getSatelliteStatus());
 		stateBox.setSpacing(10);
 		HBox phaseBox = new HBox();
-		Text phLabelText = new Text("Phase in: ");
+		Text phLabelText = new Text();
+		phLabelText.setText(OrbitManager.getInstance().isPassPhase() ? "In Phase for: " : "Phase in: ");
 		phLabelText.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		phaseBox.getChildren().addAll(phLabelText,getTimeUntilPhase());
 		phaseBox.setSpacing(10);
@@ -202,7 +203,7 @@ public class MainWindow{
 
 	}
 	private Node getTimeUntilPhase() {
-		Text phase = new Text("Unavailable");
+		Text phase = new Text();
 		
 		new AnimationTimer() {
 			@Override
