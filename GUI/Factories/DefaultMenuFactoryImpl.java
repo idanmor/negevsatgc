@@ -52,7 +52,6 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         Menu menuView = new Menu("View");
         List<AbstractMenuItem> listOfMenuItems = new ArrayList<>();
         listOfMenuItems.add(new MenuItemCommand());
-        listOfMenuItems.add(new MenuItemStatistics());
         listOfMenuItems.add(new MenuItemSatteliteStatus());
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
         List<AbstractMenuItem> listOfTablesItems = new ArrayList<>();
