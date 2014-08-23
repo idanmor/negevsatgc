@@ -11,7 +11,6 @@ import MenuItems.MenuItemExit;
 import MenuItems.MenuItemHome;
 import MenuItems.MenuItemSatteliteStatus;
 import MenuItems.MenuItemUnsentMissions;
-import MenuItems.MenuItemStatistics;
 import MenuItems.AbstractMenuItem;
 import MenuItems.MenuItemTableTemperature;
 import MenuItems.MenuItemTableEnergy;
@@ -52,7 +51,6 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         Menu menuView = new Menu("View");
         List<AbstractMenuItem> listOfMenuItems = new ArrayList<>();
         listOfMenuItems.add(new MenuItemCommand());
-        listOfMenuItems.add(new MenuItemStatistics());
         listOfMenuItems.add(new MenuItemSatteliteStatus());
         Menu menuSceens = this.createExpandMenu("Screens", listOfMenuItems);
         List<AbstractMenuItem> listOfTablesItems = new ArrayList<>();
