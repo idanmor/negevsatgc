@@ -12,23 +12,15 @@ package Factories;
  */
 public class FactoryManager {
     MenuFactory menuFactory;
-    InternalScreenFactory statisticsScreenFactory;
+
   
       
     public FactoryManager(){
         menuFactory =  new DefaultMenuFactoryImpl();      
     }
     
-    public FactoryManager(InternalScreenFactory statisticsScreenFactory){
-      this.statisticsScreenFactory = statisticsScreenFactory;
-   }
- 
     public MenuFactory getMenuFactory(){
         return menuFactory;
     }
-     public InternalScreenFactory getStatisticsScreenFactory(){
-        return statisticsScreenFactory;
-    }
-     
     
 }
