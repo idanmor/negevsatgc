@@ -13,18 +13,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -57,7 +50,12 @@ import misc.SatalliteUtils;
 import misc.StatisticDataItem;
 import misc.StatisticDataItemInterface;
 
-
+/**
+ * A class that acts as abstract component for statistics view.
+ * Represents the screen of statistics for a chosen component(which should extend this class)
+ * @author Max
+ *
+ */
 public abstract class AbstractComponentStatistics implements CommunicationRefreshInterface {
 	TableView<StatisticDataItemInterface> table;
 	private BorderPane rightPane;
@@ -95,8 +93,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 			@Override
 			public void handle(ActionEvent t) {
 				try {
-					//	writeExcelOneGraph(lineChart);
-					writeExcelApache(lineChart);
+						writeExcelApache(lineChart);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -377,8 +374,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 	private void populateTable(){
 		final long monthInMS = 26280000;//need to mult by 100
 		final long dayinMS = 86400000;
-		DateFormat simpleFormatter = new SimpleDateFormat( "dd-MM-yyyy");
-
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 		Timestamp TS=new Timestamp(System.currentTimeMillis());
 		ObservableList<StatisticDataItemInterface> nodes = FXCollections.observableArrayList();
@@ -392,11 +387,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		table.getItems().addAll(nodes);
 	}
 
-
-	private void populateTableDemo(){
-		DemoPopulateTable d = new DemoPopulateTable();
-		table.setItems(d.getNodes());
-	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createStatisicsWindow(LineChart<String,Number> lineChart){
@@ -417,83 +407,12 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 
 	}
 
-	//when no data avaliable
-	private class DemoPopulateTable{
-		private String[] components = new String[]{"Sensor1","Sensor2","Sensor3"};
-		private ObservableList<StatisticDataItemInterface> demoNodes;
-		private final int DATA_SIZE = 20;
-
-		public DemoPopulateTable(){
-			demoNodes = FXCollections.observableArrayList();
-			StringBuilder date = new StringBuilder("1/5/2014");
-			for(int i = 1 ; i < 10; i++){
-				date.replace(0, 1, String.valueOf(i));
-				demoNodes.add((new StatisticDataItem(date.toString(),components[i % components.length], "Temperature",  generateRandomStatisticsData(date.toString(),components[i % components.length]))));
-			}
-			// demoNodes.add((new StatisticDataItem(date.toString(), "Voltage", "Normal", generateRandomStatisticsData())));
-
-		}
-
-		public ObservableList<StatisticDataItemInterface> getNodes(){
-			return demoNodes;
-		}
-
-		private Comparator<String> dateComperator =  new Comparator<String>() {
-
-			@Override
-			public int compare(String o1, String o2) {
-				String firstString = o1.substring(o1.indexOf(" ") + 1);
-				String secondString = o2.substring(o1.indexOf(" ") + 1);
-				String[] split1 = firstString.split(":");
-				String[] split2 = secondString.split(":");
-				if (Integer.valueOf(split1[0]) > Integer.valueOf(split2[0])){
-					return 1;
-				}else if (Integer.valueOf(split1[0]) < Integer.valueOf(split2[0])){
-					return -1;
-				}else{
-					return Integer.valueOf(split1[1]) > Integer.valueOf(split2[1]) ? 1 : -1; 
-				}
-			}
-		};
-		private String[][] generateRandomStatisticsData(String date, String component){
-			String[][] data = new String[DATA_SIZE][3]; // x is the hour, y is the temp
-			String[] hourForSort = new String[DATA_SIZE];
-			String hour = null;
-			String fTemp = null;
-			StringBuilder hourBuilder = new StringBuilder();
-			StringBuilder dateBuilder = new StringBuilder();
-			int startTemp = 50;
-			for(int i = 0; i < data.length ; i++){
-				String minutes = ((int)(Math.random()*60)) + "";
-				if(minutes.length() == 1){
-					minutes = "0" + minutes;
-				}
-				hour = hourBuilder.append((int)(Math.random()*24)).append(":").append((int)(Math.random()*60)).toString();
-				hourForSort[i] = date + " " + hour;
-				hourBuilder.setLength(0);
-			}
-			Arrays.sort(hourForSort,dateComperator);
-			for(int i = 0; i < hourForSort.length ; i++){
-				data[i][0] = String.valueOf(hourForSort[i]);
-				for(int j = 1 ; j < data[i].length -1 ; j++){
-					int randomModifier = (int) (Math.random() * 10);
-					int temp = startTemp + i * (randomModifier > 5 ? 1 : -1);
-					fTemp = dateBuilder.append(temp).toString();
-					dateBuilder.setLength(0);
-					data[i][j] = fTemp;
-				}
-				data[i][data[i].length -1] = component;
-
-			}
-
-
-			return data;
-		}
-	}
+	
 	@Override
 	public void refreshPanelData(){
 		this.createTable();
 	}
+	//Abstracts
 	public abstract List<Component> getComponent(Timestamp oldestTS, Timestamp TS);
 	public abstract String getObjectName();
 }

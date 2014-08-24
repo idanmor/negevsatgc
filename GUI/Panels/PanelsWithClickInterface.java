@@ -78,6 +78,7 @@ public abstract class PanelsWithClickInterface  extends Parent{
 		});
 	}
 	
+	
 	private ScaleTransition getMouseEnteredTransitionTransition(){
 		if(mouseEnteredTransition == null){
 			mouseEnteredTransition = new ScaleTransition();

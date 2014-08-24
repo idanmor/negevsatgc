@@ -27,6 +27,7 @@ import javafx.scene.control.Separator;
 
 /**
  *This class represents the factory for Main Menu
+ * For adding new  items for a menu add an abstractMenuItem to a corresponding menu for instance to View menu add to createViewMenu function 
  * @author Max
  */
 public class DefaultMenuFactoryImpl implements MenuFactory{
@@ -36,6 +37,11 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
         return new Menu(name);
       }
 
+    /**
+     * Use this function to create an expand menu
+     * @param name - the name of the expand menu
+     * @param menuItems - The Items that the expand menu will expand to
+     */
     @Override
     public Menu createExpandMenu(String name, Collection<AbstractMenuItem> menuItems) {
         Menu menuEffect = new Menu(name);
