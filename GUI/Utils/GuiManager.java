@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import Panels.MissionWrapper;
 import orbit.OrbitManager;
 import javafx.application.Platform;
 import communication.CommunicationManager;
@@ -72,7 +74,13 @@ public class GuiManager {
 		addToLog("Sending change component status mission to Satellite");
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
-
+	
+	
+	public void sendMission(MissionWrapper wrapper){
+		Mission newMission =  DataManager.getInstance().insertMission(wrapper.getExecutionTS(), wrapper.getMission().getcommand(), wrapper.getMission().getPriority());
+		addToLog("Sending mission: " + newMission.getDescription() + "to Satellite");
+		CommunicationManager.getInstance().sendMission(newMission);
+	}
 	/**
 	 * Function used when there is a new data from the satellite(for example entered pass mode)
 	 * @param st
