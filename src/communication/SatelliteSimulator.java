@@ -39,7 +39,9 @@ public class SatelliteSimulator {
 					+ "1. Print components status\n"
 					+ "2. Change component status\n"
 					+ "3. Send status to ground station\n"
-					+ "4. Exit");
+					+ "4. Send temperature packets to ground station\n"
+					+ "5. Send energy packets to ground station\n"
+					+ "6. Exit");
 			String command = in.next();
 			switch(command){
 			case "1":
@@ -52,6 +54,10 @@ public class SatelliteSimulator {
 				sendStaticToGround();
 				break;
 			case "4":
+				break;
+			case "5":
+				break;
+			case "6":
 				System.out.println("Bye-Bye");
 				keepWorking = false;
 				break;
