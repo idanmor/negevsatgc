@@ -62,7 +62,7 @@ public class DataManager {
 		return db.getEnergy(startDate, endDate);
 	}
 	
-	public List<Satellite> getStatus(Timestamp startDate, Timestamp endDate){
+	public List<Satellite> getSatellite(Timestamp startDate, Timestamp endDate){
 		return db.getSatelliteData(startDate, endDate);
 	}
 	
