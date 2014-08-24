@@ -7,6 +7,7 @@ import javafx.scene.layout.BorderPane;
 public class SatteliteStatusPanel extends PanelsWithClickInterface {
 	public SatteliteStatusPanel(BorderPane mainPane) {
 		super(mainPane, "spinningEarth.gif");
+		
 	}
 	
 	public SatteliteStatusPanel(BorderPane mainPane , Parent parentTOCopy) {

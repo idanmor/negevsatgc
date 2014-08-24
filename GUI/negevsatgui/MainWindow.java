@@ -8,6 +8,7 @@ package negevsatgui;
 
 import MenuItems.MainMenu;
 import Panels.MissionPanel;
+import Panels.PanelsWithClickInterface;
 import Panels.SatteliteStatusPanel;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import Utils.Constants;
+import Utils.Utils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -61,7 +63,7 @@ public class MainWindow{
 	private ComboBox<DataAcquisitionMode> dataAquisitionModeBox;
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
-	//private Label satellitePassStatus;
+	private PanelsWithClickInterface missionPanel;
 	private Text satelliteStatus;
 	private FXMLLoader fxmlLoader;
 	public MainWindow(){
@@ -132,8 +134,8 @@ public class MainWindow{
 			pictureController = fxmlLoader.<SattelitePictureController>getController();
 			Pane left = new Pane();
 			Pane right = new Pane();
-			MissionPanel mp = new MissionPanel(getMainPane(),left);
-			left.getChildren().add(mp);
+			missionPanel = new MissionPanel(getMainPane(),left);
+			left.getChildren().add(missionPanel);
 			right.getChildren().add(new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
 			firtsLine.getChildren().addAll(left,right);
 
@@ -215,7 +217,7 @@ public class MainWindow{
 
 				String time = String.format("%02d:%02d:%02d", hour, minute, second);
 				phase.setText(time);
-
+				
 			}
 		}.start();
 		phase.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -473,9 +475,11 @@ public class MainWindow{
 					return;
 				}
 				ob.setPassPhase();
+				missionPanel.updateImage(Utils.getImageViewFromLocation(getClass(), Constants.INPASS));
+				
 			}
 		});
-		Button noPhase = new Button("Set pahse off");
+		Button noPhase = new Button("Set phase off");
 		noPhase.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -485,15 +489,12 @@ public class MainWindow{
 					return;
 				}
 				ob.setNonPassPhase();
-
+				missionPanel.updateImage(Utils.getImageViewFromLocation(getClass(), Constants.NOT_PASS));
 			}
 		});
 		box.getChildren().addAll(phase, noPhase);
 		box.setSpacing(20);
 		return box;
 	}
-
-
-
 
 }

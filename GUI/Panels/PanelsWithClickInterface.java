@@ -1,13 +1,9 @@
 package Panels;
 
-import java.awt.Panel;
-import java.io.IOException;
-
 import Utils.Utils;
 import javafx.animation.ScaleTransition;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,10 +19,14 @@ public abstract class PanelsWithClickInterface  extends Parent{
 		this.getChildren().addAll(panel.getChildrenUnmodifiable());
 		applyListeners();
 	}
+	
+	public void updateImage(Image image){
+		view.setImage(image);
+	}
+	
 	public PanelsWithClickInterface(BorderPane mainPane, Image image){
 		this.mainPane = mainPane;
 		 view = new ImageView(image);
-		//this.setImage(image);
 		view.setFitWidth(400);
 		view.setFitHeight(400);
 		view.setPreserveRatio(true);
@@ -49,8 +49,15 @@ public abstract class PanelsWithClickInterface  extends Parent{
 	public PanelsWithClickInterface(BorderPane mainPane, String imageLocation) {
 		this(mainPane, Utils.getImageViewFromLocation(PanelsWithClickInterface.class.getClass(), imageLocation));
 	}
+	
+	/**
+	 * Apply an action that would happen after the pannel was clicked
+	 */
 	public abstract void applyClickOnPanel();
 	
+	/**
+	 * Applies an effect when the mouse is howering over the panel
+	 */
 	public void applyOnHover() {
 		this.setOnMouseEntered(new EventHandler<Event>() {
 

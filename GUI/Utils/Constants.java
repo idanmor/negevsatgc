@@ -21,8 +21,8 @@ public interface Constants {
 	public static final String ICON_GREEN =  "green.png";
 	public static final String ICON_ORANGE ="orange.jpg";
 	public static final String EXCEL = "excel.jpg";
-	
-	
+	public static final String INPASS = "pass.png";
+	public static final String NOT_PASS = "pass_before.png";
 	//MainPane Images
 	public static final String MAIN_IMAGES_LOCATION = CSS_PACKAGE_LOCATION;
 	
