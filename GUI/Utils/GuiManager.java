@@ -21,54 +21,55 @@ import negevsatgui.MainWindow.DataAcquisitionMode;
 import negevsatgui.MainWindow.SatelliteMods;
 import negevsatgui.SattelitePictureController;
 
-public class GuiManager {
-	private static GuiManager instance = null;
+public class GuiManager implements IGuiManager {
+	private static IGuiManager instance = null;
 	private MainWindow mainWindow;
 	private GuiManager(){
 		this.mainWindow = MainWindow.getMainWindow();
 	}
 
-	public static GuiManager getInstance(){
+	public static IGuiManager getInstance(){
 		if(instance == null){
 			instance = new GuiManager();
 		}
 		return instance;
 	}
-	/**
-	 * Connected/Disconnected
-	 * @param status
+	
+	public static void overrideGuiManagerInstance(IGuiManager newGuiManager){
+		instance = newGuiManager;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#setNewSatteliteStatusInGui(java.lang.String)
 	 */
+	@Override
 	public void setNewSatteliteStatusInGui(String status){
 		mainWindow.setSatelliteStatusText(status);
 	}
-	/**
-	 * Sends immediate satellite command to the satellite, only viable in pass mode
-	 * The execution is immediate
-	 * For example change the mode of the satellite to safe mode
-	 * @param command
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#sendImmidiateSatelliteModeCommand(negevsatgui.MainWindow.SatelliteMods)
 	 */
+	@Override
 	public void sendImmidiateSatelliteModeCommand(SatelliteMods selectedItem) {
 		Mission newMission = DataManager.getInstance().insertMission(null, selectedItem.getCommand(), 1);
 		addToLog("Sending mission to Satellite -" + selectedItem.toString());
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
-	/**
-	 * Sends immediate Data acquisition command to the satellite, only viable in pass mode.
-	 * For example the gui asks the satellite for temperature statistics.
-	 * The execution is immediate
-	 * @param command 
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#sendImmidiateDataAquisitionCommand(negevsatgui.MainWindow.DataAcquisitionMode)
 	 */
+	@Override
 	public void sendImmidiateDataAquisitionCommand(DataAcquisitionMode dataAcquisitionMode) {
 		Mission newMission =  DataManager.getInstance().insertMission(null, dataAcquisitionMode.getCommand(), 1);
 		addToLog("Sending mission to Sattelite -" + dataAcquisitionMode.toString());
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
 	
-	/**
-	 * Sends immediate component command to the satellite, only viable in pass mode
-	 * The execution is immediate
-	 * @param command
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#sendImmidiateComponentStatusChange(data.Command)
 	 */
+	@Override
 	public void sendImmidiateComponentStatusChange(Command command) {
 		Mission newMission =  DataManager.getInstance().insertMission(null,command, 1);
 		addToLog("Sending change component status mission to Satellite");
@@ -76,15 +77,19 @@ public class GuiManager {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#sendMission(Panels.MissionWrapper)
+	 */
+	@Override
 	public void sendMission(MissionWrapper wrapper){
 		Mission newMission =  DataManager.getInstance().insertMission(wrapper.getExecutionTS(), wrapper.getMission().getcommand(), wrapper.getMission().getPriority());
 		addToLog("Sending mission: " + newMission.getDescription() + "to Satellite");
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
-	/**
-	 * Function used when there is a new data from the satellite(for example entered pass mode)
-	 * @param st
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#refreshSatelliteController(data.Satellite)
 	 */
+	@Override
 	public void refreshSatelliteController(Satellite st){
 		Platform.runLater(new Runnable() {
 			
@@ -100,10 +105,10 @@ public class GuiManager {
 		});
 	
 	}
-	/**
-	 * Add data to the log, the date that will be written is the exact date that this function was called
-	 * @param data
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#addToLog(java.lang.String)
 	 */
+	@Override
 	public void addToLog(String data){
 		if(data == null){
 			return;
@@ -115,11 +120,10 @@ public class GuiManager {
 		addToLog(date, data);
 	}
 	
-	/**
-	 * Adds data to log
-	 * @param date date for receiving the data
-	 * @param data the data to be written to the log
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#addToLog(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void addToLog(String date,String data){
 		if(data == null){
 			return;
@@ -127,11 +131,10 @@ public class GuiManager {
 			mainWindow.addToLog("("+ date + ")" + data);
 	}
 
-	/**
-	 * Sends Mode command to the satellite
-	 * @param dateString
-	 * @param c
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#sendSatelliteModeCommand(java.lang.String, data.Command)
 	 */
+	@Override
 	public void sendSatelliteModeCommand(String dateString, Command c) {
 		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss");
 		dateString = dateString.replace("/", "-");
@@ -149,24 +152,27 @@ public class GuiManager {
 		
 	}
 	
-	/**
-	 * Gets the last satellite state recorded in the database
-	 * @return
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#getLastSatelliteState()
 	 */
+	@Override
 	public SatelliteState getLastSatelliteState(){
 		DataManager dm = DataManager.getInstance();
 		return dm.getLastSateliteState();
 	}
 	
-	/**
-	 * Checks and returns the current satellite pass status
-	 * 
-	 * @return true if in pass false otherwise
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#getInPassPhase()
 	 */
+	@Override
 	public boolean getInPassPhase(){
 		return OrbitManager.getInstance().isPassPhase();
 	}
 
+	/* (non-Javadoc)
+	 * @see Utils.IGuiManager#getSatteliteMapView()
+	 */
+	@Override
 	public String getSatteliteMapView() {
 		return getInPassPhase() ? Constants.INPASS : Constants.NOT_PASS;
 		
