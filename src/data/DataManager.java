@@ -27,12 +27,14 @@ public class DataManager {
 	private static DataManager instance = null;
 	
 	private Satellite latestSatData;
+	private boolean testMode;
 	
 	private DataManager() {
 		db = dbConnection.getdbCon();
 		comm = CommunicationManager.getInstance();
-		db.creatTables();
+		db.createTables();
 		latestSatData=db.getLatestSatelliteData();
+		testMode = false;
 			try {
 				comm.connect(comPort);
 			} catch (NoSuchPortException | PortInUseException
@@ -49,9 +51,14 @@ public class DataManager {
 		return instance;
 	}
 	
+	public void setTestMode(boolean mode){
+		testMode = mode;
+	}
 	public void setLatestSatData(Satellite sat){
 		this.latestSatData=sat;
-		GuiManager.getInstance().refreshSatelliteController(sat);
+		if (testMode==false){
+			GuiManager.getInstance().refreshSatelliteController(sat);
+		}
 	}
 	
 	public List<Temprature> getTemprature(Timestamp startDate, Timestamp endDate){
@@ -132,6 +139,10 @@ public class DataManager {
 	 }
 	 
 	 public void setMission(Mission m, Timestamp missionExecutionTS, Command command, int priority){
+		 if (m==null){
+			 System.err.println("no mission object");
+			 return;
+		 }
 		 if (missionExecutionTS!=null)
 			 m.setMissionExecutionTS(missionExecutionTS);
 		 if (command!=null)
@@ -143,6 +154,10 @@ public class DataManager {
 	 }
 	 
 	 public void setMissionSentTS(Mission m, Timestamp sentTime){
+		 if (m==null){
+			 System.err.println("no mission object");
+			 return;
+		 }
 		 m.setSentTime(sentTime);
 		 db.updateMission(m);
 		 
