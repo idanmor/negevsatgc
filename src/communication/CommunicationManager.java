@@ -21,6 +21,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import data.DataManager;
 import data.Mission;
 
 
@@ -131,9 +132,13 @@ public class CommunicationManager {
 			else {
 				exeTimeString = MessageParser.toRTEMSTimestamp(mission.getExecutionTime());
 			}
+			
 			msg = msg.concat("<mission time=\"" + exeTimeString + 
 					"\" opcode=\"" + mission.getCommand().getValue() + "\" priority=\"" +
 					mission.getPriority() + "\"/>");
+			Date nw= new java.util.Date();
+	        Timestamp sentTime=new Timestamp(nw.getTime());
+	        DataManager.getInstance().setMissionSentTS(mission, sentTime);
 		}
 		
 		msg = msg.concat("</upstreamPacket>" + 
@@ -177,6 +182,10 @@ public class CommunicationManager {
 	
 	public Condition getInputDataAvailable() {
 		return inputDataAvailable;
+	}
+	
+	public boolean isSimulator() {
+		return isSimulator;
 	}
 
 }

@@ -16,8 +16,10 @@ public class Loggers {
 	private static LoggerFormatter actionFormatter;
 	private static LoggerFormatter errorFormatter;
     private static final SimpleDateFormat date_format = new SimpleDateFormat("ddMMyy-HHmmss");
+    private static boolean isInitialized = false;
 
     public static void makeLoggers() {
+    	isInitialized = true;
 		actionFormatter = new LoggerFormatter("Actions");
 		errorFormatter = new LoggerFormatter("Errors");
 		ACTION_LOG = Logger.getLogger("ActionsLog");
@@ -58,10 +60,16 @@ public class Loggers {
 	}
 
 	public static void logError(String msg) {
+		if (!isInitialized) {
+			makeLoggers();
+		}
 		ERROR_LOG.warning(msg);
 	}
 
 	public static void logAction(String msg) {
+		if (!isInitialized) {
+			makeLoggers();
+		}
 		ACTION_LOG.info(msg);
 	}
 }
