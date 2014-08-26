@@ -132,7 +132,7 @@ public class CommunicationManager {
 				exeTimeString = MessageParser.toRTEMSTimestamp(mission.getExecutionTime());
 			}
 			msg = msg.concat("<mission time=\"" + exeTimeString + 
-					"\" opcode=\"" + mission.getcommand().getValue() + "\" priority=\"" +
+					"\" opcode=\"" + mission.getCommand().getValue() + "\" priority=\"" +
 					mission.getPriority() + "\"/>");
 		}
 		
