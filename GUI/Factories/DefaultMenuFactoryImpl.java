@@ -70,8 +70,7 @@ public class DefaultMenuFactoryImpl implements MenuFactory{
     @Override
     public Menu createFileMenu() {
      Menu menuFile = this.createMenu("File");
-     menuFile.getItems().addAll(new MenuItemHome(), new MenuItemExit());
-     
+     menuFile.getItems().addAll(new MenuItemHome(), new MenuItemExit());   
      return menuFile;
     }
 

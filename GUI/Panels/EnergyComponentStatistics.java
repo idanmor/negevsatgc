@@ -20,8 +20,8 @@ public class EnergyComponentStatistics extends AbstractComponentStatistics{
 	}
 
 	@Override
-	protected String getCsvFileLocationAndName() {
-		 return "c:\\Voltage.xls";
+	protected String getExellFileLocationAndName() {
+		 return Constants.STATISTICS_VOLTAGE_DISK_LOCATION;
 	}
 
 	@Override

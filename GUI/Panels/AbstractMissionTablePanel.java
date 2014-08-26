@@ -62,7 +62,6 @@ public abstract class AbstractMissionTablePanel {
 			}
 		});
 
-
 		createTable();
 		populateTable(missions);
 		box.getChildren().addAll(send,deleteButton);
@@ -89,13 +88,6 @@ public abstract class AbstractMissionTablePanel {
 			table = new TableView<>();
 			table.setPrefWidth(600);
 			table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-			table.getItems().addListener(new ListChangeListener<TableNode>(){
-
-				@Override
-				public void onChanged(javafx.collections.ListChangeListener.Change<? extends TableNode> arg0) {
-					//TODO - disable send button if the satellite is not in phase 
-				}
-			});
 			createColumns();
 			
 		}		

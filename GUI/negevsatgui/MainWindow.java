@@ -87,6 +87,7 @@ public class MainWindow{
 	public void start(Stage primaryStage) {
 		int height = 600;
 		int width = 910;
+		primaryStage.setResizable(false);
 		mainPane = new BorderPane();  
 		BorderPane root = new BorderPane();
 		root.setTop(new MainMenu());

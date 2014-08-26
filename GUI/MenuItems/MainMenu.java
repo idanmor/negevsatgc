@@ -14,7 +14,7 @@ import javafx.scene.control.MenuBar;
 
 
 /**
- *
+ *Represents the main menu bar
  * @author Max
  */
 public class MainMenu extends MenuBar  {
@@ -29,6 +29,7 @@ public class MainMenu extends MenuBar  {
         Menu menuView = factory.createViewMenu();
         Menu menuTools = factory.createToolsMenu();
         this.getMenus().addAll(menuFile,menuView,menuTools);
+        
     }
     
 }

@@ -150,6 +150,11 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 			}
 		}
 	}
+	/**
+	 * Unfortunately the filter doesnt work
+	 * @param before
+	 * @param after
+	 */
 	private void filter(String before, String after){
 		Timestamp beforeCal = null;
 		Timestamp afterCal = null;
@@ -163,7 +168,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 				Date beforeDate = writeFormat.parse(before);
 				beforeCal = new Timestamp(beforeDate.getTime());
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -177,7 +181,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 				afterDate = writeFormat.parse(after);
 				afterCal = new Timestamp(afterDate.getTime());
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -191,29 +194,17 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		populateTableNodes(afterCal, filteredItems, new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss"), beforeCal);
 		table.setItems(filteredItems);
 	}
-	public void writeExcel() throws Exception {
-		Writer writer = null;
-		try {
-			File file = new File("C:\\Person.csv");
-			writer = new BufferedWriter(new FileWriter(file));
-			for (StatisticDataItemInterface data : table.getItems()) {
-				String text = data.getDate() + "," + data.getComponent()  + "," + data.getType() + "\n";
-				writer.write(text);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		finally {
-
-			writer.flush();
-			writer.close();
-		} 
-	}
-
+	
+	
+	/**
+	 * Writes statistics data to excel using Apache POI platform
+	 * @param chart
+	 * @throws Exception
+	 */
 	private void writeExcelApache(LineChart<String, Number> chart) throws Exception{
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Statistics");
-		File file = new File(getCsvFileLocationAndName());
+		File file = new File(getExellFileLocationAndName());
 		if(file.exists()){
 			file.delete();
 		}
@@ -249,56 +240,7 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 		}
 
 	}
-	public void writeExcelOneGraph(LineChart<String, Number> chart) throws Exception {
-		Writer writer = null;
-		try {
-			File file = new File(getCsvFileLocationAndName());
-			if(file.exists()){
-				file.delete();
-			}
-			file.createNewFile();
-
-
-			writer = new BufferedWriter(new FileWriter(file));
-			StringBuilder text = getTableDataStringBuilder();
-			//     for (StatisticDataItemInterface data : table.getItems()) {
-			//String text = data.getDate() + "," + data.getCategory()  + "," + data.getSeverity() + "\n";
-			//    writer.write(text.toString());
-			//   }
-			writer.write(text.toString());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		finally {
-
-			writer.flush();
-			writer.close();
-		} 
-	}
-	private StringBuilder getTableDataStringBuilder() {
-		StringBuilder text = new StringBuilder();
-		TableView.TableViewSelectionModel<StatisticDataItemInterface> selectionModel = table.getSelectionModel();
-		for(int i = 0 ; i < selectionModel.getSelectedItems().size() ; i++){
-			String[][] data = selectionModel.getSelectedItems().get(i).getData();
-			for(int j = 0 ; j < data.length; j++){
-				if(i == 0 && j == 0){
-					for(int k = 0 ; k < data[j].length ; k++){
-
-						text.append(table.getColumns().get(k).getText()).append(",");
-					}
-					text.append("\n");
-				}
-				//	                    	}
-				for(int k = 0 ; k < data[j].length ; k++){
-
-					text.append(data[j][k]).append(",");
-				}
-				text.append("\n");
-			}
-
-		}
-		return text;
-	}
+	
 	private List<List<String>> getTableDataAsList() {
 		List<List<String>> text = new ArrayList<List<String>>();
 		//StringBuilder text = new StringBuilder();
@@ -311,24 +253,23 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 						List<String> newColumn = new ArrayList<>();
 						newColumn.add(table.getColumns().get(k).getText());
 						text.add(newColumn);
-						//text.append(table.getColumns().get(k).getText()).append(",");
 					}
-					//text.append("\n");
 				}
 				//	                    	}
 				for(int k = 0 ; k < data[j].length ; k++){
-					text.get(k).add(data[j][k]);
-					//	text.append(data[j][k]).append(",");
+					text.get(k).add(data[j][k]);					
 				}
-				//		text.append("\n");
 			}
 
 		}
 		return text;
 	}
 
-
-	protected abstract String getCsvFileLocationAndName();
+	/**
+	 * Gets the location where to write the excel file
+	 * @return
+	 */
+	protected abstract String getExellFileLocationAndName();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createTable(){
@@ -352,7 +293,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 			type.setCellValueFactory(
 					new PropertyValueFactory<StatisticDataItemInterface,String>("type")
 					);
-			//populateTableDemo();
 			table.getColumns().addAll(date, component, type);
 			table.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -366,9 +306,6 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 			});
 		}
 		populateTable();
-		//backUpListItems = table.getItems();
-
-
 		table.getItems();
 	}
 	private void populateTable(){

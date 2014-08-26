@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import Utils.GuiManager;
+import Utils.GuiManagerForNonGuiTests;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import misc.StatisticDataItem;
@@ -22,7 +24,7 @@ public class MainTest {
 		Timestamp oldestTS=new Timestamp(System.currentTimeMillis() - monthInMS * 100);
 	    Timestamp TS=new Timestamp(System.currentTimeMillis());
     	final long dayinMS = 86400000;
- 
+    	
         addRandomTemp(db, hourInMs, oldestTS, TS);
      //   addRandomEnergy(db, hourInMs, oldestTS, TS);
       //  addRandomTemp(db, hourInMs, oldestTS, TS);

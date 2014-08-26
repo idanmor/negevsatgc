@@ -135,7 +135,7 @@ public class GuiManager implements IGuiManager {
 	 * @see Utils.IGuiManager#sendSatelliteModeCommand(java.lang.String, data.Command)
 	 */
 	@Override
-	public void sendSatelliteModeCommand(String dateString, Command c) {
+	public boolean sendSatelliteModeCommand(String dateString, Command c) {
 		DateFormat writeFormat = new SimpleDateFormat( "dd-MM-yyyy HH:mm:ss");
 		dateString = dateString.replace("/", "-");
 		Date date = null;
@@ -143,12 +143,17 @@ public class GuiManager implements IGuiManager {
 			date = writeFormat.parse(dateString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return;
+			return false;
 		}
 		Timestamp ts = new Timestamp(date.getTime());
 		Mission mission = new Mission(ts, c, 1);
 		DataManager.getInstance().insertMission(ts, c, 1);
-		CommunicationManager.getInstance().sendMission(mission);
+		if(OrbitManager.getInstance().isPassPhase()){
+			CommunicationManager.getInstance().sendMission(mission);
+			return true;
+		}else{
+			return false;
+		}
 		
 	}
 	

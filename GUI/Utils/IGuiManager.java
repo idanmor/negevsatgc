@@ -64,8 +64,9 @@ public interface IGuiManager {
 	 * Sends Mode command to the satellite
 	 * @param dateString
 	 * @param c
+	 * @return 
 	 */
-	public void sendSatelliteModeCommand(String dateString, Command c);
+	public boolean sendSatelliteModeCommand(String dateString, Command c);
 
 	/**
 	 * Gets the last satellite state recorded in the database

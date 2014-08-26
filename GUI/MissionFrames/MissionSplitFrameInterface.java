@@ -11,6 +11,7 @@ package MissionFrames;
  * @author Max
  */
 public interface MissionSplitFrameInterface{ 
+	
     public void populateLeftList();
     public String buildMissionSummary();
     

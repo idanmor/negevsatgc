@@ -19,14 +19,11 @@ import Utils.GuiManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import data.Command;
-import negevsatgui.MainWindow;
 import negevsatgui.MainWindow.Component;
 import negevsatgui.MainWindow.State;
-import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -64,7 +61,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	private VBox rightPane;
 	private Button confirmButton;
 	private Button cancelButton;
-    private Text missionSentStatus;
+	private Text missionSentStatus;
 	private List<MissionTreeItem> mission_components_list;
 	@SuppressWarnings("rawtypes")
 	ObservableList<TreeItem> dateAndLocationlist;
@@ -75,27 +72,42 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	private final int COMPONENT_ON_OFF_LOCATION = 4;
 	private final int MISSION_LOCATION_TABLE = 5;
 	private final int MISSION_MAX_NUM_ITEMS = 6;
+
+
 	public MissionSplitFrameIMPL(BorderPane pane){
 		mainSplitPane = new SplitPane();
 		mainPane = new BorderPane();
 		init();
 		pane.setCenter(mainPane);
-		
+
 	}
 	/**
 	 * Create a mission according to the selected mission object - Mission Desc
-	 * For adding more missions add a swich case that checks the mission_components_list.get(MISSION_DESC) value
+	 * For adding more missions add a switch case that checks the mission_components_list.get(MISSION_DESC) value
 	 * @throws Exception
 	 */
 	private void createMission() throws Exception{
-		createComponentMission();
-		
+		StringBuilder logUpdate = null;
+		switch (mission_components_list.get(MISSION_DESC).getMissionType()) {
+		case COMPONENT:
+			logUpdate = createAndSendComponentMission();
+			break;
+		case PHOTO:
+			//TODO
+		case CUSTOM:
+			//TODO
+		default:
+			break;
+		}
+
+		setSuccessStatus(logUpdate.toString());
+		init();// inits right tree selection
 	}
 	/**
 	 * Creates and sends a component mission to the database
 	 */
 	@SuppressWarnings("unchecked")
-	private void createComponentMission(){
+	private StringBuilder createAndSendComponentMission(){
 		MissionTreeItem date = mission_components_list.get(MISSION_DATE);
 		MissionComboBoxWrapper<Component> ComponentBox = (MissionComboBoxWrapper<Component>)mission_components_list.get(MISSION_DESC).getMissionItem();
 		MissionComboBoxWrapper<State> stateBox = (MissionComboBoxWrapper<State>)mission_components_list.get(COMPONENT_ON_OFF_LOCATION).getMissionItem();
@@ -103,21 +115,20 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		Command c = selectedComponent.getCommand(stateBox.getSelectionModel().getSelectedItem());
 		//;
 		String dateString = date.getMissionStringValue();
-		GuiManager.getInstance().sendSatelliteModeCommand(dateString, c);
+		boolean isSent = GuiManager.getInstance().sendSatelliteModeCommand(dateString, c);
 		MissionTreeItem endDate = mission_components_list.get(MISSION_DATE_END);
 		if(endDate != null){
 			String endDateString = date.getMissionStringValue();
 			State originalState = stateBox.getSelectionModel().getSelectedItem();
 			State endState = originalState == State.ON ? State.OFF : State.ON;
-			GuiManager.getInstance().sendSatelliteModeCommand(endDateString, selectedComponent.getCommand(endState));
+			isSent = isSent && GuiManager.getInstance().sendSatelliteModeCommand(endDateString, selectedComponent.getCommand(endState));
 		}
 		StringBuilder logUpdate = new StringBuilder();
-		logUpdate.append(" A mission for component: ").append(selectedComponent.toString()).append(" is sent.");
-		setSuccessStatus(logUpdate.toString());
-		init();
-	
-		
-		
+		logUpdate.append(" A mission for component: ").append(selectedComponent.toString()).append(isSent ? " is sent." : " is stored");
+
+		return logUpdate;
+
+
 	}
 	//If the mission was specified correctly(all the fields was correct) sets mission success text
 	private void setSuccessStatus(String data){
@@ -127,7 +138,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		GuiManager.getInstance().addToLog(data);
 	}
 	//If the mission was not specified correctly(one of the fields was incorrect) sets mission fail text
-	
+
 	private void setFailStatus(String data){
 		missionSentStatus.setText(Constants.MISSION_SEND_FAILED);
 		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -137,18 +148,18 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		}
 	}
 	//initializes the panes
-	
+
 	private void init(){
 		if(leftTree == null || rightPane == null){
 			populateLeftList();
 			mainSplitPane.setOrientation(Orientation.HORIZONTAL);
 			rightPane = new VBox();
 			mainSplitPane.getItems().addAll(leftTree,rightPane);
-	
+
 			mainPane.setCenter(mainSplitPane);
 			mainPane.setBottom(getConfirmCancelButtons());
 			mission_components_list = new ArrayList<>(MISSION_MAX_NUM_ITEMS);
-			}
+		}
 		rightPane.getChildren().clear();
 		mission_components_list.clear();
 		mission_components_list = new ArrayList<>(MISSION_MAX_NUM_ITEMS);
@@ -169,7 +180,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		bottomBox.getChildren().addAll(box, missionSentStatus);
 		return bottomBox;
 	}
-	
+
 	/**
 	 * Returns the confirm button
 	 * @return
@@ -213,7 +224,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 
 				@Override
 				public void handle(ActionEvent t) {
-					rightPane.getChildren().clear();
+					init();
 				}
 			});
 		}
@@ -226,60 +237,8 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	@Override
 	public void populateLeftList() {
 		if(leftTree == null){
-			TreeItem root = new TreeItem(new MissionTreeItem("Build mission"));
-			root.setExpanded(true);
-			leftTree = new TreeView<>(root);
-			leftTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
-			leftTree.setOnMouseClicked(new EventHandler<MouseEvent>()
-					{
-				@Override
-				public void handle(MouseEvent mouseEvent)
-				{            
-					TreeItem<MissionTreeItem> selectedItem = leftTree.getSelectionModel().getSelectedItem();
-					if(selectedItem == null){
-						mouseEvent.consume();
-						return;
-					}
-					if(missionSentStatus != null){
-						missionSentStatus.setText("");
-					}
-					if(mouseEvent.getClickCount() == 2)
-					{
-						MissionTreeItem item =  (MissionTreeItem) leftTree.getSelectionModel().getSelectedItem().getValue();
-						if(item == null || item.getMissionItem() == null){ //nothing is selected or there is no actual input item
-							mouseEvent.consume();
-							return;
-						}
-						BorderPane box = new BorderPane();
-						Button deletionButton = new Button("-");
-						deletionButton.setOnAction(new EventHandler<ActionEvent>() {
-
-							@Override
-							public void handle(ActionEvent t) {
-								rightPane.getChildren().remove(box);
-								item.setAlreadySelected(false);
-							}
-						});
-						box.setPadding(new Insets(10, 10, 10, 10));
-						Label expLabel = item.getExplainLabel();
-
-						if(expLabel != null){
-							box.setLeft(item.getExplainLabel());
-							box.setRight(new HBox(item.getMissionItem().getWrappedItem(),deletionButton));
-
-							//System.out.println(item.getExplainLabel().getText().length());
-						}else{
-							box.getChildren().addAll(item.getMissionItem().getWrappedItem(),deletionButton); 
-						}
-
-						item.setAlreadySelected(true);
-						rightPane.getChildren().add(item.getMissionArrayLoc(),box);
-						mission_components_list.remove(item.getMissionArrayLoc());
-						mission_components_list.add(item.getMissionArrayLoc(),item);
-						item.getMissionItem().clearSelection();
-					}
-				}
-					});
+			TreeItem root = initLeftTree();
+			//Adding Items to the left tree
 			TreeItem dateAndLocation = new TreeItem(new MissionTreeItem("Date and Location Items"));
 			dateAndLocation.getChildren().addAll(getDateAndLocationItems());	
 			TreeItem missionGeneral =  new TreeItem(new MissionTreeItem("General mission items"));
@@ -290,6 +249,69 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			root.getChildren().addAll(dateAndLocation, missionGeneral, missionComponentsAction);
 
 		}
+	}
+	@SuppressWarnings({"unchecked","rawtypes"})
+	private TreeItem initLeftTree() {
+		TreeItem root = new TreeItem(new MissionTreeItem("Build mission"));
+		root.setExpanded(true);
+		leftTree = new TreeView<>(root);
+		leftTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
+		leftTree.setOnMouseClicked(new EventHandler<MouseEvent>()
+				{
+			@Override
+			public void handle(MouseEvent mouseEvent)
+			{            
+				TreeItem<MissionTreeItem> selectedItem = leftTree.getSelectionModel().getSelectedItem();
+				if(selectedItem == null){
+					mouseEvent.consume();
+					return;
+				}
+				if(missionSentStatus != null){
+					missionSentStatus.setText("");
+				}
+				if(mouseEvent.getClickCount() == 2)
+				{
+					MissionTreeItem item =  (MissionTreeItem) leftTree.getSelectionModel().getSelectedItem().getValue();
+					if(item == null || item.getMissionItem() == null){ //nothing is selected, there is no actual input item
+						mouseEvent.consume();
+						return;
+					}
+					
+					BorderPane box = new BorderPane();
+					Button deletionButton = new Button("-");
+					deletionButton.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent t) {
+							int boxLocation = rightPane.getChildren().indexOf(box);
+							mission_components_list.remove(boxLocation);
+							mission_components_list.add(boxLocation,null);
+							rightPane.getChildren().remove(box);
+							rightPane.getChildren().add(boxLocation, new HBox());
+							item.setAlreadySelected(false);
+						}
+					});
+					box.setPadding(new Insets(10, 10, 10, 10));
+					Label expLabel = item.getExplainLabel();
+
+					if(expLabel != null){
+						box.setLeft(item.getExplainLabel());
+						box.setRight(new HBox(item.getMissionItem().getWrappedItem(),deletionButton));
+					}else{
+						box.getChildren().addAll(item.getMissionItem().getWrappedItem(),deletionButton); 
+					}
+
+					item.setAlreadySelected(true);
+					
+					rightPane.getChildren().remove(item.getMissionArrayLoc());
+					rightPane.getChildren().add(item.getMissionArrayLoc(),box);
+					mission_components_list.remove(item.getMissionArrayLoc());
+					mission_components_list.add(item.getMissionArrayLoc(),item);
+					item.getMissionItem().clearSelection();
+				}
+			}
+				});
+		return root;
 	}
 	/**
 	 * The function returns a list of mission that is related to dates, locations, time ext...
@@ -322,11 +344,11 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		ObservableList<TreeItem> list = FXCollections.observableArrayList();
 		MissionTextWrapper nonEditableField = new MissionTextWrapper("Take photo");
 		nonEditableField.setEditable(false);
-		list.add(new TreeItem (new MissionTreeItem(nonEditableField, "Take photo mission", new Label("Mission description:"),MISSION_DESC)));
-		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper<Component>(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC)));
-		list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC)));
+		list.add(new TreeItem (new MissionTreeItem(nonEditableField, "Take photo mission", new Label("Mission description:"),MISSION_DESC,MissionType.PHOTO)));
+		list.add(new TreeItem (new MissionTreeItem(new MissionComboBoxWrapper<Component>(getListOfSatteliteComponents()), "Manage component mission", new Label("Choosen Component:"),MISSION_DESC, MissionType.COMPONENT)));
+		list.add(new TreeItem (new MissionTreeItem(new MissionTextWrapper("Type Text Here"), "Custom mission", new Label("Mission description:"), MISSION_DESC, MissionType.CUSTOM)));
 		return list;
-		
+
 	}
 	/**
 	 * Returns Commands that could be done on a component
@@ -340,13 +362,13 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		return list;
 	} 
 	/**
-	 * Returns a list of components in the satelite
+	 * Returns a list of components in the satellite
 	 * @return
 	 */
 	private ObservableList<Component> getListOfSatteliteComponents(){
 		return FXCollections.observableArrayList(Component.values());
 	}
-	
+
 	/**
 	 * This is not implemented fully, once we get the STK licence this function should be deleted  
 	 * @return
@@ -365,6 +387,8 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	public String buildMissionSummary() {
 		return "unsupported";
 	}
+	
+	
 	/**
 	 * This is not implemented fully, once we get the STK licence this function should be deleted  
 	 * @return
@@ -411,6 +435,8 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		}
 
 	}
+	
+	
 	/**
 	 * This class represents an Item in the left (mission components) tree,
 	 * each MissionTreeItem is consisted of the item(such as combobox), the name to be displayed and a label if needed
@@ -423,26 +449,22 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 		private String name = null;
 		private Label explainLabel = null;
 		private int missionArrayLocation = -1;
+		private MissionType missionType;
 
-		public MissionTreeItem(MissionItemWrapper item, String name, Label explainLabel, int missionArrayLocation){
+
+		public MissionTreeItem(MissionItemWrapper item, String name, Label explainLabel, int missionArrayLocation, MissionType missionType){
 			this.item = item;
 			this.name = name;
 			this.explainLabel = explainLabel;
-			if(explainLabel != null){
-				this.explainLabel.setText(explainLabel.getText().trim() + getFillerString());
-
-			}
-
+			this.missionType = missionType;
 			this.missionArrayLocation = missionArrayLocation;
 		}
+		public MissionTreeItem(MissionItemWrapper item, String name, Label explainLabel, int missionArrayLocation){
+			this(item, name, explainLabel, missionArrayLocation, null);
+		}
 
-		private String getFillerString(){
-			StringBuilder b = new StringBuilder();
-			for(int i = 0 ; i < Math.abs(getMaxLabelWidth() - explainLabel.getText().trim().length()); i++){
-				b.append(" ");
-			}
-
-			return b.toString();
+		public MissionType getMissionType() {
+			return missionType;
 		}
 
 		public MissionTreeItem(String name){
@@ -475,8 +497,16 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 			return item.getValueStringWithPreIfNeeded(null);
 		}
 	}
-
-	
+	/**
+	 * Add new mission Types here
+	 * @author Max
+	 *
+	 */
+	private enum MissionType{
+		COMPONENT,
+		PHOTO,
+		CUSTOM;
+	}
 	public class DeleteButton extends Button{
 		private int tableIndex;
 

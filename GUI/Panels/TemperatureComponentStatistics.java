@@ -17,8 +17,8 @@ public class TemperatureComponentStatistics extends AbstractComponentStatistics 
 	
 
 	@Override
-	protected String getCsvFileLocationAndName() {
-		return "C:\\Statistics\\Temperature.xls";
+	protected String getExellFileLocationAndName() {
+		return Constants.STATISTICS_TEMPRETATURE_DISK_LOCATION;
 	}
 
 
