@@ -26,10 +26,10 @@ public class SatelliteSimulator {
 		in = new Scanner(System.in);
 		
 		try {
-			CommunicationManager.getInstance().connect("COM1");
+			CommunicationManager.getInstance().connectSimulator("COM4");
 		} catch (Exception e) {
 			try {
-				CommunicationManager.getInstance().connect("LOCAL");
+				CommunicationManager.getInstance().connectSimulator("LOCAL");
 			} catch (Exception ee) {
 				ee.printStackTrace();
 			}

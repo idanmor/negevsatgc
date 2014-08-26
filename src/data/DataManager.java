@@ -17,6 +17,7 @@ import Utils.GuiManager;
 import communication.CommunicationManager;
 import data.Satellite.SatelliteState;
 import javafx.util.Pair;
+import logger.Loggers;
 import persistency.dbConnection;
 
 public class DataManager {
@@ -33,14 +34,15 @@ public class DataManager {
 		comm = CommunicationManager.getInstance();
 		db.creatTables();
 		latestSatData=db.getLatestSatelliteData();
-			try {
-				comm.connect(comPort);
-			} catch (NoSuchPortException | PortInUseException
-					| UnsupportedCommOperationException | IOException | UnsatisfiedLinkError
-					| TooManyListenersException e) {
-				System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
-				System.out.println("Error message: " + e.getMessage());
-			}
+		try {
+			comm.connect(comPort);
+		} catch (NoSuchPortException | PortInUseException
+				| UnsupportedCommOperationException | IOException | UnsatisfiedLinkError
+				| TooManyListenersException e) {
+			System.out.println("ERROR: Could not connect to " + comPort + ". Running in offline mode.");
+			System.out.println("Error message: " + e.getMessage());
+		}
+		Loggers.makeLoggers();
 	}
 	
 	public static DataManager getInstance() {

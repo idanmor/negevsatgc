@@ -3,6 +3,8 @@ package Panels;
 import java.sql.Timestamp;
 import java.util.List;
 
+import Utils.GuiManager;
+import orbit.OrbitManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -39,7 +41,7 @@ public abstract class AbstractMissionTablePanel {
 			@Override
 			public void handle(ActionEvent arg0) {
 				List<TableNode> items = table.getSelectionModel().getSelectedItems();
-				for(TableNode item : items){
+				for(MissionWrapper item : items){
 					DataManager.getInstance().deleteCompletedMission(item.getMission().getCreationTimestamp());
 				}
 				table.getItems().removeAll(items);
@@ -53,8 +55,8 @@ public abstract class AbstractMissionTablePanel {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				for(TableNode node : table.getSelectionModel().getSelectedItems()){
-					//TODO
+				for(MissionWrapper node : table.getSelectionModel().getSelectedItems()){
+					GuiManager.getInstance().sendMission(node);
 				}
 
 			}
@@ -119,59 +121,60 @@ public abstract class AbstractMissionTablePanel {
 	 * @author Max
 	 *
 	 */
-	public class TableNode{
+	public class TableNode implements MissionWrapper{
 		private Mission mission;
-		private String creationTime;
-		private String executionTS;
+		private Timestamp creationTime;
+		private Timestamp executionTS;
 		private String description;
 		private String sentTime;
 		
 		public TableNode(Mission mission){
-			this.creationTime = mission.getCreationTimestamp().toString();
-			this.executionTS = mission.getExecutionTime().toString();
+			this.creationTime = mission.getCreationTimestamp();
+			this.executionTS = mission.getExecutionTime();
 			this.description = mission.getDescription();
 			this.sentTime = mission.getSentTime() == null ? "Not Sent" : mission.getSentTime().toString();
 			this.mission = mission;
 		}
-		/**
-		 * Gets the time that this mission was created
+		/* (non-Javadoc)
+		 * @see Panels.MissionWrapper#getCreationTime()
 		 */
-		public String getCreationTime() {
+		@Override
+		public Timestamp getCreationTime() {
 			return creationTime;
 		}
-		/**
-		 * Gets the time that this mission will be executed
-		 * @return
+		/* (non-Javadoc)
+		 * @see Panels.MissionWrapper#getExecutionTS()
 		 */
-		public String getExecutionTS() {
+		@Override
+		public Timestamp getExecutionTS() {
 			return executionTS;
 		}
-		/**
-		 * Gets the description of the mission
-		 * @return
+		/* (non-Javadoc)
+		 * @see Panels.MissionWrapper#getDescription()
 		 */
+		@Override
 		public String getDescription() {
 			return description;
 		}
-		/**
-		 * Gets the mission in the node
-		 * @return
+		/* (non-Javadoc)
+		 * @see Panels.MissionWrapper#getMission()
 		 */
+		@Override
 		public Mission getMission(){
 			return mission;
 		}
 		
-		/**
-		 * Checks if the mission was sent already
-		 * @return true if the mission was sent
+		/* (non-Javadoc)
+		 * @see Panels.MissionWrapper#getSent()
 		 */
+		@Override
 		public boolean getSent(){
 			return getSentTime().isEmpty();
 		}
-		/**
-		 * Gets the time this mission was sent
-		 * @return TimeStamp of sent time
+		/* (non-Javadoc)
+		 * @see Panels.MissionWrapper#getSentTime()
 		 */
+		@Override
 		public String getSentTime(){
 			return sentTime;
 		}

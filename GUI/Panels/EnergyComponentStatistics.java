@@ -21,7 +21,7 @@ public class EnergyComponentStatistics extends AbstractComponentStatistics{
 
 	@Override
 	protected String getCsvFileLocationAndName() {
-		 return "D:\\Voltage.csv";
+		 return "c:\\Voltage.xls";
 	}
 
 	@Override

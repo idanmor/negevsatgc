@@ -27,9 +27,6 @@ public class Utils {
 	}
 	public static Image getImageViewFromLocation(Class cs, String location){
 		return new Image(cs.getResourceAsStream(Constants.MAIN_IMAGES_LOCATION + location));
-		//ImageView iv = new ImageView(new Image(cs.getResourceAsStream(location)));
-		//return iv;
-
 	}
 	public static GregorianCalendar createCalendar(String Date){
 		String[] beforeSplitted = Date.split("/");
