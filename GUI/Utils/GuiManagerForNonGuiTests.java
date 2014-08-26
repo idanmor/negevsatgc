@@ -51,8 +51,8 @@ public class GuiManagerForNonGuiTests implements IGuiManager {
 	}
 
 	@Override
-	public void sendSatelliteModeCommand(String dateString, Command c) {
-	
+	public boolean sendSatelliteModeCommand(String dateString, Command c) {
+		return getInPassPhase();
 	}
 
 	@Override
