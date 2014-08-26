@@ -35,7 +35,7 @@ public class Mission {
     	return this.missionExecutionTS;
     }
 
-    public Command getcommand(){
+    public Command getCommand(){
     	return this.command;
     }
     public int getPriority(){

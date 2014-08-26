@@ -44,18 +44,29 @@ public class CommunicationManager {
 	private SerialReader serialReaderThread;
 	private SerialWriter serialWriterThread;
 	private MessageParser messageParserThread;
+	
+	private boolean isSimulator;
 
 	private CommunicationManager() {
 		this.inputLock = new ReentrantLock();
 		this.inputDataAvailable = this.inputLock.newCondition();
 		this.outputQueue = new LinkedBlockingQueue<Message>();
 		this.messageAcceptorQueue = new LinkedBlockingQueue<Message>();
+		this.isSimulator = false;
 	}
 	
 	public static CommunicationManager getInstance() {
 		if (instance == null) 
 			instance = new CommunicationManager();
 		return instance;
+	}
+	
+	public void connectSimulator (String portName) throws NoSuchPortException, 
+															PortInUseException, 
+															UnsupportedCommOperationException, 
+															IOException, TooManyListenersException {
+		this.isSimulator = true;
+		connect(portName);
 	}
 	
 	public void connect (String portName) throws NoSuchPortException, 
@@ -121,7 +132,7 @@ public class CommunicationManager {
 				exeTimeString = MessageParser.toRTEMSTimestamp(mission.getExecutionTime());
 			}
 			msg = msg.concat("<mission time=\"" + exeTimeString + 
-					"\" opcode=\"" + mission.getcommand().getValue() + "\" priority=\"" +
+					"\" opcode=\"" + mission.getCommand().getValue() + "\" priority=\"" +
 					mission.getPriority() + "\"/>");
 		}
 		

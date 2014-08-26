@@ -64,11 +64,17 @@ public class Satellite {
         this.creationTimestamp=t;
         this.satelliteState=SatelliteState.OPERATIONAL;
         this.TempratureStatus=temp;
+        this.TempratureTimestamp=tempratureTS;
         this.EnergyStatus=energy;
+        this.EnergyTimestamp=energyTS;
         this.SbandStatus=Sband;
+        this.SbandTimestamp=SbandTS;
         this.PayloadStatus=Payload;
+        this.PayloadTimestamp=PayloadTS;
         this.SolarPanelsStatus=SolarPanels;
+        this.SolarPanelsTimestamp=SolarPanelsTS;
         this.ThermalStatus=Thermal;
+        this.ThermalTimestamp=ThermalTS;
         
         dm=DataManager.getInstance();
         dm.setLatestSatData(this);
@@ -82,11 +88,17 @@ public class Satellite {
         this.creationTimestamp=t;
         this.satelliteState=state;
         this.TempratureStatus=temp;
+        this.TempratureTimestamp=tempratureTS;
         this.EnergyStatus=energy;
+        this.EnergyTimestamp=energyTS;
         this.SbandStatus=Sband;
+        this.SbandTimestamp=SbandTS;
         this.PayloadStatus=Payload;
+        this.PayloadTimestamp=PayloadTS;
         this.SolarPanelsStatus=SolarPanels;
+        this.SolarPanelsTimestamp=SolarPanelsTS;
         this.ThermalStatus=Thermal;
+        this.ThermalTimestamp=ThermalTS;
         
         dm=DataManager.getInstance();
         dm.setLatestSatData(this);
