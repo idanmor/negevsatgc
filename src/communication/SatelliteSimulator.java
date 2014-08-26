@@ -26,7 +26,7 @@ public class SatelliteSimulator {
 		in = new Scanner(System.in);
 		
 		try {
-			CommunicationManager.getInstance().connect("COM2");
+			CommunicationManager.getInstance().connect("COM1");
 		} catch (Exception e) {
 			try {
 				CommunicationManager.getInstance().connect("LOCAL");
