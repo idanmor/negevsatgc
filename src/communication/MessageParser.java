@@ -66,6 +66,11 @@ public class MessageParser implements Runnable {
 			try {
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
 				
+				if(CommunicationManager.getInstance().isSimulator()) {
+					System.out.println("Message accepted - printing only");
+					System.out.println(m.toString());
+				}
+				
 				Loggers.logAction("Message Accepted By Parser");
 				//System.out.println("DEBUG: Message Accepted By Parser");
 				//System.out.println(m.toString());
