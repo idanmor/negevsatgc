@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import logger.Loggers;
+
 import org.w3c.dom.*;
 
 import data.DataManager;
@@ -63,7 +65,8 @@ public class MessageParser implements Runnable {
 		while (isRunning) {
 			try {
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
-				System.out.println("DEBUG: Message Accepted By Parser");
+				Loggers.logAction("Message Accepted By Parser");
+				//System.out.println("DEBUG: Message Accepted By Parser");
 				//System.out.println(m.toString());
 				Document msg;			
 				try {
