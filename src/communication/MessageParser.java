@@ -65,6 +65,7 @@ public class MessageParser implements Runnable {
 		while (isRunning) {
 			try {
 				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
+				
 				Loggers.logAction("Message Accepted By Parser");
 				//System.out.println("DEBUG: Message Accepted By Parser");
 				//System.out.println(m.toString());
@@ -83,6 +84,7 @@ public class MessageParser implements Runnable {
 						continue; // Ignore upstream packets sent from airborne control system simulator
 					}
 					else {
+						Loggers.logError("There was an error parsing the following message:\n" + msg);
 						System.out.println("PARSING ERROR: " + e.getMessage());
 					}
 				} catch (Exception e) {
@@ -97,11 +99,13 @@ public class MessageParser implements Runnable {
 	public void parseMessage(Document msg) throws InvalidMessageException {
     	NodeList nList = msg.getElementsByTagName(tagDownPacket);
     	if(nList.getLength() == 0) {
+    		Loggers.logError("There was no <downstreamPacket> element in the message");
     		throw new InvalidMessageException("No downstreamPacket Element!");
     	}
     	Node packet = nList.item(0);
     	NodeList typeNodes = msg.getElementsByTagName(tagType);
     	if(typeNodes.getLength() == 0) {
+    		Loggers.logError("Wrong packet type accepted");
     		throw new InvalidMessageException("No type Element!");
     	}
     	String type = typeNodes.item(0).getTextContent();
@@ -116,6 +120,7 @@ public class MessageParser implements Runnable {
     		parseEnergyPacket(packet);
     		break;
     	default:
+    		Loggers.logError("Wrong packet type accepted");
     		throw new InvalidMessageException("Wrong packet type!");
     	}
     }
@@ -183,15 +188,17 @@ public class MessageParser implements Runnable {
 				}
 			}
 		}
-		System.out.println("===========");
-		System.out.println("Inserting Static Update. Satellite State: " + satState + "\n" +
+		String logMsg = "Inserting Static Update. Satellite State: " + satState + "\n" +
 				"Energy Status: " + energyStatus.toString() + " at " + energyStatusTS + "\n" +
 				"Temperature Status: " + temperatureStatus.toString() + " at " + temperatureStatusTS + "\n" +
 				"SBand Status: " + sbandStatus.toString() + " at " + sbandStatusTS + "\n" +
 				"Payload Status: " + payloadStatus.toString() + " at " + payloadStatusTS + "\n" +
 				"Solar Panels Status: " + solarPanelsStatus.toString() + " at " + solarPanelsStatusTS + "\n" +
-				"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS);
+				"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS;
 		System.out.println("===========");
+		System.out.println(logMsg);
+		System.out.println("===========");
+		Loggers.logAction(logMsg);
 		DataManager.getInstance().insertSatellite(satState, temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
 								sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
 								solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
@@ -228,12 +235,14 @@ public class MessageParser implements Runnable {
 						break;	
 					}
 				}
+				String logMsg = "Inserting Temperature Sample. Time: " + ts + "\n" +
+						"Sensor1 temperature: " + sensor1 + "C\n" +
+						"Sensor2 temperature: " + sensor2 + "C\n" +
+						"Sensor3 temperature: " + sensor3 + "C";
 				System.out.println("===========");
-				System.out.println("Inserting Temperature Sample. Time: " + ts + "\n" +
-									"Sensor1 temperature: " + sensor1 + "C\n" +
-									"Sensor2 temperature: " + sensor2 + "C\n" +
-									"Sensor3 temperature: " + sensor3 + "C");
+				System.out.println(logMsg);
 				System.out.println("===========");
+				Loggers.logAction(logMsg);
 				DataManager.getInstance().insertTemprature(sensor1, sensor2, sensor3, ts);
 			}
 		}
@@ -274,12 +283,14 @@ public class MessageParser implements Runnable {
 						break;	
 					}
 				}
+				String logMsg = "Inserting Energy Sample. Time: " + ts + "\n" +
+						"Battery1: " + batt1V + "V " + batt1C + "A\n" +
+						"Battery2: " + batt2V + "V " + batt2C + "A\n" +
+						"Battery3: " + batt3V + "V " + batt3C + "A";
 				System.out.println("===========");
-				System.out.println("Inserting Energy Sample. Time: " + ts + "\n" +
-									"Battery1: " + batt1V + "V " + batt1C + "A\n" +
-									"Battery2: " + batt2V + "V " + batt2C + "A\n" +
-									"Battery3: " + batt3V + "V " + batt3C + "A");
+				System.out.println(logMsg);
 				System.out.println("===========");
+				Loggers.logAction(logMsg);
 				DataManager.getInstance().insertEnergy(batt1V, batt2V, batt3V, batt1C, batt2C, batt3C, ts);
 			}
 		}
