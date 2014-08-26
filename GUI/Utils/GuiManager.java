@@ -77,7 +77,7 @@ public class GuiManager {
 	
 	
 	public void sendMission(MissionWrapper wrapper){
-		Mission newMission =  DataManager.getInstance().insertMission(wrapper.getExecutionTS(), wrapper.getMission().getcommand(), wrapper.getMission().getPriority());
+		Mission newMission =  DataManager.getInstance().insertMission(wrapper.getExecutionTS(), wrapper.getMission().getCommand(), wrapper.getMission().getPriority());
 		addToLog("Sending mission: " + newMission.getDescription() + "to Satellite");
 		CommunicationManager.getInstance().sendMission(newMission);
 	}
