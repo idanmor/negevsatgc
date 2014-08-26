@@ -23,7 +23,7 @@ public class MainTest {
 	    Timestamp TS=new Timestamp(System.currentTimeMillis());
     	final long dayinMS = 86400000;
  
-       // addRandomTemp(db, hourInMs, oldestTS, TS);
+        addRandomTemp(db, hourInMs, oldestTS, TS);
      //   addRandomEnergy(db, hourInMs, oldestTS, TS);
       //  addRandomTemp(db, hourInMs, oldestTS, TS);
     //	addNotRandomEnergy(db, hourInMs, oldestTS, TS);

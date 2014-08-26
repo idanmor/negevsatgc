@@ -8,6 +8,7 @@ package negevsatgui;
 
 import MenuItems.MainMenu;
 import Panels.MissionPanel;
+import Panels.PanelsWithClickInterface;
 import Panels.SatteliteStatusPanel;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import Utils.Constants;
+import Utils.Utils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -61,9 +63,10 @@ public class MainWindow{
 	private ComboBox<DataAcquisitionMode> dataAquisitionModeBox;
 	private ComboBox<Component> componentStatusBox;
 	private ComboBox<State> buttonBox;
-	//private Label satellitePassStatus;
+	private PanelsWithClickInterface missionPanel;
 	private Text satelliteStatus;
 	private FXMLLoader fxmlLoader;
+	private TextArea listView;
 	public MainWindow(){
 		super();
 		synchronized(MainWindow.class){
@@ -110,8 +113,11 @@ public class MainWindow{
 		return mainPane;
 	}
 
-	TextArea demoListView;
 
+	/**
+	 * Creates and shows the main screen(Home)
+	 * @param mainPane
+	 */
 	public void showMainScreen(BorderPane mainPane){
 		if(mainScreen == null){
 			mainScreen = new VBox();
@@ -132,27 +138,27 @@ public class MainWindow{
 			pictureController = fxmlLoader.<SattelitePictureController>getController();
 			Pane left = new Pane();
 			Pane right = new Pane();
-			MissionPanel mp = new MissionPanel(getMainPane(),left);
-			left.getChildren().add(mp);
+			missionPanel = new MissionPanel(getMainPane(),left);
+			left.getChildren().add(missionPanel);
 			right.getChildren().add(new SatteliteStatusPanel(getMainPane(),fxmlLoader.getRoot()));
 			firtsLine.getChildren().addAll(left,right);
 
-			demoListView = new TextArea();
-			demoListView.setEditable(false);
+			listView = new TextArea();
+			listView.setEditable(false);
 			TextField toLogger = new TextField();
 			toLogger.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 				@Override
 				public void handle(KeyEvent t) {
 					if (t.getCode() == KeyCode.ENTER) {
-						demoListView.appendText(addDateToString(toLogger.getText()) + "\n");
+						listView.appendText(addDateToString(toLogger.getText()) + "\n");
 						toLogger.setText("");
 					}
 				}
 			});
 			Label logTitle = new Label("Log Screen");
-			demoListView.setPrefWidth(400);
-			logBox.getChildren().addAll(logTitle,demoListView,toLogger);
+			listView.setPrefWidth(400);
+			logBox.getChildren().addAll(logTitle,listView,toLogger);
 			buttonBox.getChildren().addAll(generateButtonHolders());
 			secondLine.getChildren().addAll(logBox,buttonBox);
 			mainScreen.getChildren().addAll(firtsLine,secondLine);
@@ -162,7 +168,10 @@ public class MainWindow{
 		}
 		mainPane.setCenter(mainScreen);
 	}
-
+	/**
+	 * Gets the satellite status - Mode operational, safe mode ect
+	 * @return
+	 */
 	public Text getSatelliteStatus(){
 		if(satelliteStatus == null){
 			SatelliteState state = GuiManager.getInstance().getLastSatelliteState();
@@ -185,6 +194,7 @@ public class MainWindow{
 			return Color.BLACK;
 		}
 	}
+	
 	private VBox getSatteliteStateAndPhaseTexts(){
 		VBox textHolder = new VBox();
 		HBox stateBox = new HBox();
@@ -202,9 +212,13 @@ public class MainWindow{
 		return textHolder;
 
 	}
+	/**
+	 * Timer until the next pass
+	 * @return
+	 */
 	private Node getTimeUntilPhase() {
 		Text phase = new Text();
-		
+
 		new AnimationTimer() {
 			@Override
 			public void handle(long now) {
@@ -221,6 +235,7 @@ public class MainWindow{
 		phase.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		return phase;
 	}
+	
 	private BorderPane generateButtonHolders(){
 		HBox one = new HBox();
 		one.setSpacing(10);
@@ -426,15 +441,14 @@ public class MainWindow{
 			return presentationCommand;
 		}
 	}
-	private String getSatellitePassStatus() {
-		//String[] generatedStatus = {"Pass phase: Time remaining 3:20","Pass phase: In 2:30:45", "Connection Loss"};
-		String[] generatedStatus = {"Satellite in pass"};
-		return generatedStatus[(int)(Math.random()*generatedStatus.length)];
-	}
+	
 	public void setSatelliteStatusText(String status) {
 		//satellitePassStatus.setText(status);
 	}
-
+	/**
+	 * Adds data to log, the date is not automaticly added
+	 * @param data
+	 */
 	public void addToLog(String... data){
 		if(data == null){
 			return;
@@ -444,7 +458,7 @@ public class MainWindow{
 			if(!toAdd.endsWith("\n")){
 				toAdd = toAdd + "\n";
 			}
-			demoListView.appendText(toAdd);
+			listView.appendText(toAdd);
 		}
 
 	}
@@ -473,9 +487,11 @@ public class MainWindow{
 					return;
 				}
 				ob.setPassPhase();
+				missionPanel.updateImage(Utils.getImageViewFromLocation(getClass(), Constants.INPASS));
+
 			}
 		});
-		Button noPhase = new Button("Set pahse off");
+		Button noPhase = new Button("Set phase off");
 		noPhase.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -485,15 +501,12 @@ public class MainWindow{
 					return;
 				}
 				ob.setNonPassPhase();
-
+				missionPanel.updateImage(Utils.getImageViewFromLocation(getClass(), Constants.NOT_PASS));
 			}
 		});
 		box.getChildren().addAll(phase, noPhase);
 		box.setSpacing(20);
 		return box;
 	}
-
-
-
 
 }
