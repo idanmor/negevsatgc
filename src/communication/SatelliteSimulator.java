@@ -4,6 +4,7 @@ import gnu.io.NoSuchPortException;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Random;
 import java.util.Scanner;
 
 import data.Status;
@@ -25,10 +26,10 @@ public class SatelliteSimulator {
 		in = new Scanner(System.in);
 		
 		try {
-			CommunicationManager.getInstance().connect("COM2");
+			CommunicationManager.getInstance().connectSimulator("COM4");
 		} catch (Exception e) {
 			try {
-				CommunicationManager.getInstance().connect("LOCAL");
+				CommunicationManager.getInstance().connectSimulator("LOCAL");
 			} catch (Exception ee) {
 				ee.printStackTrace();
 			}
@@ -39,7 +40,9 @@ public class SatelliteSimulator {
 					+ "1. Print components status\n"
 					+ "2. Change component status\n"
 					+ "3. Send status to ground station\n"
-					+ "4. Exit");
+					+ "4. Send temperature packets to ground station\n"
+					+ "5. Send energy packets to ground station\n"
+					+ "6. Exit");
 			String command = in.next();
 			switch(command){
 			case "1":
@@ -52,6 +55,12 @@ public class SatelliteSimulator {
 				sendStaticToGround();
 				break;
 			case "4":
+				sendTemperatureToGround();
+				break;
+			case "5":
+				sendEnergyToGround();
+				break;
+			case "6":
 				System.out.println("Bye-Bye");
 				keepWorking = false;
 				break;
@@ -60,6 +69,38 @@ public class SatelliteSimulator {
 				break;
 			}
 		}
+	}
+	
+	private static void sendTemperatureToGround() {
+		ts = new Timestamp((new Date()).getTime());
+		String tss = MessageParser.toRTEMSTimestamp(ts);
+		String msg = CommunicationManager.msgStartDelimiter + "<?xml version=\"1.0\"?>"
+				+ "<packet><downstreamPacket>\n"
+				+ "<type>Temperature</type>\n"
+				+ "<TemperatureSample time=\"" + tss + "\">\n"
+				+ "<Sensor1 temp=\"" + randFloat(40.0f,45.0f) + "\"/>\n"
+				+ "<Sensor2 temp=\"" + randFloat(55.0f,60.0f) + "\"/>\n"
+				+ "<Sensor3 temp=\"" + randFloat(50.0f,55.0f) + "\"/>\n"
+				+ "</TemperatureSample>\n"
+				+ "</downstreamPacket>\n"
+				+ "</packet>" + CommunicationManager.msgStopDelimiter;	
+		CommunicationManager.getInstance().sendMessage(new Message(msg));
+	}
+	
+	private static void sendEnergyToGround() {
+		ts = new Timestamp((new Date()).getTime());
+		String tss = MessageParser.toRTEMSTimestamp(ts);
+		String msg = CommunicationManager.msgStartDelimiter + "<?xml version=\"1.0\"?>"
+				+ "<packet><downstreamPacket>\n"
+				+ "<type>Energy</type>\n"
+				+ "<EnergySample time=\"" + tss + "\">\n"
+				+ "<Battery1 voltage=\"" + randFloat(107.0f,112.0f) + "\" current=\"" + randFloat(1.0f,4.0f) + "\"/>\n"
+				+ "<Battery2 voltage=\"" + randFloat(107.0f,112.0f) + "\" current=\"" + randFloat(1.0f,4.0f) + "\"/>\n"
+				+ "<Battery3 voltage=\"" + randFloat(107.0f,112.0f) + "\" current=\"" + randFloat(1.0f,4.0f) + "\"/>\n"
+				+ "</EnergySample>\n"
+				+ "</downstreamPacket>\n"
+				+ "</packet>" + CommunicationManager.msgStopDelimiter;	
+		CommunicationManager.getInstance().sendMessage(new Message(msg));
 	}
 	
 	private static void sendStaticToGround() {
@@ -182,5 +223,10 @@ public class SatelliteSimulator {
 		}
 	}
 	
+	private static float randFloat (float min, float max) {
+		Random rand = new Random();
+	    float randomNum = rand.nextFloat()*(max-min) + min;
+	    return randomNum;
+	}
 	
 }

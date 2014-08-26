@@ -134,13 +134,6 @@ public class DataManagerTests {
 		assertEquals(s.getObjectCreationTimestamp(), dm.getLatestSatData().getObjectCreationTimestamp());
 	}
 	@Test
-	public void testGetListOfStatustPairs() {
-		Satellite s = dm.insertSatellite(Status.ON, TSdayEarlier, Status.ON, TSdayEarlier, Status.ON, TSdayEarlier, Status.ON, TSdayEarlier, Status.ON, TSdayEarlier, Status.ON, TSdayEarlier);
-		ArrayList<Pair<String,Pair<Status,Timestamp>>> lst =dm.getListOfStatusPairs(s);
-		assertEquals(TSdayEarlier,lst.get(0).getValue().getValue());
-		
-	}
-	@Test
 	public void testGetReadingsPerSensor() {
 		Energy e = dm.insertEnergy(one, two, three, one, two, three, TSdayEarlier);
 		Map<String,Float> map = dm.getReadingsPerSensor(e);

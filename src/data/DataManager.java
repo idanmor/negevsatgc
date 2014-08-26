@@ -17,6 +17,7 @@ import Utils.GuiManager;
 import communication.CommunicationManager;
 import data.Satellite.SatelliteState;
 import javafx.util.Pair;
+import logger.Loggers;
 import persistency.dbConnection;
 
 public class DataManager {
@@ -84,18 +85,6 @@ public class DataManager {
 
 	public Satellite getLatestSatData(){
 		return(this.latestSatData);
-	}
-	
-	public ArrayList<Pair<String,Pair<Status,Timestamp>>> getListOfStatusPairs(Satellite satellite){
-		ArrayList<Pair<String,Pair<Status,Timestamp>>> statusPairs=new ArrayList<Pair<String,Pair<Status,Timestamp>>>();
-		statusPairs.add(new Pair("Temprature",new Pair(satellite.getTempratureStatus(),satellite.getTempratureTS())));
-		statusPairs.add(new Pair("Energy",new Pair(satellite.getEnergyStatus(),satellite.getEnergyTS())));
-		statusPairs.add(new Pair("Sband",new Pair(satellite.getSbandStatus(),satellite.getSbandTS())));
-		statusPairs.add(new Pair("Payload",new Pair(satellite.getPayloadStatus(),satellite.getPayloadTS())));
-		statusPairs.add(new Pair("SolarPanels",new Pair(satellite.getSolarPanelsStatus(),satellite.getSolarPanelsTS())));
-		statusPairs.add(new Pair("Thermal",new Pair(satellite.getThermalStatus(),satellite.getThermalTS())));
-		
-		return(statusPairs);
 	}
 	
 	public Map<String,Float> getReadingsPerSensor(Component component){
