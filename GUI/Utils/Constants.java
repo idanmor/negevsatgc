@@ -38,6 +38,6 @@ public interface Constants {
 	public static final String MISSION_SEND_FAILED = "Mission creation failed, check if all fields present";
 	
 	//Statistics
-	public static final String STATISTICS_VOLTAGE_DISK_LOCATION = "c:\\Voltage.xls";
-	public static final String STATISTICS_TEMPRETATURE_DISK_LOCATION = "C:\\Statistics\\Temperature.xls";;
+	public static final String STATISTICS_VOLTAGE_DISK_LOCATION = "c:\\Statistics\\Voltage";
+	public static final String STATISTICS_TEMPRETATURE_DISK_LOCATION = "C:\\Statistics\\Temperature";;
 }

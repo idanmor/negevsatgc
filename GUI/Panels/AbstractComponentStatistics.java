@@ -1,12 +1,9 @@
 package Panels;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -204,7 +201,10 @@ public abstract class AbstractComponentStatistics implements CommunicationRefres
 	private void writeExcelApache(LineChart<String, Number> chart) throws Exception{
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Statistics");
-		File file = new File(getExellFileLocationAndName());
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yy_hh-mm");
+		String time = formatter.format(new Date(System.currentTimeMillis()));
+		File file = new File(getExellFileLocationAndName() + time + ".xls");
+		file.mkdirs();
 		if(file.exists()){
 			file.delete();
 		}

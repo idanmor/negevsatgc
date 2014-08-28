@@ -132,7 +132,7 @@ public class MissionSplitFrameIMPL implements MissionSplitFrameInterface{
 	}
 	//If the mission was specified correctly(all the fields was correct) sets mission success text
 	private void setSuccessStatus(String data){
-		missionSentStatus.setText(Constants.MISSION_SENT);
+		missionSentStatus.setText(data);
 		missionSentStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		missionSentStatus.setFill(Color.GREEN);
 		GuiManager.getInstance().addToLog(data);

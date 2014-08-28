@@ -196,7 +196,7 @@ public class MainWindow{
 		}
 	}
 	
-	private VBox getSatteliteStateAndPhaseTexts(){
+	private VBox getSatteliteStateAndPassTexts(){
 		VBox textHolder = new VBox();
 		HBox stateBox = new HBox();
 		Text stLabelText = new Text("Satellite Status: ");
@@ -205,7 +205,7 @@ public class MainWindow{
 		stateBox.setSpacing(10);
 		HBox phaseBox = new HBox();
 		Text phLabelText = new Text();
-		phLabelText.setText(OrbitManager.getInstance().isPassPhase() ? "In Phase for: " : "Phase in: ");
+		phLabelText.setText(OrbitManager.getInstance().isPassPhase() ? "In pass for: " : "Pass in: ");
 		phLabelText.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		phaseBox.getChildren().addAll(phLabelText,getTimeUntilPhase());
 		phaseBox.setSpacing(10);
@@ -241,7 +241,7 @@ public class MainWindow{
 		HBox one = new HBox();
 		one.setSpacing(10);
 		BorderPane borderPane = new BorderPane();
-		VBox textHolder = getSatteliteStateAndPhaseTexts();
+		VBox textHolder = getSatteliteStateAndPassTexts();
 		borderPane.setTop(textHolder);
 		BorderPane.setMargin(textHolder, new Insets(0, 0, 10, 0));
 		List<HBox> buttonList = new ArrayList<HBox>();
