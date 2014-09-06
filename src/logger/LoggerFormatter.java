@@ -40,7 +40,7 @@ public class LoggerFormatter extends Formatter {
 	public String getHead(Handler h) {
 		StringBuffer sb = new StringBuffer(1000);
 		sb.append("<!DOCTYPE html>" + "<html>" + "<head>"
-				+ "<title>Forum Server " + title + " Log</title>"
+				+ "<title>NegevSat Ground Station " + title + " Log</title>"
 				+ "</head><body>");
 		return sb.toString();
 	}
