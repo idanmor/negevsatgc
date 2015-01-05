@@ -21,7 +21,7 @@ import logger.Loggers;
 import persistency.dbConnection;
 
 public class DataManager {
-	private static final String comPort = "COM2";
+	private static final String comPort = "COM1";
 	private dbConnection db;
 	private CommunicationManager comm;
 	

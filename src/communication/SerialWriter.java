@@ -23,6 +23,7 @@ public class SerialWriter implements Runnable {
 				this.out.write(msg.getBytes(), 0, msg.getBytes().length);
 				//this.out.write(CommunicationManager.stopDelimiter);
 				this.out.write(10);
+				
 	        }
 	        catch ( IOException e )
 	        {

@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.TooManyListenersException;
+import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -40,6 +41,7 @@ public class CommunicationManager {
 	private Condition inputDataAvailable;
 	
 	private BlockingQueue<Message> outputQueue;
+	public BlockingQueue<byte[]> outputQ;			// binary
 	private BlockingQueue<Message> messageAcceptorQueue;
 	
 	private SerialReader serialReaderThread;
@@ -52,6 +54,7 @@ public class CommunicationManager {
 		this.inputLock = new ReentrantLock();
 		this.inputDataAvailable = this.inputLock.newCondition();
 		this.outputQueue = new LinkedBlockingQueue<Message>();
+		outputQ = new LinkedBlockingQueue<byte[]>();
 		this.messageAcceptorQueue = new LinkedBlockingQueue<Message>();
 		this.isSimulator = false;
 	}
@@ -119,6 +122,7 @@ public class CommunicationManager {
 	}
 	
 	public void sendMissions(Collection<Mission> missions) {
+		/*
 		Date now = new Date();
 		String msg = 
 				"<?xml version=\"1.0\"?>" +
@@ -146,9 +150,13 @@ public class CommunicationManager {
 		
 		System.out.println("DEBUG: Sending message:\n" + msg);
 		this.sendMessage(new Message(msg));
+		*/
+		
+		Vector<Byte> msg = new Vector<Byte>();
+		
 	}
 	
-	public void sendMessage(Message msg) {
+ 	public void sendMessage(Message msg) {
 		try {
 			this.outputQueue.put(msg);
 		} catch (InterruptedException e) {

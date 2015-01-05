@@ -19,6 +19,7 @@ public class Mission {
     @DatabaseField
     private Timestamp sentTime;
     
+    
     public Mission(){}
     
     public Mission(Timestamp _missionExecutionTS, Command _command, int _priority) {
