@@ -84,7 +84,7 @@ public class SatelliteSimulator {
 				+ "</TemperatureSample>\n"
 				+ "</downstreamPacket>\n"
 				+ "</packet>" + CommunicationManager.msgStopDelimiter;	
-		CommunicationManager.getInstance().sendMessage(new Message(msg));
+		CommunicationManager.getInstance().sendMessage(new XmlMessage(msg));
 	}
 	
 	private static void sendEnergyToGround() {
@@ -100,7 +100,7 @@ public class SatelliteSimulator {
 				+ "</EnergySample>\n"
 				+ "</downstreamPacket>\n"
 				+ "</packet>" + CommunicationManager.msgStopDelimiter;	
-		CommunicationManager.getInstance().sendMessage(new Message(msg));
+		CommunicationManager.getInstance().sendMessage(new XmlMessage(msg));
 	}
 	
 	private static void sendStaticToGround() {
@@ -130,7 +130,7 @@ public class SatelliteSimulator {
 				+ "</Module>\n"
 				+ "</downstreamPacket>\n"
 				+ "</packet>" + CommunicationManager.msgStopDelimiter;	
-		CommunicationManager.getInstance().sendMessage(new Message(msg));
+		CommunicationManager.getInstance().sendMessage(new XmlMessage(msg));
 	}
 
 	public static void printComponents() {

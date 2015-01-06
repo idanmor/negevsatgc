@@ -14,9 +14,9 @@ public class SerialReader implements Runnable {
         isRunning = true;
     }
     
-    public void run () {  
+    public void run () {     // TO DO : CHANGE SWITCH-CASE LOOP FOR ALL TYPE OF MessageInterface - now working only with XMLMessage
         int len = -1;      
-        Message msg = new Message();
+        XmlMessage msg = new XmlMessage();
         StringBuffer remainder = new StringBuffer();
         while(isRunning) {
 	        try
@@ -37,7 +37,7 @@ public class SerialReader implements Runnable {
 		        		StringBuffer trash = new StringBuffer();
 		        		matcher.appendReplacement(trash, foundMsg);
 		        	    System.out.println(foundMsg);
-		        	    CommunicationManager.getInstance().getMessageAcceptorQueue().put(new Message(foundMsg));
+		        	    CommunicationManager.getInstance().getMessageAcceptorQueue().put(new XmlMessage(foundMsg));
 		        	}
 		        	remainder = new StringBuffer();
 		        	matcher.appendTail(remainder);

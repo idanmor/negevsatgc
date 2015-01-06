@@ -64,7 +64,7 @@ public class MessageParser implements Runnable {
     {
 		while (isRunning) {
 			try {
-				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
+				MessageInterface m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
 				
 				if(CommunicationManager.getInstance().isSimulator()) {
 					System.out.println("Message accepted - printing only");
