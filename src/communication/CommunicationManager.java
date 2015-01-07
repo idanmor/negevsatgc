@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -187,20 +188,20 @@ public class CommunicationManager {
 		this.sendMessage(message);
 		//this.sendMessage(new Message(msg));
 
-
-
-
-
-
-
-
-
+	}
+	
+	public static byte[] longToByteArray(long i) {
+	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
+	    bb.order(ByteOrder.BIG_ENDIAN);
+	    bb.putLong(i);
+	    return bb.array();
 	}
 
-	//public Byte CheckNReplace(byte b){
-	// Byte ans;
-	// if 
-	//}
+	public static long byteArrayToLong(byte[] b) {
+		final ByteBuffer bb = ByteBuffer.wrap(b);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		return bb.getLong();
+	}
 
 	public void sendMessage(XmlMessage msg) {
 		try {
