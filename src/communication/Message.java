@@ -15,16 +15,16 @@ import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-public class XmlMessage implements MessageInterface {
+public class Message  implements MessageInterface{
 	private String messageText;
 	private Vector<Byte> ToSend;
 	
-	public XmlMessage () {
+	public Message () {
 		this.messageText = "";
 		this.ToSend = new  Vector<Byte>();
 	}
 	
-	public XmlMessage (String messageText) {
+	public Message (String messageText) {
 		this.messageText = messageText;
 		this.ToSend = new  Vector<Byte>();
 	}
@@ -35,6 +35,10 @@ public class XmlMessage implements MessageInterface {
 	
 	public void setTosend(Vector<Byte> v){
 	this.ToSend = new Vector<Byte>(v);
+	}
+	
+	public Vector<Byte> getToSend(){
+		return new Vector<Byte>(ToSend);
 	}
 	
 	public Document toDocument() {
@@ -69,6 +73,17 @@ public class XmlMessage implements MessageInterface {
 	}
 	
 	public byte[] getBytes() {
-		return messageText.getBytes(Charset.forName("UTF-8"));
+		//return messageText.getBytes(Charset.forName("UTF-8"));
+		byte[] res = new byte[this.ToSend.size()];
+		for (int i=0;i<res.length; i++)
+			res[i]=this.ToSend.elementAt(i).byteValue();
+		return res;
+	}
+	
+	public byte[] ConvertTobyteArr(){
+		byte[] res = new byte[this.ToSend.size()];
+		for (int i=0;i<res.length; i++)
+			res[i]=this.ToSend.elementAt(i).byteValue();
+		return res;
 	}
 }

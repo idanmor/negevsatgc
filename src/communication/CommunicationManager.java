@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -127,7 +128,7 @@ public class CommunicationManager {
 
 		Date now = new Date();
 		Timestamp creational = new Timestamp(now.getTime());
-		XmlMessage message = new XmlMessage();
+		Message message = new Message();
 		Vector<Byte> ByteColl = new Vector<Byte>();
 		
 		String msg = 
@@ -176,18 +177,43 @@ public class CommunicationManager {
 				ByteColl.addElement(Priority[i]);			
 			for (int i =0 ; i < ExecTbytes.length; i++ )
 				ByteColl.addElement(ExecTbytes[i]);
+		
+			/*
+			byte[] ExecTbytes1 = ByteBuffer.allocate(8).putLong(2015).array();
+			String s= "2015";
+			byte[] ExecTbytes2=s.getBytes(Charset.forName("UTF-8"));
+			System.out.println(opcode + "   " + Priority.toString());
+			*/
+			
 			
 		}
 
 		msg = msg.concat("</upstreamPacket>" + 
 				"</packet>");
-
 		System.out.println("DEBUG: Sending message:\n" + msg);
+	
+		ByteColl = ReplaceAll10(ByteColl) ;
 		message.setTosend(ByteColl);
 		message.SetMessageText(msg);
 		this.sendMessage(message);
 		//this.sendMessage(new Message(msg));
 
+	}
+	
+	public Vector<Byte> ReplaceAll10(Vector<Byte> b){
+		Vector<Byte> res = new Vector<Byte>();
+		for (int i=0; i<b.size(); i++){
+			if (b.elementAt(i).byteValue()==10){
+				res.add((byte)11);
+			}
+			else if (b.elementAt(i).byteValue()==11){
+				res.add((byte)11);
+				res.add((byte)12);
+			}
+			else
+				res.add(b.elementAt(i).byteValue());
+		}
+		return res;
 	}
 	
 	public static byte[] longToByteArray(long i) {
@@ -203,7 +229,7 @@ public class CommunicationManager {
 		return bb.getLong();
 	}
 
-	public void sendMessage(XmlMessage msg) {
+	public void sendMessage(Message msg) {
 		try {
 			this.outputQueue.put(msg);
 		} catch (InterruptedException e) {
@@ -211,7 +237,7 @@ public class CommunicationManager {
 		}
 	}
 
-	public void sendLocalMessage(XmlMessage msg) {
+	public void sendLocalMessage(MessageInterface msg) {
 		try {
 			this.messageAcceptorQueue.put(msg);
 		} catch (InterruptedException e) {
