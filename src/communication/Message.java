@@ -29,6 +29,8 @@ public class Message  implements MessageInterface{
 		this.ToSend = new  Vector<Byte>();
 	}
 	
+
+	
 	public void append (String addition) {
 		messageText = this.messageText.concat(addition);
 	}
@@ -72,12 +74,18 @@ public class Message  implements MessageInterface{
 		this.messageText = txt;
 	}
 	
+	
+	
 	public byte[] getBytes() {
-		//return messageText.getBytes(Charset.forName("UTF-8"));
+		if( CommunicationManager.getInstance().isSimulator())
+			return messageText.getBytes(Charset.forName("UTF-8"));
+		
 		byte[] res = new byte[this.ToSend.size()];
 		for (int i=0;i<res.length; i++)
 			res[i]=this.ToSend.elementAt(i).byteValue();
 		return res;
+		
+		
 	}
 	
 	public byte[] ConvertTobyteArr(){

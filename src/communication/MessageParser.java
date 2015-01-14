@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 import logger.Loggers;
 
@@ -83,7 +84,8 @@ public class MessageParser implements Runnable {
 					continue;
 				}
 				try {
-					parseMessage(msg);
+					parseBinaryData(m.getBytes());
+					//parseMessage(msg);
 				} catch (InvalidMessageException e) {
 					if (msg.getElementsByTagName(tagUpPacket).getLength() != 0) {
 						continue; // Ignore upstream packets sent from airborne control system simulator
@@ -100,6 +102,52 @@ public class MessageParser implements Runnable {
 			}
 		}       
     }
+	
+	public void parseBinaryData (byte[] b) throws InvalidMessageException{
+		byte type = b[0];
+		switch (type){
+		case 0: parseStatic(b);
+				break;
+		case 1: parseEnergy(b);
+				break;
+		case 2: parseTemp(b);
+				break;
+		default:
+				Loggers.logError("unknown type message : "  +b+ " \n");
+				System.out.println("unknown message type \n");
+				break;
+		}
+	}
+	
+	public void parseTemp(byte[]b){
+		int samples = b[1];
+		byte[]data = new byte[b.length-2];
+		for (int i =2, j=0 ; i<b.length; i++, j++)
+			data[j]=b[i];
+		
+		int j = 0;
+		for (int i =1 ; i<=samples; i++){
+			long value = 0;
+			for ( ; j < j+ 8; j++)
+			{
+			   value += ((long) data[i] & 0xffL) << (8 * i);
+			}
+			Timestamp ts = new Timestamp(value);
+			for (; j<j+4; j++){
+				//conv to temp
+			}
+			
+		}
+		
+	}
+	
+	public void parseStatic(byte[]b){
+		//to do
+	}
+	
+	public void parseEnergy(byte[]b){
+		//to do 
+	}
 	
 	public void parseMessage(Document msg) throws InvalidMessageException {
     	NodeList nList = msg.getElementsByTagName(tagDownPacket);

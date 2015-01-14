@@ -2,6 +2,7 @@ package communication;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +26,8 @@ public class SerialReader implements Runnable {
 	        	len = in.read(buffer, 0, buffer.length);
 	        	if (len > 0) {
 		        	System.out.println("DEBUG: Read " + len + " bytes");
+		        	
+		        	/*
 		        	StringBuffer str = new StringBuffer(new String(buffer, 0, len));
 		        	str = remainder.append(str);
 		        	
@@ -41,7 +44,37 @@ public class SerialReader implements Runnable {
 		        	}
 		        	remainder = new StringBuffer();
 		        	matcher.appendTail(remainder);
-	        	}	
+		        	*/
+		        	
+		        	   									// Idan & Shimon Changes
+		        	boolean pass = true;
+		        	Vector<Byte> tmp = new Vector<Byte>();
+		        	for (int i=0; i< len; i++){
+		        		if (buffer[i]== 11 && i==len-1){
+		        			pass=false;
+		        			break;
+		        		}
+		        		if  (buffer[i] == 11 && buffer[i+1]==12){
+		        			tmp.addElement((byte)10);
+		        			i++;
+		        		}
+		        		else if (buffer[i]==11 && buffer[i+1]==11){
+		        			tmp.addElement((byte)11);
+		        			i++;
+		        		}
+		        		else
+		        			tmp.addElement(buffer[i]);
+		        	}
+		        	
+		        	if (pass){
+		        		
+		        		msg.setTosend(tmp);
+		        		 CommunicationManager.getInstance().getMessageAcceptorQueue().put(msg);
+		        	}
+		        											// Idan & Shimon Changes
+		        	
+	        	}
+	        	
 		        CommunicationManager.getInstance().getInputLock().lock();
 		        CommunicationManager.getInstance().getInputDataAvailable().await();
 	        }

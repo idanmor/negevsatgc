@@ -6,4 +6,5 @@ public interface MessageInterface {
 
 	public byte[] getBytes();
 	public Document toDocument();
+	
 }
