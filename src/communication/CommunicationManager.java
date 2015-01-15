@@ -200,7 +200,7 @@ public class CommunicationManager {
 
 	}
 	
-	public Vector<Byte> ReplaceAll10(Vector<Byte> b){
+	static public Vector<Byte> ReplaceAll10(Vector<Byte> b){
 		Vector<Byte> res = new Vector<Byte>();
 		for (int i=0; i<b.size(); i++){
 			if (b.elementAt(i).byteValue()==10){
@@ -216,18 +216,7 @@ public class CommunicationManager {
 		return res;
 	}
 	
-	public static byte[] longToByteArray(long i) {
-	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
-	    bb.order(ByteOrder.BIG_ENDIAN);
-	    bb.putLong(i);
-	    return bb.array();
-	}
-
-	public static long byteArrayToLong(byte[] b) {
-		final ByteBuffer bb = ByteBuffer.wrap(b);
-		bb.order(ByteOrder.BIG_ENDIAN);
-		return bb.getLong();
-	}
+	
 
 	public void sendMessage(Message msg) {
 		try {

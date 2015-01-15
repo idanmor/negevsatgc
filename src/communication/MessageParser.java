@@ -1,5 +1,7 @@
 package communication;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -127,15 +129,24 @@ public class MessageParser implements Runnable {
 		
 		int j = 0;
 		for (int i =1 ; i<=samples; i++){
-			long value = 0;
-			for ( ; j < j+ 8; j++)
-			{
-			   value += ((long) data[i] & 0xffL) << (8 * i);
-			}
-			Timestamp ts = new Timestamp(value);
-			for (; j<j+4; j++){
-				//conv to temp
-			}
+			byte[] time = new byte[8];
+			for (int k =0 ; j < j+ 8; j++,k++)
+			   time[k]= data[j];
+			long CurrentTimeLong = byteArrayToLong(time);
+			String CurrentTimeString = Long.toString(CurrentTimeLong);			
+			Timestamp ts = new Timestamp(parseRTEMSTimestamp(CurrentTimeString));
+			byte[] ByteTemp = new byte[4];
+			for (int k =0; j<j+4; j++,k++)
+				ByteTemp[k] = data[j];
+			float TempInt = byteArrayToFloat(ByteTemp);
+			
+			String logMsg = "Inserting Temperature Sample. Time: " + ts + "\n" +
+					"Sensor1 temperature: " + TempInt + "C\n";
+			System.out.println("===========");
+			System.out.println(logMsg);
+			System.out.println("===========");
+			Loggers.logAction(logMsg);
+			DataManager.getInstance().insertTemprature(TempInt, -1, -1, ts);
 			
 		}
 		
@@ -412,5 +423,31 @@ public class MessageParser implements Runnable {
 			satst = Satellite.SatelliteState.UNKNOWN;
 		}
 		return satst;
+	}
+	
+	public  static byte[] longToByteArray(long i) {
+	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
+	    bb.order(ByteOrder.BIG_ENDIAN);
+	    bb.putLong(i);
+	    return bb.array();
+	}
+	
+	public  static byte[] floatToByteArray(float i) {
+	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
+	    bb.order(ByteOrder.BIG_ENDIAN);
+	    bb.putFloat(i);
+	    return bb.array();
+	}
+
+	public  long byteArrayToLong(byte[] b) {
+		final ByteBuffer bb = ByteBuffer.wrap(b);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		return bb.getLong();
+	}
+	
+	public  float byteArrayToFloat(byte[] b) {
+		final ByteBuffer bb = ByteBuffer.wrap(b);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		return bb.getFloat();
 	}
 }

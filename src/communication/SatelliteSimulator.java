@@ -2,10 +2,12 @@ package communication;
 
 import gnu.io.NoSuchPortException;
 
+import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Vector;
 
 import data.Status;
 import data.Satellite.SatelliteState;
@@ -55,7 +57,8 @@ public class SatelliteSimulator {
 				sendStaticToGround();
 				break;
 			case "4":
-				sendTemperatureToGround();
+				sendTemperatureToGroundGenerate();
+				//sendTemperatureToGround();
 				break;
 			case "5":
 				sendEnergyToGround();
@@ -69,6 +72,47 @@ public class SatelliteSimulator {
 				break;
 			}
 		}
+	}
+	
+	private static void sendTemperatureToGroundGenerate(){
+		int opcode = 2;
+		int NmOfSamples = 1;
+		Vector<Long> time   = new Vector<Long>();
+		Vector<Float> temp = new Vector<Float>();
+		time.add(new Long ("20150108141622"));
+		temp.add(new Float("45"));
+		sendTemperatureToGroundByBtye(opcode,NmOfSamples, time,temp);
+	}
+	
+	private static void sendTemperatureToGroundByBtye(int opcode, int NmOfSamples,Vector<Long> TimeVec,Vector<Float> TempVec){
+		Vector<Byte> alldata = new Vector < Byte>();
+		byte[] AllOpCode = ByteBuffer.allocate(4).putInt(opcode).array();
+		byte opcodebyte = AllOpCode[3];
+		
+		byte[] sampels = ByteBuffer.allocate(4).putInt(NmOfSamples).array();
+		byte NmOfSamplesbyte = sampels[3];
+		
+		alldata.add(opcodebyte);
+		alldata.add(NmOfSamplesbyte);
+		
+		for (int i =0 ; i<Math.min(TimeVec.size(),TempVec.size());i++){
+			byte[] time = new byte[8];
+			time =MessageParser.longToByteArray(TimeVec.elementAt(i));
+			byte[] temp = new byte[4];
+			temp =MessageParser.floatToByteArray(TempVec.elementAt(i).floatValue());
+			
+			for (int t =0; t<time.length; t++)
+				alldata.add(time[i]);
+			for (int j =0; j<temp.length; j++)
+				alldata.add(temp[j]);
+			
+			Vector<Byte> ToSend =CommunicationManager.ReplaceAll10(alldata);
+			Message msg  = new Message();
+			msg.setTosend(ToSend);
+			
+			CommunicationManager.getInstance().sendMessage(msg);
+		}
+			
 	}
 	
 	private static void sendTemperatureToGround() {
