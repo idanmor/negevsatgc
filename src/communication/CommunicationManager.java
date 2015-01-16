@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.TooManyListenersException;
 import java.util.Vector;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -221,6 +222,7 @@ public class CommunicationManager {
 	public void sendMessage(Message msg) {
 		try {
 			this.outputQueue.put(msg);
+			System.out.println("item on out queue");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

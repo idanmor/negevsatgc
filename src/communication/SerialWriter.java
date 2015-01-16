@@ -17,12 +17,15 @@ public class SerialWriter implements Runnable {
     {
 		while (isRunning) {
 			try {
+				// this.w CommunicationManager.getInstance().getOutputQueue().wait();
+				while (!CommunicationManager.getInstance().getOutputQueue().isEmpty()){
 				MessageInterface msg = CommunicationManager.getInstance().getOutputQueue().take();
 				//System.out.println("DEBUG: Sending message:\n" + msg.toString());
 				//this.out.write(CommunicationManager.startDelimiter);
 				this.out.write(msg.getBytes(), 0, msg.getBytes().length);
 				//this.out.write(CommunicationManager.stopDelimiter);
 				this.out.write(10);
+				}
 				
 	        }
 	        catch ( IOException e )

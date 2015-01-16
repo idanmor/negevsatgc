@@ -95,24 +95,25 @@ public class SatelliteSimulator {
 		alldata.add(opcodebyte);
 		alldata.add(NmOfSamplesbyte);
 		
-		for (int i =0 ; i<Math.min(TimeVec.size(),TempVec.size());i++){
+		for (int i =0 ; i<Math.min(TimeVec.size(),TempVec.size()); i++){
 			byte[] time = new byte[8];
 			time =MessageParser.longToByteArray(TimeVec.elementAt(i));
 			byte[] temp = new byte[4];
 			temp =MessageParser.floatToByteArray(TempVec.elementAt(i).floatValue());
 			
 			for (int t =0; t<time.length; t++)
-				alldata.add(time[i]);
+				alldata.add(time[t]);
 			for (int j =0; j<temp.length; j++)
 				alldata.add(temp[j]);
 			
-			Vector<Byte> ToSend =CommunicationManager.ReplaceAll10(alldata);
-			Message msg  = new Message();
-			msg.setTosend(ToSend);
-			
-			CommunicationManager.getInstance().sendMessage(msg);
+		
 		}
-			
+		Vector<Byte> ToSend =CommunicationManager.ReplaceAll10(alldata);
+		Message msg  = new Message();
+		msg.setTosend(ToSend);
+		
+		//CommunicationManager.getInstance().getOutputQueue().put(msg);
+		CommunicationManager.getInstance().sendMessage(msg);
 	}
 	
 	private static void sendTemperatureToGround() {
@@ -144,6 +145,7 @@ public class SatelliteSimulator {
 				+ "</EnergySample>\n"
 				+ "</downstreamPacket>\n"
 				+ "</packet>" + CommunicationManager.msgStopDelimiter;	
+
 		CommunicationManager.getInstance().sendMessage(new Message(msg));
 	}
 	

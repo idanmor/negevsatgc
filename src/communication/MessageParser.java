@@ -77,6 +77,7 @@ public class MessageParser implements Runnable {
 				Loggers.logAction("Message Accepted By Parser");
 				//System.out.println("DEBUG: Message Accepted By Parser");
 				//System.out.println(m.toString());
+				/*
 				Document msg;			
 				try {
 					msg = m.toDocument();
@@ -85,10 +86,13 @@ public class MessageParser implements Runnable {
 					System.out.println(e.getMessage());
 					continue;
 				}
+				*/
+				
 				try {
 					parseBinaryData(m.getBytes());
 					//parseMessage(msg);
 				} catch (InvalidMessageException e) {
+					/*
 					if (msg.getElementsByTagName(tagUpPacket).getLength() != 0) {
 						continue; // Ignore upstream packets sent from airborne control system simulator
 					}
@@ -96,6 +100,8 @@ public class MessageParser implements Runnable {
 						Loggers.logError("There was an error parsing the following message:\n" + msg);
 						System.out.println("PARSING ERROR: " + e.getMessage());
 					}
+					*/
+					
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
@@ -130,13 +136,15 @@ public class MessageParser implements Runnable {
 		int j = 0;
 		for (int i =1 ; i<=samples; i++){
 			byte[] time = new byte[8];
-			for (int k =0 ; j < j+ 8; j++,k++)
+			int tempj=j;
+			for (int k =0 ; j < tempj+ 8; j++,k++)
 			   time[k]= data[j];
 			long CurrentTimeLong = byteArrayToLong(time);
 			String CurrentTimeString = Long.toString(CurrentTimeLong);			
 			Timestamp ts = new Timestamp(parseRTEMSTimestamp(CurrentTimeString));
 			byte[] ByteTemp = new byte[4];
-			for (int k =0; j<j+4; j++,k++)
+			tempj=j;
+			for (int k =0; j<tempj+4; j++,k++)
 				ByteTemp[k] = data[j];
 			float TempInt = byteArrayToFloat(ByteTemp);
 			
@@ -152,13 +160,54 @@ public class MessageParser implements Runnable {
 		
 	}
 	
+	public void parseEnergy(byte[]b){
+		int samples = b[1];
+		
+		byte[]data = new byte[b.length-2];
+		
+		for (int i =2, j=0 ; i<b.length; i++, j++)
+			data[j]=b[i];
+		
+		int j = 0;
+		for (int i =1 ; i<=samples; i++){
+			byte[] time = new byte[8];
+			int tempj=j;
+			for (int k =0 ; j < tempj+ 8; j++,k++)
+			   time[k]= data[j];
+			long CurrentTimeLong = byteArrayToLong(time);
+			String CurrentTimeString = Long.toString(CurrentTimeLong);			
+			Timestamp ts = new Timestamp(parseRTEMSTimestamp(CurrentTimeString));
+			
+			byte[] Amper = new byte[4];    //amper
+			tempj=j;
+			for (int k =0; j<tempj+4; j++,k++)
+				Amper[k] = data[j];
+			float FloatAmp = byteArrayToFloat(Amper);
+			
+			byte[] volt = new byte[4];    //voltage
+			tempj=j;
+			for (int k =0; j<tempj+4; j++,k++)
+				volt[k] = data[j];
+			float FloatVolage = byteArrayToFloat(Amper);
+			
+			
+			String logMsg = "Inserting Energy Sample. Time: " + ts + "\n" +
+					"Battery1: " + FloatVolage + "V " + FloatAmp + "A\n";
+
+			System.out.println("===========");
+			System.out.println(logMsg);
+			System.out.println("===========");
+			Loggers.logAction(logMsg);
+			DataManager.getInstance().insertEnergy(FloatVolage, FloatAmp, -1, -1, -1, -1, ts);
+			}
+		
+
+	}
 	public void parseStatic(byte[]b){
 		//to do
 	}
 	
-	public void parseEnergy(byte[]b){
-		//to do 
-	}
+
 	
 	public void parseMessage(Document msg) throws InvalidMessageException {
     	NodeList nList = msg.getElementsByTagName(tagDownPacket);
@@ -376,6 +425,9 @@ public class MessageParser implements Runnable {
 		}
 	}
 	
+	
+	
+	
 	public static String toRTEMSTimestamp (Timestamp timestamp) {
 		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		return df.format(timestamp.getTime());
@@ -426,7 +478,7 @@ public class MessageParser implements Runnable {
 	}
 	
 	public  static byte[] longToByteArray(long i) {
-	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
+	    final ByteBuffer bb = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
 	    bb.order(ByteOrder.BIG_ENDIAN);
 	    bb.putLong(i);
 	    return bb.array();
