@@ -222,7 +222,7 @@ public class CommunicationManager {
 	public void sendMessage(Message msg) {
 		try {
 			this.outputQueue.put(msg);
-			System.out.println("item on out queue");
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
