@@ -1,21 +1,17 @@
 package communication;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Vector;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-public class Message  implements MessageInterface{
+public class Message {
 	private String messageText;
 	private Vector<Byte> ToSend;
 	
@@ -24,12 +20,20 @@ public class Message  implements MessageInterface{
 		this.ToSend = new  Vector<Byte>();
 	}
 	
+	public Message (Vector<Byte> v) {
+		this.messageText = "";
+		this.ToSend = v;
+	}
+	
 	public Message (String messageText) {
 		this.messageText = messageText;
 		this.ToSend = new  Vector<Byte>();
 	}
 	
-
+	public Message (Message m){
+		this.messageText = new String (m.messageText);
+		this.ToSend = new Vector<Byte>(m.ToSend);
+	}
 	
 	public void append (String addition) {
 		messageText = this.messageText.concat(addition);
@@ -83,8 +87,7 @@ public class Message  implements MessageInterface{
 		byte[] res = new byte[this.ToSend.size()];
 		for (int i=0;i<res.length; i++)
 			res[i]=this.ToSend.elementAt(i).byteValue();
-		return res;
-		
+		return res;		
 		
 	}
 	
@@ -94,4 +97,5 @@ public class Message  implements MessageInterface{
 			res[i]=this.ToSend.elementAt(i).byteValue();
 		return res;
 	}
+
 }

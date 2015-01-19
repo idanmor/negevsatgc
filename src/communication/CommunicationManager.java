@@ -44,9 +44,9 @@ public class CommunicationManager {
 	private Lock inputLock;
 	private Condition inputDataAvailable;
 
-	private BlockingQueue<MessageInterface> outputQueue;
+	private final BlockingQueue<Message> outputQueue;
 	//public BlockingQueue<MessageInterface> outputQ;			// binary
-	private BlockingQueue<MessageInterface> messageAcceptorQueue;
+	private BlockingQueue<Message> messageAcceptorQueue;
 
 	private SerialReader serialReaderThread;
 	private SerialWriter serialWriterThread;
@@ -57,9 +57,10 @@ public class CommunicationManager {
 	private CommunicationManager() {
 		this.inputLock = new ReentrantLock();
 		this.inputDataAvailable = this.inputLock.newCondition();
-		this.outputQueue = new LinkedBlockingQueue<MessageInterface>();
+		this.outputQueue = new LinkedBlockingQueue<Message>();
 		//	outputQ = new LinkedBlockingQueue<MessageInterface>();
-		this.messageAcceptorQueue = new LinkedBlockingQueue<MessageInterface>();
+		this.messageAcceptorQueue = new LinkedBlockingQueue<Message>();
+		this.messageAcceptorQueue.clear();
 		this.isSimulator = false;
 	}
 
@@ -102,10 +103,9 @@ public class CommunicationManager {
 
 					serialPort.addEventListener(new SerialListener(in));
 					serialPort.notifyOnDataAvailable(true);
-
-
+					
 					serialReaderThread = new SerialReader(in);
-					serialWriterThread = new SerialWriter(out);
+					serialWriterThread = new SerialWriter(out,outputQueue);
 					messageParserThread = new MessageParser();
 
 					(new Thread(serialReaderThread)).start();
@@ -220,15 +220,15 @@ public class CommunicationManager {
 	
 
 	public void sendMessage(Message msg) {
-		try {
-			this.outputQueue.put(msg);
-			
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			try {
+				this.outputQueue.put(msg);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
 	}
 
-	public void sendLocalMessage(MessageInterface msg) {
+	public void sendLocalMessage(Message msg) {
 		try {
 			this.messageAcceptorQueue.put(msg);
 		} catch (InterruptedException e) {
@@ -240,11 +240,11 @@ public class CommunicationManager {
 
 	}
 
-	public BlockingQueue<MessageInterface> getOutputQueue() {
+	public BlockingQueue<Message> getOutputQueue() {
 		return this.outputQueue;
 	}
 
-	public BlockingQueue<MessageInterface> getMessageAcceptorQueue() {
+	public BlockingQueue<Message> getMessageAcceptorQueue() {
 		return this.messageAcceptorQueue;
 	}
 

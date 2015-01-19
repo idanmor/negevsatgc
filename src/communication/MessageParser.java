@@ -27,53 +27,53 @@ public class MessageParser implements Runnable {
 	public static final String tagInfo = "Info";
 	public static final String tagName = "name";
 	public static final String tagStatus = "status";
-	
+
 	public static final String tagTime = "time";
 	public static final String tagVoltage = "voltage";
 	public static final String tagCurrent = "current";
 	public static final String tagTemp = "temp";
-	
+
 	public static final String tagStatusOn = "ON";
 	public static final String tagStatusMalfunction = "MALFUNCTION";
 	public static final String tagStatusStandby = "STANDBY";
 	public static final String tagStatusNonOperational = "NON_OPERATIONAL";
-	
+
 	public static final String tagStateOperational = "OPERATIONAL_STATE";
 	public static final String tagStateSafe = "SAFE_STATE";
 	public static final String tagStateInit = "INIT_STATE";
-	
+
 	public static final String tagEnergyPacketItem1 = "Battery1";
 	public static final String tagEnergyPacketItem2 = "Battery2";
 	public static final String tagEnergyPacketItem3 = "Battery3";
-	
+
 	public static final String tagTempPacketItem1 = "Sensor1";
 	public static final String tagTempPacketItem2 = "Sensor2";
 	public static final String tagTempPacketItem3 = "Sensor3";
-	
+
 	public static final String tagModuleTemperature = "Temperature";
 	public static final String tagModuleEnergy = "Energy";
 	public static final String tagModuleSband = "Sband";
 	public static final String tagModulePayload = "Payload";
 	public static final String tagModuleSolarPanels = "SolarPanels";
 	public static final String tagModuleThermalCtrl = "ThermalControl";
-	
+
 	private boolean isRunning;
-	
+
 	public MessageParser () {
 		this.isRunning = true;
 	}
-	
+
 	public void run ()
-    {
+	{
 		while (isRunning) {
 			try {
-				MessageInterface m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
-				
+				Message m = CommunicationManager.getInstance().getMessageAcceptorQueue().take();
+
 				if(CommunicationManager.getInstance().isSimulator()) {
 					System.out.println("Message accepted - printing only");
 					System.out.println(m.toString());
 				}
-				
+
 				Loggers.logAction("Message Accepted By Parser");
 				//System.out.println("DEBUG: Message Accepted By Parser");
 				//System.out.println(m.toString());
@@ -86,8 +86,8 @@ public class MessageParser implements Runnable {
 					System.out.println(e.getMessage());
 					continue;
 				}
-				*/
-				
+				 */
+
 				try {
 					parseBinaryData(m.getBytes());
 					//parseMessage(msg);
@@ -100,45 +100,45 @@ public class MessageParser implements Runnable {
 						Loggers.logError("There was an error parsing the following message:\n" + msg);
 						System.out.println("PARSING ERROR: " + e.getMessage());
 					}
-					*/
-					
+					 */
+
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-	        } catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}       
-    }
-	
+	}
+
 	public void parseBinaryData (byte[] b) throws InvalidMessageException{
 		byte type = b[0];
 		switch (type){
 		case 0: parseStatic(b);
-				break;
+		break;
 		case 1: parseEnergy(b);
-				break;
+		break;
 		case 2: parseTemp(b);
-				break;
+		break;
 		default:
-				Loggers.logError("unknown type message : "  +b+ " \n");
-				System.out.println("unknown message type \n");
-				break;
+			Loggers.logError("unknown type message : "  +b+ " \n");
+			System.out.println("unknown message type \n");
+			break;
 		}
 	}
-	
+
 	public void parseTemp(byte[]b){
 		int samples = b[1];
 		byte[]data = new byte[b.length-2];
 		for (int i =2, j=0 ; i<b.length; i++, j++)
 			data[j]=b[i];
-		
+
 		int j = 0;
 		for (int i =1 ; i<=samples; i++){
 			byte[] time = new byte[8];
 			int tempj=j;
 			for (int k =0 ; j < tempj+ 8; j++,k++)
-			   time[k]= data[j];
+				time[k]= data[j];
 			long CurrentTimeLong = byteArrayToLong(time);
 			String CurrentTimeString = Long.toString(CurrentTimeLong);			
 			Timestamp ts = new Timestamp(parseRTEMSTimestamp(CurrentTimeString));
@@ -146,8 +146,8 @@ public class MessageParser implements Runnable {
 			tempj=j;
 			for (int k =0; j<tempj+4; j++,k++)
 				ByteTemp[k] = data[j];
-			float TempInt = byteArrayToFloat(ByteTemp);
-			
+			float TempInt = byteArrayToInt(ByteTemp);
+
 			String logMsg = "Inserting Temperature Sample. Time: " + ts + "\n" +
 					"Sensor1 temperature: " + TempInt + "C\n";
 			System.out.println("===========");
@@ -155,42 +155,42 @@ public class MessageParser implements Runnable {
 			System.out.println("===========");
 			Loggers.logAction(logMsg);
 			DataManager.getInstance().insertTemprature(TempInt, -1, -1, ts);
-			
+
 		}
-		
+
 	}
-	
+
 	public void parseEnergy(byte[]b){
 		int samples = b[1];
-		
+
 		byte[]data = new byte[b.length-2];
-		
+
 		for (int i =2, j=0 ; i<b.length; i++, j++)
 			data[j]=b[i];
-		
+
 		int j = 0;
 		for (int i =1 ; i<=samples; i++){
 			byte[] time = new byte[8];
 			int tempj=j;
 			for (int k =0 ; j < tempj+ 8; j++,k++)
-			   time[k]= data[j];
+				time[k]= data[j];
 			long CurrentTimeLong = byteArrayToLong(time);
 			String CurrentTimeString = Long.toString(CurrentTimeLong);			
 			Timestamp ts = new Timestamp(parseRTEMSTimestamp(CurrentTimeString));
-			
+
 			byte[] Amper = new byte[4];    //amper
 			tempj=j;
 			for (int k =0; j<tempj+4; j++,k++)
 				Amper[k] = data[j];
-			float FloatAmp = byteArrayToFloat(Amper);
-			
+			float FloatAmp = byteArrayToInt(Amper);
+
 			byte[] volt = new byte[4];    //voltage
 			tempj=j;
 			for (int k =0; j<tempj+4; j++,k++)
 				volt[k] = data[j];
-			float FloatVolage = byteArrayToFloat(Amper);
-			
-			
+			float FloatVolage = byteArrayToInt(Amper);
+
+
 			String logMsg = "Inserting Energy Sample. Time: " + ts + "\n" +
 					"Battery1: " + FloatVolage + "V " + FloatAmp + "A\n";
 
@@ -199,45 +199,142 @@ public class MessageParser implements Runnable {
 			System.out.println("===========");
 			Loggers.logAction(logMsg);
 			DataManager.getInstance().insertEnergy(FloatVolage, FloatAmp, -1, -1, -1, -1, ts);
-			}
-		
+		}
+
 
 	}
 	public void parseStatic(byte[]b){
-		//to do
-	}
-	
 
-	
+		System.out.println("DEBUG: Static packet parsing");
+		Status defaultStatus = Status.UNKNOWN;
+		//	NodeList children = packet.getChildNodes();
+		Satellite.SatelliteState satState = Satellite.SatelliteState.UNKNOWN;
+		Status energyStatus = defaultStatus;
+		Timestamp energyStatusTS = null;
+		Status temperatureStatus = defaultStatus;
+		Timestamp temperatureStatusTS = null;
+		Status payloadStatus = defaultStatus;
+		Timestamp payloadStatusTS = null;
+		Status sbandStatus = defaultStatus;
+		Timestamp sbandStatusTS = null;
+		Status solarPanelsStatus = defaultStatus;
+		Timestamp solarPanelsStatusTS = null;
+		Status thermalCtrlStatus = defaultStatus;
+		Timestamp thermalCtrlStatusTS = null;
+
+
+
+		int samples = b[1];
+		byte[]data = new byte[b.length-2];
+		for (int i =2, j=0 ; i<b.length; i++, j++)
+			data[j]=b[i];
+
+		int j = 0,k = 0;
+		for (int i =0 ; i<samples; i++){
+			byte[] time = new byte[8];
+			byte[] componentCode = new byte[1];			
+
+			int tempj=j;			
+			for(k=0; j< tempj+1; k++,j++){
+				componentCode[k] = data[j];
+			}
+			int componentCodeInt = componentCode[0];
+			tempj=j;
+
+			for ( k =0 ; j < tempj+ 8; j++,k++)
+				time[k]= data[j];
+			long CurrentTimeLong = byteArrayToLong(time);
+			String CurrentTimeString = Long.toString(CurrentTimeLong);			
+			Timestamp ts = new Timestamp(parseRTEMSTimestamp(CurrentTimeString));
+
+			byte[] statusB = new byte[1];
+			tempj=j;
+			for ( k =0; j<tempj+1; j++,k++)
+				statusB[k] = data[j];
+			int statusInt = statusB[0];
+			
+			String moduleName = eNumtoString(componentCodeInt);
+			Status moduleStatus = intToStatus(statusInt);
+
+			switch (moduleName) {
+			case tagModuleTemperature:
+				temperatureStatus = moduleStatus;
+				temperatureStatusTS = ts;
+				break;
+			case tagModuleEnergy:
+				energyStatus = moduleStatus;
+				energyStatusTS = ts;
+				break;
+			case tagModulePayload:
+				payloadStatus = moduleStatus;
+				payloadStatusTS = ts;
+				break;
+			case tagModuleSband:
+				sbandStatus = moduleStatus;
+				sbandStatusTS = ts;
+				break;
+			case tagModuleSolarPanels:
+				solarPanelsStatus = moduleStatus;
+				solarPanelsStatusTS = ts;
+				break;
+			case tagModuleThermalCtrl:
+				thermalCtrlStatus = moduleStatus;
+				thermalCtrlStatusTS = ts;
+				break;
+			default:
+				break;	
+			}
+
+			
+			String logMsg = "Inserting Static Update. Satellite State: " + satState + "\n" +
+					"Energy Status: " + energyStatus.toString() + " at " + energyStatusTS + "\n" +
+					"Temperature Status: " + temperatureStatus.toString() + " at " + temperatureStatusTS + "\n" +
+					"SBand Status: " + sbandStatus.toString() + " at " + sbandStatusTS + "\n" +
+					"Payload Status: " + payloadStatus.toString() + " at " + payloadStatusTS + "\n" +
+					"Solar Panels Status: " + solarPanelsStatus.toString() + " at " + solarPanelsStatusTS + "\n" +
+					"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS;
+			System.out.println("===========");
+			System.out.println(logMsg);
+			System.out.println("===========");
+			Loggers.logAction(logMsg);
+			DataManager.getInstance().insertSatellite(satState, temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
+									sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
+									solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
+		 
+		}
+	}
+
+
+
 	public void parseMessage(Document msg) throws InvalidMessageException {
-    	NodeList nList = msg.getElementsByTagName(tagDownPacket);
-    	if(nList.getLength() == 0) {
-    		Loggers.logError("There was no <downstreamPacket> element in the message");
-    		throw new InvalidMessageException("No downstreamPacket Element!");
-    	}
-    	Node packet = nList.item(0);
-    	NodeList typeNodes = msg.getElementsByTagName(tagType);
-    	if(typeNodes.getLength() == 0) {
-    		Loggers.logError("Wrong packet type accepted");
-    		throw new InvalidMessageException("No type Element!");
-    	}
-    	String type = typeNodes.item(0).getTextContent();
-    	switch(type) {
-    	case "Static":
-    		parseStaticPacket(packet);
-    		break;
-    	case "Temperature":
-    		parseTemperaturePacket(packet);
-    		break;
-    	case "Energy":
-    		parseEnergyPacket(packet);
-    		break;
-    	default:
-    		Loggers.logError("Wrong packet type accepted");
-    		throw new InvalidMessageException("Wrong packet type!");
-    	}
-    }
-	
+		NodeList nList = msg.getElementsByTagName(tagDownPacket);
+		if(nList.getLength() == 0) {
+			Loggers.logError("There was no <downstreamPacket> element in the message");
+			throw new InvalidMessageException("No downstreamPacket Element!");
+		}
+		Node packet = nList.item(0);
+		NodeList typeNodes = msg.getElementsByTagName(tagType);
+		if(typeNodes.getLength() == 0) {
+			Loggers.logError("Wrong packet type accepted");
+			throw new InvalidMessageException("No type Element!");
+		}
+		String type = typeNodes.item(0).getTextContent();
+		switch(type) {
+		case "Static":
+			parseStaticPacket(packet);
+			break;
+		case "Temperature":
+			parseTemperaturePacket(packet);
+			break;
+		case "Energy":
+			parseEnergyPacket(packet);
+			break;
+		default:
+			Loggers.logError("Wrong packet type accepted");
+			throw new InvalidMessageException("Wrong packet type!");
+		}
+	}
+
 	public void parseStaticPacket (Node packet) {
 		System.out.println("DEBUG: Static packet parsing");
 		Status defaultStatus = Status.UNKNOWN;
@@ -255,7 +352,7 @@ public class MessageParser implements Runnable {
 		Timestamp solarPanelsStatusTS = null;
 		Status thermalCtrlStatus = defaultStatus;
 		Timestamp thermalCtrlStatusTS = null;
-		
+
 		for (int i=0; i < children.getLength(); i++) { //For each packet element
 			Node child = children.item(i);
 			if (child.getNodeName().equals(tagState)) {
@@ -263,7 +360,7 @@ public class MessageParser implements Runnable {
 			} else if (child.getNodeName().equals(tagModule)) {
 				NamedNodeMap attr = child.getAttributes();
 				String moduleTimestamp = attr.getNamedItem(tagTime).getNodeValue();
-				
+
 				NodeList infos = child.getChildNodes();
 				for (int j=0; j < infos.getLength(); j++) {
 					Node info = infos.item(j);
@@ -313,10 +410,10 @@ public class MessageParser implements Runnable {
 		System.out.println("===========");
 		Loggers.logAction(logMsg);
 		DataManager.getInstance().insertSatellite(satState, temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
-								sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
-								solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
+				sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
+				solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
 	}
-	
+
 	public void parseTemperaturePacket (Node packet) {
 		System.out.println("DEBUG: Temperature packet parsing");
 		NodeList children = packet.getChildNodes();
@@ -328,7 +425,7 @@ public class MessageParser implements Runnable {
 				NamedNodeMap attr = child.getAttributes();
 				String sampleTimestamp = attr.getNamedItem(tagTime).getNodeValue();
 				ts = new Timestamp (parseRTEMSTimestamp(sampleTimestamp)); //Parse timestamp
-				
+
 				NodeList sensors = child.getChildNodes();
 				for (int j=0; j < sensors.getLength(); j++) {
 					Node sensor = sensors.item(j);
@@ -360,7 +457,7 @@ public class MessageParser implements Runnable {
 			}
 		}
 	}
-	
+
 	public void parseEnergyPacket (Node packet) {
 		System.out.println("DEBUG: Energy packet parsing");
 		NodeList children = packet.getChildNodes();
@@ -372,7 +469,7 @@ public class MessageParser implements Runnable {
 				NamedNodeMap attr = child.getAttributes();
 				String sampleTimestamp = attr.getNamedItem(tagTime).getNodeValue();
 				ts = new Timestamp (parseRTEMSTimestamp(sampleTimestamp)); //Parse timestamp
-				
+
 				NodeList batts = child.getChildNodes();
 				for (int j=0; j < batts.getLength(); j++) {
 					Node batt = batts.item(j);
@@ -408,7 +505,7 @@ public class MessageParser implements Runnable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Translate RTEMS timestamp format to standard time format
 	 * @param timestamp String timestamp of format yyyymmddhhmmss
@@ -424,19 +521,19 @@ public class MessageParser implements Runnable {
 			return 0;
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	public static String toRTEMSTimestamp (Timestamp timestamp) {
 		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		return df.format(timestamp.getTime());
 	}
-	
+
 	public void stopThread() {
-    	this.isRunning = false;
-    }
-	
+		this.isRunning = false;
+	}
+
 	public Status stringToStatus (String strst) {
 		Status st;
 		switch (strst) {
@@ -458,7 +555,7 @@ public class MessageParser implements Runnable {
 		}
 		return st;
 	}
-	
+
 	public Satellite.SatelliteState stringToSatState (String satstate) {
 		Satellite.SatelliteState satst;
 		switch (satstate) {
@@ -477,18 +574,44 @@ public class MessageParser implements Runnable {
 		return satst;
 	}
 	
-	public  static byte[] longToByteArray(long i) {
-	    final ByteBuffer bb = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
-	    bb.order(ByteOrder.BIG_ENDIAN);
-	    bb.putLong(i);
-	    return bb.array();
+	public  String eNumtoString(int i) {
+		String res="";
+		switch (i) {
+		case 0:
+			res=tagModuleEnergy;
+			break;
+		case 1:
+			res=tagModulePayload;
+			break;
+		case 2:
+			res=tagModuleSband;
+			break;
+		case 3:
+			res=tagModuleTemperature;
+			break;
+		case 4:
+			res=tagModuleSolarPanels;
+			break;
+		case 5:
+			res=tagModuleThermalCtrl;
+			break;
+		}
+		
+		return res;
 	}
-	
+
+	public  static byte[] longToByteArray(long i) {
+		final ByteBuffer bb = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		bb.putLong(i);
+		return bb.array();
+	}
+
 	public  static byte[] floatToByteArray(float i) {
-	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
-	    bb.order(ByteOrder.BIG_ENDIAN);
-	    bb.putFloat(i);
-	    return bb.array();
+		final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		bb.putFloat(i);
+		return bb.array();
 	}
 
 	public  long byteArrayToLong(byte[] b) {
@@ -496,10 +619,31 @@ public class MessageParser implements Runnable {
 		bb.order(ByteOrder.BIG_ENDIAN);
 		return bb.getLong();
 	}
-	
-	public  float byteArrayToFloat(byte[] b) {
+
+	public  int byteArrayToInt(byte[] b) {
 		final ByteBuffer bb = ByteBuffer.wrap(b);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		return bb.getFloat();
+		return bb.getInt();
+	}
+	public Status intToStatus (int strst) {
+		Status st;
+		switch (strst) {
+		case 0:
+			st = Status.ON;
+			break;
+		case 1:
+			st = Status.MALFUNCTION;
+			break;
+		case 3:
+			st = Status.STANDBY;
+			break;
+		case 2:
+			st = Status.NON_OPERATIONAL;
+			break;
+		default:
+			st = null;
+			break;
+		}
+		return st;
 	}
 }
