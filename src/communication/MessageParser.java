@@ -127,7 +127,7 @@ public class MessageParser implements Runnable {
 		}
 	}
 
-	public void parseTemp(byte[]b){
+	public static void parseTemp(byte[]b){
 		int samples = b[1];
 		byte[]data = new byte[b.length-2];
 		for (int i =2, j=0 ; i<b.length; i++, j++)
@@ -160,7 +160,7 @@ public class MessageParser implements Runnable {
 
 	}
 
-	public void parseEnergy(byte[]b){
+	public static void parseEnergy(byte[]b){
 		int samples = b[1];
 
 		byte[]data = new byte[b.length-2];
@@ -203,7 +203,7 @@ public class MessageParser implements Runnable {
 
 
 	}
-	public void parseStatic(byte[]b){
+	public static void parseStatic(byte[]b){
 
 		System.out.println("DEBUG: Static packet parsing");
 		Status defaultStatus = Status.UNKNOWN;
@@ -252,7 +252,7 @@ public class MessageParser implements Runnable {
 			for ( k =0; j<tempj+1; j++,k++)
 				statusB[k] = data[j];
 			int statusInt = statusB[0];
-			
+
 			String moduleName = eNumtoString(componentCodeInt);
 			Status moduleStatus = intToStatus(statusInt);
 
@@ -285,23 +285,23 @@ public class MessageParser implements Runnable {
 				break;	
 			}
 
-			
-			String logMsg = "Inserting Static Update. Satellite State: " + satState + "\n" +
-					"Energy Status: " + energyStatus.toString() + " at " + energyStatusTS + "\n" +
-					"Temperature Status: " + temperatureStatus.toString() + " at " + temperatureStatusTS + "\n" +
-					"SBand Status: " + sbandStatus.toString() + " at " + sbandStatusTS + "\n" +
-					"Payload Status: " + payloadStatus.toString() + " at " + payloadStatusTS + "\n" +
-					"Solar Panels Status: " + solarPanelsStatus.toString() + " at " + solarPanelsStatusTS + "\n" +
-					"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS;
-			System.out.println("===========");
-			System.out.println(logMsg);
-			System.out.println("===========");
-			Loggers.logAction(logMsg);
-			DataManager.getInstance().insertSatellite(satState, temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
-									sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
-									solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
-		 
 		}
+		String logMsg = "Inserting Static Update. Satellite State: " + satState + "\n" +
+				"Energy Status: " + energyStatus.toString() + " at " + energyStatusTS + "\n" +
+				"Temperature Status: " + temperatureStatus.toString() + " at " + temperatureStatusTS + "\n" +
+				"SBand Status: " + sbandStatus.toString() + " at " + sbandStatusTS + "\n" +
+				"Payload Status: " + payloadStatus.toString() + " at " + payloadStatusTS + "\n" +
+				"Solar Panels Status: " + solarPanelsStatus.toString() + " at " + solarPanelsStatusTS + "\n" +
+				"Thermal Control Status: " + thermalCtrlStatus.toString() + " at " + thermalCtrlStatusTS;
+		System.out.println("===========");
+		System.out.println(logMsg);
+		System.out.println("===========");
+		Loggers.logAction(logMsg);
+		DataManager.getInstance().insertSatellite(satState, temperatureStatus, temperatureStatusTS, energyStatus, energyStatusTS, 
+				sbandStatus, sbandStatusTS, payloadStatus, payloadStatusTS, solarPanelsStatus, 
+				solarPanelsStatusTS, thermalCtrlStatus, thermalCtrlStatusTS);
+
+
 	}
 
 
@@ -573,8 +573,8 @@ public class MessageParser implements Runnable {
 		}
 		return satst;
 	}
-	
-	public  String eNumtoString(int i) {
+
+	public static String eNumtoString(int i) {
 		String res="";
 		switch (i) {
 		case 0:
@@ -596,7 +596,7 @@ public class MessageParser implements Runnable {
 			res=tagModuleThermalCtrl;
 			break;
 		}
-		
+
 		return res;
 	}
 
@@ -614,18 +614,18 @@ public class MessageParser implements Runnable {
 		return bb.array();
 	}
 
-	public  long byteArrayToLong(byte[] b) {
+	public static  long byteArrayToLong(byte[] b) {
 		final ByteBuffer bb = ByteBuffer.wrap(b);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		return bb.getLong();
 	}
 
-	public  int byteArrayToInt(byte[] b) {
+	public static  int byteArrayToInt(byte[] b) {
 		final ByteBuffer bb = ByteBuffer.wrap(b);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		return bb.getInt();
 	}
-	public Status intToStatus (int strst) {
+	public static Status intToStatus (int strst) {
 		Status st;
 		switch (strst) {
 		case 0:
