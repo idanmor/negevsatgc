@@ -1,5 +1,7 @@
 package communication;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
@@ -7,24 +9,53 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SerialReader implements Runnable {
-	InputStream in;
+	DataInputStream in;
 	private boolean isRunning;
+//	DataInputStream DataInput;
     
-    public SerialReader ( InputStream in ) {
+    public SerialReader ( DataInputStream in ) {
         this.in = in;
         isRunning = true;
+       // this.DataInput = new DataInputStream(in);
     }
     
     public void run () {     // TO DO : CHANGE SWITCH-CASE LOOP FOR ALL TYPE OF MessageInterface - now working only with XMLMessage
-        int len = -1;      
+        int len = -1;   
         Message msg = new Message();
         StringBuffer remainder = new StringBuffer();
         while(isRunning) {
 	        try
 	        {
+	        	
 	        	byte[] buffer = new byte[1024];
-	        	len = in.read(buffer, 0, buffer.length);
-	        	if (len > 0) {
+	    		byte[] temp = new byte[1];
+	    		int reads=0;
+	    		len=0;
+	    		
+	    			while(len!=-1){
+	    				len =  this.in.read(temp, 0, 1);
+	    				if(len!=1)
+	    					continue;
+	    				if(temp[0]!=10){
+	    					buffer[reads]= temp[0];
+	    					reads++;
+	    				}
+	    				else{
+	    					len = reads;
+	    					break;
+	    				}
+	    				
+	    			}
+	    		
+
+	        	
+	        	
+	        	//byte[] buffer = new byte[1024];
+	        	//len = in.read(buffer, 0, buffer.length);
+
+	        	//len = this.in.read(buffer, 0, buffer.length);
+	        	int t=5;
+	        	if (len > 0 && buffer[0]!=94) {					// Fix BUG  when send packet to sat and got immediate unknown message 
 		        	System.out.println("DEBUG: Read " + len + " bytes");
 		        	
 		        	/*
@@ -47,6 +78,7 @@ public class SerialReader implements Runnable {
 		        	*/
 		        	
 		        	   									// Idan & Shimon Changes
+		        	
 		        	boolean pass = true;
 		        	Vector<Byte> tmp = new Vector<Byte>();
 		        	for (int i=0; i< len; i++){

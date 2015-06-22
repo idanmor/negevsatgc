@@ -1,6 +1,7 @@
 package communication;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,9 +11,9 @@ import gnu.io.SerialPortEventListener;
 
 public class SerialListener implements SerialPortEventListener {
 	
-	private InputStream in;
+	private DataInputStream in;
 	
-	public SerialListener (InputStream in) {
+	public SerialListener (DataInputStream in) {
 		this.in = in;
 	}
 

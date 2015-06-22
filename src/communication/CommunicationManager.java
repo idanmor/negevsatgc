@@ -7,6 +7,7 @@ import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,7 +39,7 @@ public class CommunicationManager {
 
 	private static CommunicationManager instance = null;
 	private SerialPort serialPort;
-	private InputStream in;
+	private DataInputStream in;
 	private OutputStream out;
 
 	private Lock inputLock;
@@ -98,7 +99,7 @@ public class CommunicationManager {
 					serialPort.setSerialPortParams(19200,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 					//serialPort.setFlowControlMode(serialPort.FLOWCONTROL_RTSCTS_IN);
 
-					in = serialPort.getInputStream();
+					in =new DataInputStream(serialPort.getInputStream()) ;
 					out = serialPort.getOutputStream();
 
 					serialPort.addEventListener(new SerialListener(in));

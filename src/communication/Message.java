@@ -81,9 +81,18 @@ public class Message {
 	
 	
 	public byte[] getBytes() {
-		if( CommunicationManager.getInstance().isSimulator())
+		if(! CommunicationManager.getInstance().isSimulator())
 			return messageText.getBytes(Charset.forName("UTF-8"));
 		
+		byte[] res = new byte[this.ToSend.size()];
+		for (int i=0;i<res.length; i++)
+			res[i]=this.ToSend.elementAt(i).byteValue();
+		return res;		
+		
+	}
+	
+	public byte[] getBytesReceive() {
+
 		byte[] res = new byte[this.ToSend.size()];
 		for (int i=0;i<res.length; i++)
 			res[i]=this.ToSend.elementAt(i).byteValue();

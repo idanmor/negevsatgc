@@ -29,6 +29,9 @@ public class SatelliteSimulator {
 		
 		try {
 			CommunicationManager.getInstance().connectSimulator("COM4");
+			for (int i=0; i< 1000; i++){
+				sendTemperatureToGroundGenerate();
+			}
 		} catch (Exception e) {
 			try {
 				CommunicationManager.getInstance().connectSimulator("LOCAL");
@@ -36,7 +39,7 @@ public class SatelliteSimulator {
 				ee.printStackTrace();
 			}
 		}
-		
+		/*
 		while(keepWorking) {
 			System.out.println("Choose command:\n"
 					+ "1. Print components status\n"
@@ -72,6 +75,8 @@ public class SatelliteSimulator {
 				break;
 			}
 		}
+		*/
+		System.out.println("Choose command:\n");	
 	}
 	
 	private static void sendTemperatureToGroundGenerate(){

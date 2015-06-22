@@ -14,7 +14,8 @@ public enum Command implements CommandWithDescription {
 	PAYLOAD_ON(10,"Set Payload on"),
 	PAYLOAD_STANDBY(11,"Set Payload to Standbye"),
 	THERMAL_CRTL_ON(12,"Set Thermal control on"),
-	THERMAL_CRTL_STANDBY(13,"Set Thermal control off");
+	THERMAL_CRTL_STANDBY(13,"Set Thermal control off"),
+	MOVE_TO_PASS(14);
 	
 	private final int value;
 	private final String description;

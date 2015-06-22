@@ -1,5 +1,6 @@
 package communication;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.BlockingQueue;
@@ -8,12 +9,15 @@ public class SerialWriter implements Runnable {
 	OutputStream out;
 	private boolean isRunning;
 	private final BlockingQueue<Message> queue;
+	private DataOutputStream DataOutPut;
+	
     
     public SerialWriter (OutputStream out,BlockingQueue<Message> Q)
     {
         this.out = out;
         this.isRunning = true;
         this.queue = Q;
+        this.DataOutPut = new DataOutputStream(out);
     }
 
 	public void run ()
@@ -27,9 +31,10 @@ public class SerialWriter implements Runnable {
 				//MessageInterface msg = CommunicationManager.getInstance().getOutputQueue().take();
 				//System.out.println("DEBUG: Sending message:\n" + msg.toString());
 				//this.out.write(CommunicationManager.startDelimiter);
-				this.out.write(msg.getBytes(), 0, msg.getBytes().length);
+				//this.DataOutPut.writeBytes("fsara");
+				this.DataOutPut.write(msg.getBytes(), 0, msg.getBytes().length);
 				//this.out.write(CommunicationManager.stopDelimiter);
-				this.out.write(10);
+				this.DataOutPut.write(10);
 				}
 				
 	     //   }

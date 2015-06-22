@@ -89,7 +89,7 @@ public class MessageParser implements Runnable {
 				 */
 
 				try {
-					parseBinaryData(m.getBytes());
+					parseBinaryData(m.getBytesReceive());
 					//parseMessage(msg);
 				} catch (InvalidMessageException e) {
 					/*
@@ -255,6 +255,11 @@ public class MessageParser implements Runnable {
 
 			String moduleName = eNumtoString(componentCodeInt);
 			Status moduleStatus = intToStatus(statusInt);
+			
+			if ( moduleStatus == null)
+				moduleStatus = Status.UNKNOWN;
+			if (moduleName == null)
+				moduleName = "";
 
 			switch (moduleName) {
 			case tagModuleTemperature:
@@ -367,6 +372,12 @@ public class MessageParser implements Runnable {
 					NamedNodeMap infoattrs = info.getAttributes();
 					String moduleName = infoattrs.getNamedItem(tagName).getNodeValue();
 					Status moduleStatus = stringToStatus(infoattrs.getNamedItem(tagStatus).getNodeValue());
+					
+					if ( moduleStatus == null)
+						moduleStatus = Status.UNKNOWN;
+					if (moduleName == null)
+						moduleName = "";
+					
 					switch (moduleName) {
 					case tagModuleTemperature:
 						temperatureStatus = moduleStatus;
@@ -641,7 +652,7 @@ public class MessageParser implements Runnable {
 			st = Status.NON_OPERATIONAL;
 			break;
 		default:
-			st = null;
+			st = Status.UNKNOWN;
 			break;
 		}
 		return st;

@@ -357,7 +357,8 @@ public class MainWindow{
 	public enum SatelliteMods{
 		SAFE("Safe mode", Command.MOVE_TO_SAFE),
 		OPERATION("Operation mode", Command.MOVE_TO_OP),
-		STANDBYE("Standby mode", Command.MOVE_TO_STANDBY);
+		STANDBYE("Standby mode", Command.MOVE_TO_STANDBY),
+		PASS("Pass Mode", Command.MOVE_TO_PASS);
 
 		private String presentationCommand;
 		private Command command ;
